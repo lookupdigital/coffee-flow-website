@@ -1,11 +1,6 @@
 import Link from "next/link";
 import { Fragment } from "react";
-import {
-  ImageFit,
-  Product,
-  catalogDescription,
-  catalogMetrics,
-} from "@/lib/data";
+import { ImageFit, Product, beanPlaceholder } from "@/lib/data";
 
 const src = (id: string) => `/images/${id}.webp`;
 
@@ -92,6 +87,32 @@ export function Pic({
   );
 }
 
+export function Metrics({
+  items,
+  className = "metrics",
+  itemClass = "metric",
+  lineClass = "metric-line",
+}: {
+  items: [string, string][];
+  className?: string;
+  itemClass?: string;
+  lineClass?: string;
+}) {
+  return (
+    <div className={className}>
+      {items.map(([value, label], i) => (
+        <Fragment key={label}>
+          {i > 0 && <span className={lineClass} aria-hidden />}
+          <div className={itemClass}>
+            <strong dir={/^[0-9+.,″]+$/.test(value) ? "ltr" : undefined}>{value}</strong>
+            <span>{label}</span>
+          </div>
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
 export function ProductRow({ product: p }: { product: Product }) {
   const href = `/products/${p.slug}`;
   const machine = p.category === "machines";
@@ -100,39 +121,27 @@ export function ProductRow({ product: p }: { product: Product }) {
       <Link
         href={href}
         className={`row-photo ${machine ? "row-photo-light" : "row-photo-dark"}`}
-        aria-label={p.catalogName}
+        aria-label={p.name}
       >
         {machine ? (
           <span className="machine-stage">
-            <Pic id={p.image} fit={p.catalogFit} alt={p.catalogName} />
+            <Pic id={p.image} fit={{ kind: "contain" }} alt={p.name} />
           </span>
         ) : (
-          <Pic id={p.image} fit={p.catalogFit} alt={p.catalogName} />
+          <Pic id={p.image} fit={{ kind: "contain" }} alt={p.name} />
         )}
       </Link>
       <div className="row-copy">
         <h2 className="row-title">
-          <Link href={href}>{p.catalogName}</Link>
+          <Link href={href}>{p.name}</Link>
         </h2>
-        <p className="text">{catalogDescription}</p>
-        <div className="metrics">
-          {catalogMetrics.map(([value, label], i) => (
-            <Fragment key={label}>
-              {i > 0 && <span className="metric-line" aria-hidden />}
-              <div
-                className={`metric ${i === catalogMetrics.length - 1 ? "metric-edge" : ""}`}
-              >
-                <strong dir={/^[0-9+]+$/.test(value) ? "ltr" : undefined}>{value}</strong>
-                <span>{label}</span>
-              </div>
-            </Fragment>
-          ))}
-        </div>
-        {machine && (
-          <Link href={href} className="btn btn-gold">
-            למידע נוסף
-          </Link>
-        )}
+        <p className="text">
+          {p.description ? <Rich text={p.description} /> : beanPlaceholder}
+        </p>
+        {p.trust && <Metrics items={p.trust} />}
+        <Link href={href} className="btn btn-gold">
+          למידע נוסף
+        </Link>
       </div>
     </article>
   );

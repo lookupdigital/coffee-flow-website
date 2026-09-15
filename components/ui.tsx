@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Fragment } from "react";
-import { Product, cardDescription, reviews } from "@/lib/data";
-import { Pic, Rich } from "./shared";
-import { ContactForm } from "./interactive";
+import { Product, cardDescription } from "@/lib/data";
+import { Pic } from "./shared";
+import { ContactForm, HeaderShell } from "./interactive";
 
 const nav = [
   ["/solutions/office", "פתרונות למשרדים"],
@@ -27,7 +27,7 @@ export function Header({
   home?: boolean;
 }) {
   return (
-    <header className={`header ${overlay ? "header-overlay" : ""}`}>
+    <HeaderShell className={`header ${overlay ? "header-overlay" : ""}`}>
       <div className="header-inner">
         <Link href="/" className="header-logo" aria-label="Coffee Flow">
           <img src="/images/6373b.webp" alt="Coffee Flow" width={158} height={67} />
@@ -51,7 +51,7 @@ export function Header({
           <WhatsAppLink />
         )}
       </div>
-    </header>
+    </HeaderShell>
   );
 }
 
@@ -134,11 +134,28 @@ export function SectionHeader({
       >
         {lines.map((line) => (
           <p key={line}>
-            <Rich text={line} />
+            <RichText text={line} />
           </p>
         ))}
       </div>
     </div>
+  );
+}
+
+function RichText({ text }: { text: string }) {
+  const parts = text.split(/([A-Za-z][A-Za-z0-9’'.\- ]*[A-Za-z0-9])/g);
+  return (
+    <>
+      {parts.map((part, i) =>
+        i % 2 ? (
+          <span className="eng" key={i}>
+            {part}
+          </span>
+        ) : (
+          <Fragment key={i}>{part}</Fragment>
+        ),
+      )}
+    </>
   );
 }
 
@@ -156,7 +173,7 @@ export function MachineCard({
       className={`machine-card ${variant === "solution" ? "machine-card-bordered" : ""}`}
     >
       <span className="machine-card-photo">
-        <Pic id={p.image} fit={fit} alt={p.cardName} />
+        <Pic id={p.cardImage ?? p.image} fit={fit} alt={p.cardName} />
       </span>
       <span className="machine-card-body">
         <span className="card-title">{p.cardName}</span>
@@ -170,7 +187,7 @@ export function CoffeeCard({ product: p, outlined = false }: { product: Product;
   return (
     <Link href={`/products/${p.slug}`} className="coffee-card">
       <span className={`coffee-card-photo ${outlined ? "coffee-card-outlined" : ""}`}>
-        <Pic id={p.image} fit={p.cardFit} alt={p.cardName} />
+        <Pic id={p.cardImage ?? p.image} fit={p.cardFit} alt={p.cardName} />
       </span>
       <span className="coffee-card-meta">
         <span className="card-title">{p.cardName}</span>
@@ -178,26 +195,6 @@ export function CoffeeCard({ product: p, outlined = false }: { product: Product;
         <span className="coffee-card-text">פסקה</span>
       </span>
     </Link>
-  );
-}
-
-export function Quote({ review }: { review: (typeof reviews)[number] }) {
-  return (
-    <figure className="quote">
-      <span className="quote-mark quote-mark-open" aria-hidden>
-        “
-      </span>
-      <blockquote>
-        <Rich text={review.text} />
-      </blockquote>
-      <span className="quote-mark quote-mark-close" aria-hidden>
-        “
-      </span>
-      <figcaption>
-        <strong>{review.name}</strong>
-        <span>{review.role}</span>
-      </figcaption>
-    </figure>
   );
 }
 

@@ -6,11 +6,11 @@ import {
   Footer,
   Header,
   MachineCard,
-  Quote,
   SectionHeader,
   Separated,
   Testimonials,
 } from "@/components/ui";
+import { RollingReviews } from "@/components/interactive";
 import { Rich } from "@/components/shared";
 import {
   Audience,
@@ -18,7 +18,6 @@ import {
   featuredMachines,
   getProduct,
   moreThanCoffee,
-  reviews,
   solutions,
 } from "@/lib/data";
 
@@ -114,7 +113,7 @@ export default async function SolutionPage({
       </section>
 
       <Testimonials title={s.testimonialTitle} width={s.testimonialWidth}>
-        <Quote review={reviews[0]} />
+        <RollingReviews />
       </Testimonials>
 
       <ContactSection title={s.contactTitle} text={s.contactText} />

@@ -1,4 +1,6 @@
-// All copy below is taken verbatim from the Figma file "coffee-flow-website".
+// Layout copy is taken verbatim from the Figma file "coffee-flow-website".
+// Machine specs come from the Coffee Flow machine spec sheet (PDF); machine descriptions
+// are written from the manufacturers' official pages (see `sources` on each product).
 // Placeholder copy (e.g. "אחוזים", "פסקה", "כותרת פוסט") is intentional and will be replaced later.
 
 export type ImageFit =
@@ -13,29 +15,27 @@ export type MachineKind = "office" | "professional" | "capsule" | "automatic";
 export type Product = {
   slug: string;
   category: "machines" | "beans";
+  name: string;
+  /** Name shown on the Figma cards (home / solution pages). */
   cardName: string;
-  catalogName: string;
+  /** Catalog and product-page image (with dimensions, from the client's Drive). */
   image: string;
+  /** Card image from Figma, when the product appears on a Figma card. */
+  cardImage?: string;
   cardFit: ImageFit;
   solutionFit?: ImageFit;
-  catalogFit: ImageFit;
-  heroImage?: string;
   kinds?: MachineKind[];
-  bordered?: boolean;
+  description?: string;
+  narrative?: string[];
+  trust?: [string, string][];
+  specs?: [string, string][];
+  sources?: string[];
 };
 
 export const cardDescription =
   "מכונת האספרסו המקצועית המובילה בשוק, מושלמת למסעדות ובתי קפה עמוסים. עיצוב איטלקי מושלם עם ביצועים ללא פשרות.";
 
-export const catalogDescription =
-  "מיני בר הינה מכונה מסחרית המיועדת לצרכים המיוחדים והאינטנסיביים של משרדים, בתי מלון וטרקליני עסקים. בעלת ממשק מגע צבעוני חכם, אפשרויות שונות של פולי קפה וחלב טרי, ומספקת חווית בית קפה אמיתית בלחיצת כפתור אחת.";
-
-// Right-to-left reading order (the right-most item in Figma comes first).
-export const catalogMetrics: [string, string][] = [
-  ["מלא", "חיבור מים ישיר"],
-  ["24", "סוגי משקאות"],
-  ["120+", "כוסות ביום"],
-];
+export const beanPlaceholder = "פסקה";
 
 const machineInset: ImageFit = {
   kind: "inset",
@@ -44,75 +44,340 @@ const machineInset: ImageFit = {
   width: 90.31,
   height: 88.36,
 };
+const machineCardFit: ImageFit = { kind: "fixed", width: 300, height: 270 };
+const beanCardFit: ImageFit = { kind: "fixed", width: 260, height: 260 };
+
+function specs(
+  width: string,
+  depth: string,
+  height: string,
+  power: string,
+  voltage?: string,
+  phase?: string,
+): [string, string][] {
+  const rows: [string, string][] = [
+    ["רוחב", `${width} ס״מ`],
+    ["עומק", `${depth} ס״מ`],
+    ["גובה", `${height} ס״מ`],
+    ["הספק", power],
+  ];
+  if (voltage) rows.push(["מתח", voltage]);
+  if (phase) rows.push(["חיבור חשמל", phase]);
+  return rows;
+}
+
+const appiaNarrative = [
+  "מערכת Soft Infusion System (SIS) מרטיבה את הקפה בלחץ נמוך לפני החליטה המלאה, מעצימה את הארומה של כל בלנד, מעניקה קרמה מלאה ועקבית ומפצה על טעויות בדחיסת הקפה.",
+  "מסך TFT מציג את זמני החליטה ומאפשר לשנות מנות, להפעיל ניקוי ולצפות במונים. בידוד DRYTEX THERMICAL מפחית את צריכת האנרגיה ב-13% לעומת הדגם הקודם Appia II, וזרוע קיטור מנירוסטה מאפשרת הקצפת חלב מקצועית.",
+];
+const appiaSources = [
+  "https://nuovasimonelli.com/en/machine/appia-life-2/",
+];
 
 export const products: Product[] = [
   {
     slug: "coffee-express",
     category: "machines",
+    name: "Dr.Coffee Coffee Express",
     cardName: "Coffee Express",
-    catalogName: "Coffee Express",
-    image: "206d3",
-    heroImage: "942c4",
+    image: "catalog/machine-coffee-express",
+    cardImage: "206d3",
     cardFit: machineInset,
     solutionFit: { kind: "fixed", width: 379, height: 285 },
-    catalogFit: machineInset,
     kinds: ["office", "automatic"],
+    description:
+      "מכונת קפה אוטומטית מסחרית של Dr.Coffee, עם שני מכלי פולים ומסך מגע 10.1 אינץ׳. מכינה משקאות קפה וחלב בלחיצה אחת, ומתאימה למשרדים ולמתחמי אירוח עם תפוקה יומית מומלצת של 200 כוסות.",
+    narrative: [
+      "שני מכלי פולים (1,000 ו-1,200 גרם) מאפשרים להציע שני סוגי קפה במקביל, ומערכת החלב מתנקה אוטומטית. לפי היצרן, המכונה מספקת עד 100 כוסות בשעה ותפוקה יומית מומלצת של 200 כוסות.",
+      "המכונה עובדת עם מכל מים של 4 ליטר או בחיבור ישיר לרשת המים, וכוללת יציאת מים חמים. ניתן לשלב מקרר חלב ייעודי של Dr.Coffee להכנת משקאות חלב חמים וקרים.",
+    ],
+    trust: [
+      ["200", "כוסות ביום (מומלץ)"],
+      ["10.1″", "מסך מגע"],
+      ["2", "מכלי פולים"],
+    ],
+    specs: specs("34", "54.5", "62", "2,700W", "240V", "חד פאזי"),
+    sources: ["https://www.drcoffee.com/specifications/coffee-express.html"],
   },
   {
     slug: "gt2-pro",
     category: "machines",
+    name: "Dr.Coffee GT2 Pro",
     cardName: "GT2 Pro",
-    catalogName: "GT2 Pro",
-    image: "a2781",
+    image: "catalog/machine-gt2-pro",
+    cardImage: "a2781",
     cardFit: { kind: "contain" },
-    catalogFit: machineInset,
     kinds: ["office", "automatic"],
+    description:
+      "מכונת קפה אוטומטית מסדרת GT2 של Dr.Coffee, שנבנתה לעסקים ולמשרדים בגודל קטן עד בינוני — עם מסך צבעוני 10.1 אינץ׳, מטחנה סרמית ומשקאות חלב בלחיצה.",
+    narrative: [
+      "מערכת חליטה בשני לחצים, יחד עם מטחנה סרמית, מספקת קפה איכותי ועקבי לשימוש מסחרי. ניתן לכוון את דרגת הטחינה, את כמות הקפה ואת זמן ההרטבה המקדימה, ולהתאים כל משקה לטעם המקום.",
+      "מסלול החלב נפרק כולו ומתנקה אוטומטית בלי להפריע לשימוש, וצינורות החלב מוסתרים לתחזוקה נוחה. המכונה משתלבת במערכת IoT של Dr.Coffee לשליטה וניהול מרחוק.",
+    ],
+    trust: [
+      ["10.1″", "מסך צבעוני"],
+      ["2", "לחצי חליטה"],
+      ["IoT", "ניהול מרחוק"],
+    ],
+    specs: specs("30", "50", "58", "2,900W", "240V", "חד פאזי"),
+    sources: ["https://www.drcoffee.com/ocs-/gt2.html", "https://www.drcoffee.com/ocs/"],
   },
   {
-    slug: "nouva-simonelli",
+    slug: "coffee-break",
     category: "machines",
+    name: "Dr.Coffee CoffeeBreak",
+    cardName: "CoffeeBreak",
+    image: "catalog/machine-coffee-break",
+    cardFit: machineCardFit,
+    kinds: ["office", "automatic"],
+    description:
+      "מכונת קפה אוטומטית של Dr.Coffee לעסקים ולמשרדים בגודל קטן עד בינוני, עם מסך מגע צבעוני 10.1 אינץ׳ ומערכת חלב נשלפת שמתנקה מעצמה.",
+    narrative: [
+      "מטחנה עם להבים שטוחים מסרמיקה מציעה 9 דרגות טחינה, והקפה הטחון עובר ישירות ליחידת חליטה של 16 גרם — כך שכל כוס נחלטת מקפה טרי. ניתן לבחור חליטה בטמפרטורה גבוהה או נמוכה ולכוון את ההרטבה המקדימה.",
+      "מערכת החלב נשלפת ומקציפה בטמפרטורה של 60–70 מעלות. המכונה מבצעת ניקוי אוטומטי בהדלקה ובכיבוי, וניתן להגדיר מחזורי ניקוי לפי מספר כוסות או שעות פעילות.",
+    ],
+    trust: [
+      ["10.1″", "מסך מגע"],
+      ["9", "דרגות טחינה"],
+      ["16 גר׳", "יחידת חליטה"],
+    ],
+    specs: specs("41", "50", "58", "1,500W", "240V", "חד פאזי"),
+    sources: ["https://www.drcoffee.com/ocs/coffee-break.html"],
+  },
+  {
+    slug: "coffee-bar",
+    category: "machines",
+    name: "Dr.Coffee CoffeeBar",
+    cardName: "CoffeeBar",
+    image: "catalog/machine-coffee-bar",
+    cardFit: machineCardFit,
+    kinds: ["office", "automatic"],
+    description:
+      "מכונת קפה אוטומטית קומפקטית של Dr.Coffee לחנויות נוחות, משרדים קטנים וחדרי ישיבות, עם מסך מגע 10.1 אינץ׳ ותפוקה יומית של עד 200 כוסות.",
+    narrative: [
+      "המכונה טוחנת פולים טריים במטחנה עם להבים שטוחים מסרמיקה, ויחידת החליטה עשויה מתכת — לעבודה יציבה לאורך זמן בתנאים מסחריים.",
+      "מערכת הקצפת החלב כוללת ניקוי עצמי, ולצידה זרוע קיטור ויציאת מים חמים בלחיצה. מכל המים מכיל 4 ליטר, והעיצוב הקומפקטי מתאים גם לעמדות קפה קטנות.",
+    ],
+    trust: [
+      ["200", "כוסות ביום"],
+      ["10.1″", "מסך מגע"],
+      ["4 ל׳", "מכל מים"],
+    ],
+    specs: specs("34", "54.5", "62", "2,900W", "240V", "חד פאזי"),
+    sources: [
+      "https://dr-coffee.en.made-in-china.com/product/CdMJFPojMAVu/China-Dr-Coffee-Coffeebar-Water-Capacity-4-L-Bean-to-Cup-Coffee-Machine-for-Hotel.html",
+    ],
+  },
+  {
+    slug: "coffee-master-200",
+    category: "machines",
+    name: "Dr.Coffee CoffeeMaster 200",
+    cardName: "CoffeeMaster 200",
+    image: "catalog/machine-coffee-master-200",
+    cardFit: machineCardFit,
+    kinds: ["professional", "automatic"],
+    description:
+      "מכונת הדגל של Dr.Coffee לרשתות, לבתי קפה ולמתחמים עמוסים — עם מטחנות שווייצריות, יחידת חליטה ממתכת ומערכת חלב טרי מקצועית.",
+    narrative: [
+      "המכונה מצוידת במטחנות שווייצריות עם להבים שטוחים בקוטר 64 מ״מ, שטוחנות באחידות ובחום נמוך, ועד שלושה מכלי פולים. יחידת החליטה עשויה מתכת, בנפח 21 גרם, ומיועדת ל-300,000 כוסות.",
+      "מערכת משאבות כפולה מוזגת קפה וחלב בו-זמנית, ודוד של 3 ליטר תומך בהכנה רציפה של משקאות גדולים. לצד זרוע הקיטור האוטומטית יש זרוע קיטור נפרדת, וניטור חוסר חלב מתריע בזמן.",
+    ],
+    trust: [
+      ["64 מ״מ", "מטחנות שווייצריות"],
+      ["21 גר׳", "יחידת חליטה ממתכת"],
+      ["3 ל׳", "דוד"],
+    ],
+    specs: specs("38", "63", "76", "5,600W", "380V", "תלת פאזי"),
+    sources: [
+      "https://www.drcoffee.com/coffee-shop/coffee-master.html",
+      "https://www.drcoffee.com/specifications/coffee-master.html",
+    ],
+  },
+  {
+    slug: "jura-w8",
+    category: "machines",
+    name: "JURA W8",
+    cardName: "JURA W8",
+    image: "catalog/machine-jura-w8",
+    cardFit: machineCardFit,
+    kinds: ["office", "automatic"],
+    description:
+      "מכונת קפה אוטומטית מקצועית של JURA למשרדים, לסטודיואים ולחנויות — 17 משקאות קפה בלחיצה, עם תפוקה יומית מומלצת של עד 50 כוסות.",
+    narrative: [
+      "מטחנת Professional Aroma Grinder (P.A.G.2) טוחנת את הפולים באחידות, ותהליך Pulse Extraction Process (P.E.P.) מזרים מים בפולסים קצרים לאספרסו עשיר ואינטנסיבי. טכנולוגיית הקצף העדין מכינה קפוצ׳ינו קרמי.",
+      "מסך צבעוני 3.5 אינץ׳ מאפשר תפעול פשוט, מכל המים מכיל 3 ליטר ומכל הפולים 500 גרם. תוכניות שטיפה, ניקוי והסרת אבנית מובנות במכונה, וניקוי מערכת החלב נעשה בלחיצה אחת.",
+    ],
+    trust: [
+      ["17", "משקאות קפה"],
+      ["50", "כוסות ביום"],
+      ["3 ל׳", "מכל מים"],
+    ],
+    specs: specs("29.5", "44.6", "44.3", "1,450W", "240V", "חד פאזי"),
+    sources: ["https://us.jura.com/en/professional/machines/w8-dark-inox-naa-15650"],
+  },
+  {
+    slug: "jura-x10",
+    category: "machines",
+    name: "JURA X10",
+    cardName: "JURA X10",
+    image: "catalog/machine-jura-x10",
+    cardFit: machineCardFit,
+    kinds: ["office", "automatic"],
+    description:
+      "מכונת קפה אוטומטית של JURA למשרדים גדולים, לקפיטריות ולאזורי שירות עצמי — 34 משקאות קפה, כולל משקאות קפה קר, ועד 100 כוסות ביום.",
+    narrative: [
+      "תהליך Cold Extraction Process מזרים מים קרים דרך קפה טחון טרי בלחץ גבוה ובפולסים איטיים, כך שמתקבלים משקאות קפה קרים בטעם טבעי ורענן. מטחנת P.A.G.2+ ויחידת חליטה משתנה (5–16 גרם) מתאימות את כמות הקפה לכל משקה.",
+      "מערכת החלב עוברת אוטומטית בין חלב לקצף חלב ומתנקה בלחיצה אחת. מכל המים מכיל 5 ליטר, ואת מכל הפולים של 500 גרם ניתן להרחיב ל-1 ק״ג.",
+    ],
+    trust: [
+      ["34", "משקאות קפה"],
+      ["100", "כוסות ביום"],
+      ["5 ל׳", "מכל מים"],
+    ],
+    specs: specs("37.3", "46.1", "47", "1,450W", "240V", "חד פאזי"),
+    sources: ["https://us.jura.com/en/professional/machines/x10-dark-inox-nab-15783"],
+  },
+  {
+    slug: "cafitesse-excellence",
+    category: "machines",
+    name: "Cafitesse Excellence",
+    cardName: "Cafitesse Excellence",
+    image: "catalog/machine-cafitesse-excellence",
+    cardFit: machineCardFit,
+    kinds: ["office", "professional"],
+    description:
+      "מערכת קפה נוזלי סגורה של Douwe Egberts (JDE Professional) להגשה מהירה בהיקפים גדולים — קפה עקבי בכל כוס, בלי טחינה ובלי התעסקות בפולים.",
+    narrative: [
+      "קפה Cafitesse נחלט במפעל לתמצית קפה ייחודית, שנארזת מיד באריזה אטומה ומוקפאת כדי לשמור על הטעם והארומה. המכונה מכינה ממנה כל משקה בעקביות מלאה, מקפה שחור ועד קפוצ׳ינו.",
+      "המערכת הסגורה מצמצמת מגע ידני ושומרת על היגיינה, מסך המגע מאפשר לבחור ולהתאים משקאות בקלות, והתחזוקה פשוטה ומהירה. כוס קפה שחור מוכנה תוך כ-6 שניות וקפוצ׳ינו תוך כ-12 שניות.",
+    ],
+    trust: [
+      ["6 שנ׳", "לכוס קפה שחור"],
+      ["12 שנ׳", "לקפוצ׳ינו"],
+      ["סגורה", "מערכת קפה נוזלי"],
+    ],
+    specs: specs("38", "53", "70", "9,000W", "240V / 380V", "חד / תלת פאזי"),
+    sources: [
+      "https://www.jacobsdouweegbertsprofessional.co.uk/articles/coffee-for-business/five-reasons-why-our-cafitesse-excellence-touch-is-the-perfect-hygienic-coffee-solution-for-your-company/",
+      "https://ads-coffee-supplies.co.uk/product/douwe-egberts-cafitesse-excellence-touch/",
+    ],
+  },
+  {
+    slug: "nuova-simonelli-1gr",
+    category: "machines",
+    name: "Nuova Simonelli 1GR",
     cardName: "Nouva Simonelli",
-    catalogName: "Nouva Simonelli 1 gr",
-    image: "3acaf",
+    image: "catalog/machine-nuova-simonelli-1gr",
+    cardImage: "3acaf",
     cardFit: { kind: "contain" },
-    catalogFit: { kind: "contain" },
     kinds: ["professional"],
+    description:
+      "מכונת אספרסו מקצועית מסדרת Appia Life של Nuova Simonelli, עם ראש חליטה אחד בגודל קומפקטי — לבתי קפה, מסעדות ועסקים שרוצים להגיש אספרסו איכותי.",
+    narrative: appiaNarrative,
+    trust: [
+      ["1", "ראש חליטה"],
+      ["5 ל׳", "דוד"],
+      ["13%", "חיסכון באנרגיה"],
+    ],
+    specs: specs("40.4", "49.8", "54.5", "1,900W"),
+    sources: appiaSources,
   },
   {
-    slug: "lor-espresso-harmonieux",
-    category: "beans",
-    cardName: "Lór Espresso Harmonieux",
-    catalogName: "Lór Espresso Harmonieux",
-    image: "66f61",
-    cardFit: { kind: "box", size: 292 },
-    catalogFit: { kind: "box", size: 292 },
+    slug: "nuova-simonelli-2gr",
+    category: "machines",
+    name: "Nuova Simonelli 2GR",
+    cardName: "Nuova Simonelli 2GR",
+    image: "catalog/machine-nuova-simonelli-2gr",
+    cardFit: machineCardFit,
+    kinds: ["professional"],
+    description:
+      "מכונת אספרסו מקצועית מסדרת Appia Life של Nuova Simonelli, עם שני ראשי חליטה — לבתי קפה, מסעדות ועסקים שמגישים הרבה קפה איכותי לאורך היום.",
+    narrative: appiaNarrative,
+    trust: [
+      ["2", "ראשי חליטה"],
+      ["11 ל׳", "דוד"],
+      ["13%", "חיסכון באנרגיה"],
+    ],
+    specs: specs("78.4", "54.4", "50", "3,400W", "380V", "תלת פאזי"),
+    sources: appiaSources,
   },
   {
-    slug: "jacobs-crema-harmonia",
-    category: "beans",
-    cardName: "Jacobs Crema Harmonia",
-    catalogName: "Jacobs Crema Harmonia",
-    image: "25cef",
-    cardFit: { kind: "cover" },
-    catalogFit: { kind: "box", size: 292, scale: 128.08 },
-  },
-  {
-    slug: "jacobs-royal",
-    category: "beans",
-    cardName: "Jacobs Royal",
-    catalogName: "Jacobs Royal",
-    image: "6d491",
-    cardFit: { kind: "box", size: 292, scale: 122.6 },
-    catalogFit: { kind: "box", size: 292, scale: 122.6 },
+    slug: "nuova-simonelli-3gr",
+    category: "machines",
+    name: "Nuova Simonelli 3GR",
+    cardName: "Nuova Simonelli 3GR",
+    image: "catalog/machine-nuova-simonelli-3gr",
+    cardFit: machineCardFit,
+    kinds: ["professional"],
+    description:
+      "מכונת אספרסו מקצועית מסדרת Appia Life של Nuova Simonelli, עם שלושה ראשי חליטה — לבתי קפה עמוסים ולרשתות שצריכות להכין כמות גדולה של קפה איכותי.",
+    narrative: appiaNarrative,
+    trust: [
+      ["3", "ראשי חליטה"],
+      ["15 ל׳", "דוד"],
+      ["13%", "חיסכון באנרגיה"],
+    ],
+    specs: specs("101.4", "54.4", "50", "5,200W", "380V", "תלת פאזי"),
+    sources: appiaSources,
   },
   {
     slug: "jacobs-crema-traditional",
     category: "beans",
+    name: "Jacobs Crema Traditional",
     cardName: "Jacobs Crema Traditional",
-    catalogName: "Jacobs Crema Traditional",
-    image: "31901",
+    image: "catalog/bean-jacobs-crema",
+    cardImage: "31901",
     cardFit: { kind: "cover" },
-    catalogFit: { kind: "box", size: 292, scale: 128.08 },
+  },
+  {
+    slug: "jacobs-crema-harmonia",
+    category: "beans",
+    name: "Jacobs Crema Harmonia",
+    cardName: "Jacobs Crema Harmonia",
+    image: "catalog/bean-jacobs-harmonia",
+    cardImage: "25cef",
+    cardFit: { kind: "cover" },
+  },
+  {
+    slug: "jacobs-royal",
+    category: "beans",
+    name: "Jacobs Royal",
+    cardName: "Jacobs Royal",
+    image: "catalog/bean-jacobs-royal",
+    cardFit: beanCardFit,
+  },
+  {
+    slug: "lor-espresso-harmonieux",
+    category: "beans",
+    name: "L’OR Espresso Harmonieux",
+    cardName: "Lór Espresso Harmonieux",
+    image: "catalog/bean-lor-harmonieux",
+    cardImage: "66f61",
+    cardFit: { kind: "box", size: 292 },
+  },
+  {
+    slug: "lor-espresso-riche",
+    category: "beans",
+    name: "L’OR Espresso Riche",
+    cardName: "L’OR Espresso Riche",
+    image: "catalog/bean-lor-riche",
+    cardFit: beanCardFit,
+  },
+  {
+    slug: "lor-espresso-vibrant",
+    category: "beans",
+    name: "L’OR Espresso Vibrant",
+    cardName: "L’OR Espresso Vibrant",
+    image: "catalog/bean-lor-vibrant",
+    cardFit: beanCardFit,
+  },
+  {
+    slug: "cafitesse-strong-roast",
+    category: "beans",
+    name: "Douwe Egberts Cafitesse Strong Roast",
+    cardName: "Cafitesse Strong Roast",
+    image: "catalog/bean-cafitesse-strong-roast",
+    cardFit: beanCardFit,
   },
 ];
 
@@ -120,19 +385,34 @@ export const getProduct = (slug: string) =>
   products.find((p) => p.slug === slug);
 
 // Card order as displayed in Figma, right to left.
-export const featuredMachines = ["coffee-express", "gt2-pro", "nouva-simonelli"];
+export const featuredMachines = ["coffee-express", "gt2-pro", "nuova-simonelli-1gr"];
 export const featuredBeans = [
   "jacobs-crema-traditional",
   "jacobs-crema-harmonia",
   "lor-espresso-harmonieux",
 ];
-// Figma catalog pages show these rows, top to bottom; the remaining products follow.
-export const machineCatalogOrder = ["coffee-express", "gt2-pro", "nouva-simonelli"];
+
+export const machineCatalogOrder = [
+  "coffee-express",
+  "gt2-pro",
+  "coffee-break",
+  "coffee-bar",
+  "coffee-master-200",
+  "jura-w8",
+  "jura-x10",
+  "cafitesse-excellence",
+  "nuova-simonelli-1gr",
+  "nuova-simonelli-2gr",
+  "nuova-simonelli-3gr",
+];
 export const beansCatalogOrder = [
   "lor-espresso-harmonieux",
+  "lor-espresso-riche",
+  "lor-espresso-vibrant",
   "jacobs-crema-harmonia",
   "jacobs-royal",
   "jacobs-crema-traditional",
+  "cafitesse-strong-roast",
 ];
 
 // Filter cards, right to left as in Figma.
@@ -151,27 +431,7 @@ export const catalogHero = {
   filtersText: "בואו לבחור מכונת קפה לעסקים מתוך מבחר גדול של מותגים מובילים",
 };
 
-export const productPage = {
-  description:
-    "מכונת האספרסו המקצועית שנועדה לענות על הצרכים התובעניים ביותר של משרדים מודרניים, מלונות בוטיק וטרקליני עסקים. בעלת ממשק מגע מתקדם ומערכת הקצפת חלב טרי מדויקת להכנת כוס קפה מושלמת פעם אחר פעם.",
-  // Right to left.
-  trust: [
-    ["120+", "כוסות ביום"],
-    ["24", "סוגי משקאות"],
-    ["טחינה טרייה", "בכל כוס"],
-  ] as [string, string][],
-  specs: [
-    ["קיבולת מיכל מים", "6 ליטר"],
-    ["מספר ראשי חליטה", "2"],
-    ["קיבולת מיכל פולים", "2 ק״ג"],
-    ["ממדים (רוחב×עומק×גובה)", '45×60×75 ס"מ'],
-  ] as [string, string][],
-  narrativeTitle: "חדשנות טכנולוגית בשירות הקפה",
-  narrative: (name: string) => [
-    `מכונת ה-${name} מצוידת במטחנה קרמית שקטה במיוחד השומרת על ארומת הפולים, ובמערכת דו-דודים עוצמתית המאפשרת חליטת אספרסו והקצפת חלב בו-זמנית ללא ירידה בטמפרטורה.`,
-    "ממשק המשתמש הצבעוני מבוסס מגע ומאפשר לעובדי המשרד או לאורחי המלון לבחור את המשקה האהוב עליהם, לשלוט על חוזק הקפה וכמות החלב, וליהנות מחווית בית קפה איטלקי בלחיצה קלה.",
-  ],
-};
+export const narrativeTitle = "חדשנות טכנולוגית בשירות הקפה";
 
 export const defaultContact = {
   title: "בואו נמצא את פתרון הקפה המתאים לעסק שלכם.",

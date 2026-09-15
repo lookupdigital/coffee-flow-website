@@ -3,6 +3,37 @@ import { FormEvent, ReactNode, useEffect, useId, useRef, useState } from "react"
 import { MachineKind, Product, machineFilters, reviews } from "@/lib/data";
 import { ProductRow, Rich } from "./shared";
 
+// Keeps the header pinned to the top of the viewport and adds a solid backdrop once the page scrolls.
+export function HeaderShell({
+  className,
+  children,
+}: {
+  className: string;
+  children: ReactNode;
+}) {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 24);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
+  return (
+    <header className={`${className} ${scrolled ? "is-scrolled" : ""}`}>{children}</header>
+  );
+}
+
+const fields = [
+  [
+    { name: "name", label: "שם מלא *", placeholder: "ישראל ישראלי", required: true, autoComplete: "name" },
+    { name: "company", label: "שם החברה *", placeholder: "שם החברה", required: true, autoComplete: "organization" },
+  ],
+  [
+    { name: "city", label: "עיר", placeholder: "תל אביב", required: false, autoComplete: "address-level2" },
+    { name: "employees", label: "מספר עובדים משוער", placeholder: "לדוגמה: 50", required: false, autoComplete: "off" },
+  ],
+];
+
 export function ContactForm() {
   const id = useId();
   const [sent, setSent] = useState(false);
@@ -10,30 +41,23 @@ export function ContactForm() {
     e.preventDefault();
     setSent(true);
   }
-  // Field layout mirrors Figma: two rows of "שם מלא" / "שם החברה", then a message.
-  const rows = [0, 1];
   return (
     <form className="contact-form" onSubmit={submit}>
-      {rows.map((row) => (
-        <div className="field-row" key={row}>
-          <label className="field" htmlFor={`${id}-name-${row}`}>
-            <span>שם מלא *</span>
-            <input
-              id={`${id}-name-${row}`}
-              name={`name-${row}`}
-              placeholder="ישראל ישראלי"
-              required={row === 0}
-            />
-          </label>
-          <label className="field" htmlFor={`${id}-company-${row}`}>
-            <span>שם החברה *</span>
-            <input
-              id={`${id}-company-${row}`}
-              name={`company-${row}`}
-              placeholder="ישראל ישראלי"
-              required={row === 0}
-            />
-          </label>
+      {fields.map((row, r) => (
+        <div className="field-row" key={r}>
+          {row.map((f) => (
+            <label className="field" htmlFor={`${id}-${f.name}`} key={f.name}>
+              <span>{f.label}</span>
+              <input
+                id={`${id}-${f.name}`}
+                name={f.name}
+                placeholder={f.placeholder}
+                required={f.required}
+                autoComplete={f.autoComplete}
+                inputMode={f.name === "employees" ? "numeric" : undefined}
+              />
+            </label>
+          ))}
         </div>
       ))}
       <label className="field field-message" htmlFor={`${id}-message`}>
@@ -59,40 +83,52 @@ export function RollingReviews() {
       return;
     const timer = setInterval(
       () => setIndex((i) => (i + 1) % reviews.length),
-      5000,
+      6000,
     );
     return () => clearInterval(timer);
-  }, [paused]);
+  }, [paused, index]);
+  const go = (step: 1 | -1) =>
+    setIndex((i) => (i + step + reviews.length) % reviews.length);
   return (
     <div
-      className="rolling-reviews"
+      className="rolling-wrap"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
-      <div
-        className="rolling-track"
-        style={{ transform: `translateY(-${index * 100}%)` }}
-        aria-live="polite"
-      >
-        {reviews.map((review, i) => (
-          <figure className="quote rolling-slide" key={i} aria-hidden={i !== index}>
-            <span className="quote-mark quote-mark-open" aria-hidden>
-              “
-            </span>
-            <blockquote>
-              <Rich text={review.text} />
-            </blockquote>
-            <span className="quote-mark quote-mark-close" aria-hidden>
-              “
-            </span>
-            <figcaption>
-              <strong>{review.name}</strong>
-              <span>{review.role}</span>
-            </figcaption>
-          </figure>
-        ))}
+      <div className="rolling-reviews">
+        <div
+          className="rolling-track"
+          style={{ transform: `translateY(-${index * 100}%)` }}
+          aria-live="polite"
+        >
+          {reviews.map((review, i) => (
+            <figure className="quote rolling-slide" key={i} aria-hidden={i !== index}>
+              <span className="quote-mark quote-mark-open" aria-hidden>
+                “
+              </span>
+              <blockquote>
+                <Rich text={review.text} />
+              </blockquote>
+              <span className="quote-mark quote-mark-close" aria-hidden>
+                “
+              </span>
+              <figcaption>
+                <strong>{review.name}</strong>
+                <span>{review.role}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+      <div className="rolling-controls">
+        <button type="button" onClick={() => go(-1)} aria-label="להמלצה הקודמת">
+          <img src="/images/05291.svg" alt="" className="rolling-up" />
+        </button>
+        <button type="button" onClick={() => go(1)} aria-label="להמלצה הבאה">
+          <img src="/images/05291.svg" alt="" />
+        </button>
       </div>
     </div>
   );

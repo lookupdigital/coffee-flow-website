@@ -147,14 +147,22 @@ textarea {
 
 /* ===== Header ===== */
 .header {
-  position: relative;
-  z-index: 20;
+  position: sticky;
+  top: 0;
+  z-index: 50;
   width: 100%;
   background: url("/images/4cdc6.webp") center / 100% 100% no-repeat;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 .header-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0 0 auto;
+}
+.header.is-scrolled {
+  background-color: rgba(13, 10, 7, 0.92);
+  box-shadow: 0 1px 0 var(--line);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .header-inner {
   display: flex;
@@ -276,9 +284,11 @@ textarea {
   margin-top: 44px;
 }
 .home-hero-whatsapp {
-  position: absolute;
-  bottom: 0;
+  position: fixed;
+  bottom: 24px;
   right: 50px;
+  z-index: 45;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .solution-hero-content {
@@ -291,6 +301,9 @@ textarea {
   flex-direction: column;
   align-items: flex-end;
   gap: 24px;
+}
+.solution-hero-content > .btn {
+  align-self: center;
 }
 .solution-hero-row {
   display: flex;
@@ -906,6 +919,44 @@ textarea {
 .rolling-slide {
   height: 222px;
 }
+.rolling-wrap {
+  position: relative;
+}
+.rolling-controls {
+  position: absolute;
+  top: 50%;
+  left: -64px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rolling-controls button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgba(247, 243, 236, 0.18);
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.rolling-controls button:hover,
+.rolling-controls button:focus-visible {
+  opacity: 1;
+  border-color: rgba(185, 138, 62, 0.6);
+}
+.rolling-controls img {
+  width: 14px;
+  height: 9px;
+}
+.rolling-controls .rolling-up {
+  transform: rotate(180deg);
+}
 
 /* ===== Contact ===== */
 .contact {
@@ -1166,11 +1217,14 @@ textarea {
   position: absolute;
 }
 .row-photo-light .machine-stage > img.pic {
-  width: 626px;
-  height: 382px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  width: 92%;
+  height: 92%;
+  left: 4%;
+  top: 4%;
+}
+.row-photo-dark > img.pic {
+  width: 72%;
+  height: 72%;
 }
 .row-photo-dark {
   width: 480px;
@@ -1387,6 +1441,57 @@ textarea {
   gap: 24px;
   text-align: right;
 }
+.legal {
+  gap: 16px;
+  color: var(--text-65);
+}
+.legal h1 {
+  margin-bottom: 16px;
+}
+.legal h2 {
+  margin-top: 24px;
+  font-family: var(--font-con);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 40px;
+  color: var(--beige);
+}
+.legal h3,
+.legal .legal-subtitle {
+  margin-top: 16px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--beige);
+}
+.legal ol,
+.legal ul {
+  margin: 0;
+  padding-inline-start: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.legal a {
+  color: var(--gold);
+  text-decoration: underline;
+  word-break: break-all;
+}
+.legal strong {
+  color: var(--beige);
+}
+.product-frame-bean > img.pic {
+  width: 480px !important;
+  height: 480px !important;
+}
+.similar-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.trust-strip-wrap {
+  display: block;
+}
 
 /* ===== Responsive ===== */
 @media (max-width: 1440px) {
@@ -1482,7 +1587,7 @@ textarea {
     align-items: stretch;
   }
   .solution-hero-content .btn {
-    align-self: flex-end;
+    align-self: center;
   }
   .solution-hero-row {
     flex-direction: column;
@@ -1661,9 +1766,12 @@ textarea {
   .spec-row dd {
     width: 50%;
   }
-  .row-photo-light .machine-stage > img.pic {
-    width: 130%;
-    height: 80%;
+  .rolling-controls {
+    position: static;
+    transform: none;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 16px;
   }
 }
 
