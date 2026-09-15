@@ -1,61 +1,10 @@
 import Link from "next/link";
 import { Fragment } from "react";
 import { Product, cardDescription } from "@/lib/data";
-import { Pic } from "./shared";
-import { ContactForm, HeaderShell } from "./interactive";
+import { Pic, WhatsAppLink } from "./shared";
+import { ContactForm, Header } from "./interactive";
 
-// Right to left: "בית" is the right-most menu item.
-const nav = [
-  ["/", "בית"],
-  ["/solutions/office", "פתרונות למשרדים"],
-  ["/solutions/cafe", "פתרונות לבתי קפה ומסעדות"],
-  ["/solutions/hotel", "פתרונות למלונות"],
-];
-
-export function WhatsAppLink({ className = "" }: { className?: string }) {
-  return (
-    <Link href="#contact" className={`whatsapp ${className}`}>
-      <img src="/images/d8c0a.svg" alt="" width={16} height={16} />
-      צרו קשר
-    </Link>
-  );
-}
-
-export function Header({
-  overlay = true,
-  home = false,
-}: {
-  overlay?: boolean;
-  home?: boolean;
-}) {
-  return (
-    <HeaderShell className={`header ${overlay ? "header-overlay" : ""}`}>
-      <div className="header-inner">
-        <Link href="/" className="header-logo" aria-label="Coffee Flow">
-          <img src="/images/6373b.webp" alt="Coffee Flow" width={158} height={67} />
-        </Link>
-        <nav className="header-nav" aria-label="ניווט ראשי">
-          {nav.map(([href, label]) => (
-            <Link key={href} href={href}>
-              {label}
-            </Link>
-          ))}
-        </nav>
-        {home ? (
-          <img
-            className="header-partner"
-            src="/images/94ed1.webp"
-            alt="DIL Israel"
-            width={85}
-            height={32}
-          />
-        ) : (
-          <WhatsAppLink />
-        )}
-      </div>
-    </HeaderShell>
-  );
-}
+export { Header, WhatsAppLink };
 
 export function Footer({
   variant = "default",

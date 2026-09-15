@@ -4,6 +4,21 @@ import { ImageFit, Product, beanPlaceholder } from "@/lib/data";
 
 const src = (id: string) => `/images/${id}.webp`;
 
+export function WhatsAppLink({
+  className = "",
+  onClick,
+}: {
+  className?: string;
+  onClick?: () => void;
+}) {
+  return (
+    <Link href="#contact" className={`whatsapp ${className}`} onClick={onClick}>
+      <img src="/images/d8c0a.svg" alt="" width={16} height={16} />
+      צרו קשר
+    </Link>
+  );
+}
+
 // Latin words inside Hebrew copy use the English font, as in Figma.
 export function Rich({ text }: { text: string }) {
   const parts = text.split(/([A-Za-z][A-Za-z0-9’'.\- ]*[A-Za-z0-9])/g);

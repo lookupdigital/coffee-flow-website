@@ -1,25 +1,100 @@
 "use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FormEvent, ReactNode, useEffect, useId, useRef, useState } from "react";
 import { MachineKind, Product, machineFilters, reviews } from "@/lib/data";
-import { ProductRow, Rich } from "./shared";
+import { ProductRow, Rich, WhatsAppLink } from "./shared";
 
-// Keeps the header pinned to the top of the viewport and adds a solid backdrop once the page scrolls.
-export function HeaderShell({
-  className,
-  children,
+// Right to left: "בית" is the right-most menu item.
+const nav = [
+  ["/", "בית"],
+  ["/solutions/office", "פתרונות למשרדים"],
+  ["/solutions/cafe", "פתרונות לבתי קפה ומסעדות"],
+  ["/solutions/hotel", "פתרונות למלונות"],
+];
+
+// Pinned site header. On mobile the menu collapses behind a hamburger button.
+export function Header({
+  overlay = true,
+  home = false,
 }: {
-  className: string;
-  children: ReactNode;
+  overlay?: boolean;
+  home?: boolean;
 }) {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 24);
     update();
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
   }, []);
+
+  useEffect(() => setOpen(false), [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const close = () => setOpen(false);
+
   return (
-    <header className={`${className} ${scrolled ? "is-scrolled" : ""}`}>{children}</header>
+    <header
+      className={`header ${overlay ? "header-overlay" : ""} ${scrolled ? "is-scrolled" : ""} ${open ? "menu-open" : ""}`}
+    >
+      <div className="header-inner">
+        <Link href="/" className="header-logo" aria-label="Coffee Flow" onClick={close}>
+          <img src="/images/6373b.webp" alt="Coffee Flow" width={158} height={67} />
+        </Link>
+        <nav id="site-nav" className="header-nav" aria-label="ניווט ראשי">
+          {nav.map(([href, label]) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={close}
+              aria-current={pathname === href ? "page" : undefined}
+            >
+              {label}
+            </Link>
+          ))}
+          <WhatsAppLink className="nav-contact" onClick={close} />
+        </nav>
+        <div className="header-end">
+          {home ? (
+            <img
+              className="header-partner"
+              src="/images/94ed1.webp"
+              alt="DIL Israel"
+              width={85}
+              height={32}
+            />
+          ) : (
+            <WhatsAppLink className="header-contact" />
+          )}
+          <button
+            type="button"
+            className="menu-toggle"
+            aria-expanded={open}
+            aria-controls="site-nav"
+            aria-label={open ? "סגירת תפריט" : "פתיחת תפריט"}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+      </div>
+    </header>
   );
 }
 
