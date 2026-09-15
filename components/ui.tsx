@@ -4,7 +4,9 @@ import { Product, cardDescription } from "@/lib/data";
 import { Pic } from "./shared";
 import { ContactForm, HeaderShell } from "./interactive";
 
+// Right to left: "בית" is the right-most menu item.
 const nav = [
+  ["/", "בית"],
   ["/solutions/office", "פתרונות למשרדים"],
   ["/solutions/cafe", "פתרונות לבתי קפה ומסעדות"],
   ["/solutions/hotel", "פתרונות למלונות"],
@@ -183,9 +185,10 @@ export function MachineCard({
   );
 }
 
+// Coffee beans have no product page, so the card is not a link.
 export function CoffeeCard({ product: p, outlined = false }: { product: Product; outlined?: boolean }) {
   return (
-    <Link href={`/products/${p.slug}`} className="coffee-card">
+    <article className="coffee-card">
       <span className={`coffee-card-photo ${outlined ? "coffee-card-outlined" : ""}`}>
         <Pic id={p.cardImage ?? p.image} fit={p.cardFit} alt={p.cardName} />
       </span>
@@ -194,7 +197,7 @@ export function CoffeeCard({ product: p, outlined = false }: { product: Product;
         <span className="coffee-card-percent">אחוזים</span>
         <span className="coffee-card-text">פסקה</span>
       </span>
-    </Link>
+    </article>
   );
 }
 

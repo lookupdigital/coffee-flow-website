@@ -526,9 +526,6 @@ textarea {
   justify-content: center;
   transition: transform 0.25s;
 }
-.coffee-card:hover .coffee-card-photo {
-  transform: translateY(-4px);
-}
 .coffee-card-outlined {
   border: 1px solid #000;
   padding: 1px;

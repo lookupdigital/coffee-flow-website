@@ -4,22 +4,21 @@ import { Carousel } from "@/components/interactive";
 import { Metrics, Pic, Rich } from "@/components/shared";
 import {
   ButtonLink,
-  CoffeeCard,
   ContactSection,
   Footer,
   Header,
   MachineCard,
 } from "@/components/ui";
-import {
-  beanPlaceholder,
-  defaultContact,
-  getProduct,
-  narrativeTitle,
-  products,
-} from "@/lib/data";
+import { defaultContact, getProduct, narrativeTitle, products } from "@/lib/data";
+
+// Product pages exist for coffee machines only; beans appear in the catalog without a page.
+const machines = products.filter((p) => p.category === "machines");
+const getMachine = (slug: string) => machines.find((p) => p.slug === slug);
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+  return machines.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -27,7 +26,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const p = getProduct((await params).slug);
+  const p = getMachine((await params).slug);
   return { title: p?.name ?? "מוצר", description: p?.description };
 }
 
@@ -36,30 +35,27 @@ export default async function ProductPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const p = getProduct((await params).slug);
+  const p = getMachine((await params).slug);
   if (!p) notFound();
-  const machine = p.category === "machines";
 
   // Figma shows Nouva Simonelli, GT2 Pro, Nouva Simonelli under Coffee Express.
   const similar =
     p.slug === "coffee-express"
       ? ["nuova-simonelli-1gr", "gt2-pro", "nuova-simonelli-1gr"].map((s) => getProduct(s)!)
-      : products.filter((x) => x.category === p.category && x.slug !== p.slug).slice(0, 3);
+      : machines.filter((x) => x.slug !== p.slug).slice(0, 3);
 
   return (
     <>
       <Header overlay={false} />
       <section className="product-hero">
         <div className="product-frame">
-          <div className={`product-frame-inner ${machine ? "" : "product-frame-bean"}`}>
+          <div className="product-frame-inner">
             <Pic id={p.image} fit={{ kind: "contain" }} alt={p.name} eager />
           </div>
         </div>
         <div className="product-hero-copy">
           <h1 className="product-title">{p.name}</h1>
-          <p className="subheading">
-            {p.description ? <Rich text={p.description} /> : beanPlaceholder}
-          </p>
+          <p className="subheading">{p.description && <Rich text={p.description} />}</p>
           <ButtonLink href="#contact" tone="gold">
             לתיאום פגישת ייעוץ
           </ButtonLink>
@@ -105,17 +101,13 @@ export default async function ProductPage({
         <h2 className="h2">מוצרים דומים</h2>
         <div className="similar-wrap">
           <Carousel label="מוצרים דומים">
-            {similar.map((x, i) =>
-              x.category === "machines" ? (
-                <MachineCard product={x} variant="plain" key={`${x.slug}-${i}`} />
-              ) : (
-                <CoffeeCard product={x} key={`${x.slug}-${i}`} />
-              ),
-            )}
+            {similar.map((x, i) => (
+              <MachineCard product={x} variant="plain" key={`${x.slug}-${i}`} />
+            ))}
           </Carousel>
         </div>
-        {machine && <ButtonLink href="#contact">לצפייה בסרטוני הדרכה ושימוש</ButtonLink>}
-        <ButtonLink href={machine ? "/machines" : "/beans"}>לצפייה בקטלוג המלא</ButtonLink>
+        <ButtonLink href="#contact">לצפייה בסרטוני הדרכה ושימוש</ButtonLink>
+        <ButtonLink href="/machines">לצפייה בקטלוג המלא</ButtonLink>
       </section>
 
       <ContactSection title={defaultContact.title} text={defaultContact.text} />

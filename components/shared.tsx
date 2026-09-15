@@ -115,29 +115,31 @@ export function Metrics({
 
 export function ProductRow({ product: p }: { product: Product }) {
   const href = `/products/${p.slug}`;
-  const machine = p.category === "machines";
+  // Only machines have product pages; bean rows are display-only.
+  if (p.category === "beans")
+    return (
+      <article className="product-row">
+        <div className="row-photo row-photo-dark">
+          <Pic id={p.image} fit={{ kind: "contain" }} alt={p.name} />
+        </div>
+        <div className="row-copy">
+          <h2 className="row-title">{p.name}</h2>
+          <p className="text">{beanPlaceholder}</p>
+        </div>
+      </article>
+    );
   return (
     <article className="product-row">
-      <Link
-        href={href}
-        className={`row-photo ${machine ? "row-photo-light" : "row-photo-dark"}`}
-        aria-label={p.name}
-      >
-        {machine ? (
-          <span className="machine-stage">
-            <Pic id={p.image} fit={{ kind: "contain" }} alt={p.name} />
-          </span>
-        ) : (
+      <Link href={href} className="row-photo row-photo-light" aria-label={p.name}>
+        <span className="machine-stage">
           <Pic id={p.image} fit={{ kind: "contain" }} alt={p.name} />
-        )}
+        </span>
       </Link>
       <div className="row-copy">
         <h2 className="row-title">
           <Link href={href}>{p.name}</Link>
         </h2>
-        <p className="text">
-          {p.description ? <Rich text={p.description} /> : beanPlaceholder}
-        </p>
+        <p className="text">{p.description && <Rich text={p.description} />}</p>
         {p.trust && <Metrics items={p.trust} />}
         <Link href={href} className="btn btn-gold">
           למידע נוסף
