@@ -261,6 +261,9 @@ textarea {
   align-items: center;
   text-align: center;
 }
+.home-hero-content .h1 {
+  white-space: nowrap;
+}
 .home-hero-content .subheading {
   width: min(482px, 100%);
   padding-top: 28px;
@@ -586,7 +589,7 @@ textarea {
 }
 .clients-header .h2 {
   line-height: 48px;
-  max-width: 500px;
+  white-space: nowrap;
 }
 .clients-header .subheading {
   max-width: 672px;
@@ -902,25 +905,6 @@ textarea {
 }
 .rolling-slide {
   height: 222px;
-}
-.rolling-dots {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  gap: 6px;
-}
-.rolling-dots button {
-  width: 6px;
-  height: 6px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(247, 243, 236, 0.25);
-  cursor: pointer;
-}
-.rolling-dots button[aria-selected="true"] {
-  background: var(--gold);
 }
 
 /* ===== Contact ===== */
@@ -1515,6 +1499,10 @@ textarea {
   .home-hero-whatsapp {
     right: var(--gutter);
     bottom: 24px;
+  }
+  .home-hero-content .h1,
+  .clients-header .h2 {
+    white-space: normal;
   }
   .h1 {
     font-size: 56px;

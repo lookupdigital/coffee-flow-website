@@ -122,7 +122,7 @@ export function ProductRow({ product: p }: { product: Product }) {
               <div
                 className={`metric ${i === catalogMetrics.length - 1 ? "metric-edge" : ""}`}
               >
-                <strong>{value}</strong>
+                <strong dir={/^[0-9+]+$/.test(value) ? "ltr" : undefined}>{value}</strong>
                 <span>{label}</span>
               </div>
             </Fragment>

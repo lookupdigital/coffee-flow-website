@@ -94,17 +94,6 @@ export function RollingReviews() {
           </figure>
         ))}
       </div>
-      <div className="rolling-dots" role="tablist" aria-label="המלצות">
-        {reviews.map((_, i) => (
-          <button
-            key={i}
-            role="tab"
-            aria-selected={i === index}
-            aria-label={`המלצה ${i + 1}`}
-            onClick={() => setIndex(i)}
-          />
-        ))}
-      </div>
     </div>
   );
 }
