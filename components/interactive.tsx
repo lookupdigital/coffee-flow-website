@@ -13,6 +13,20 @@ const nav = [
   ["/solutions/hotel", "בתי מלון ובתי הארחה"],
 ];
 
+// Wrench icon for the technical-service button.
+function ServiceIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.6 17.2a1.4 1.4 0 0 0 0 2l1.2 1.2a1.4 1.4 0 0 0 2 0l5.7-5.7a4 4 0 0 0 5.2-5.4l-2.5 2.5-2.3-.6-.6-2.3 2.4-2.6Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 // Pinned site header. On mobile the menu collapses behind a hamburger button.
 export function Header({
   overlay = true,
@@ -66,9 +80,25 @@ export function Header({
               {label}
             </Link>
           ))}
+          <Link
+            href="/service"
+            className="nav-service"
+            onClick={close}
+            aria-current={pathname === "/service" ? "page" : undefined}
+          >
+            שירות טכני
+          </Link>
           <WhatsAppLink className="nav-contact" onClick={close} />
         </nav>
         <div className="header-end">
+          <Link
+            href="/service"
+            className="header-service"
+            aria-current={pathname === "/service" ? "page" : undefined}
+          >
+            <ServiceIcon />
+            שירות טכני
+          </Link>
           {home ? (
             <img
               className="header-partner"

@@ -40,6 +40,8 @@
 }
 html {
   scroll-behavior: smooth;
+  /* Keep anchor targets clear of the sticky header. */
+  scroll-padding-top: 140px;
 }
 body {
   margin: 0;
@@ -213,7 +215,28 @@ textarea {
   align-items: center;
   gap: 16px;
 }
+.header-service {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border: 1px solid var(--gold-stroke);
+  border-radius: 12px;
+  color: var(--gold-stroke);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+}
+.header-service:hover,
+.header-service[aria-current="page"] {
+  background: var(--gold-stroke);
+  color: #000;
+}
 .header-nav .nav-contact,
+.header-nav .nav-service,
 .menu-toggle {
   display: none;
 }
@@ -343,6 +366,15 @@ textarea {
 .solution-hero-content > .btn {
   align-self: center;
 }
+.solution-hero-features {
+  align-self: stretch;
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+.solution-hero-features .feature {
+  color: rgba(247, 243, 236, 0.8);
+}
 .solution-hero-row {
   display: flex;
   align-items: center;
@@ -452,6 +484,57 @@ textarea {
   background: var(--line);
 }
 
+.brand-carousel {
+  width: 100%;
+  overflow: hidden;
+  direction: ltr;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.brand-track {
+  display: flex;
+  width: max-content;
+  animation: brand-scroll 90s linear infinite;
+}
+.brand-carousel:hover .brand-track {
+  animation-play-state: paused;
+}
+.brand-list {
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0 20px 0 0;
+  list-style: none;
+}
+.brand-card {
+  width: 160px;
+  height: 110px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+}
+.brand-card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+@keyframes brand-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-carousel {
+    overflow-x: auto;
+  }
+  .brand-track {
+    animation: none;
+  }
+}
 .more {
   background: var(--bg-deep);
   border: 1px solid var(--line);
@@ -482,6 +565,16 @@ textarea {
   justify-content: center;
   gap: 28px;
   width: 100%;
+}
+/* More than three cards: wrap into centered rows (e.g. 3 + 2). */
+.machine-grid-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.machine-grid-wrap > * {
+  flex: 0 1 392px;
+  min-width: 280px;
 }
 .coffee-grid {
   display: grid;
@@ -570,6 +663,9 @@ textarea {
   justify-content: center;
   transition: transform 0.25s;
 }
+.coffee-card:hover .coffee-card-photo {
+  transform: translateY(-4px);
+}
 .coffee-card-outlined {
   border: 1px solid #000;
   padding: 1px;
@@ -582,13 +678,11 @@ textarea {
   flex-direction: column;
   align-items: center;
 }
-.coffee-card-percent {
-  padding-top: 8px;
-  font-size: 14px;
-  line-height: 20px;
-  color: rgba(185, 138, 62, 0.7);
-}
 .coffee-card-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
   padding-top: 6px;
   font-size: 14px;
   line-height: 20px;
@@ -697,14 +791,6 @@ textarea {
 .about-copy .h2 span {
   display: block;
   color: var(--gold);
-}
-.about-lead {
-  padding-top: 16px;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 26px;
-  color: var(--text-65);
-  max-width: 558px;
 }
 .about-copy .text {
   padding-top: 24px;
@@ -1528,6 +1614,77 @@ textarea {
   line-height: 46px;
 }
 
+/* ===== Technical service ===== */
+.service-page {
+  min-height: 100vh;
+  padding: 200px var(--gutter) 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(185, 138, 62, 0.14), transparent 60%),
+    var(--bg);
+}
+.breadcrumbs {
+  display: flex;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--text-65);
+}
+.breadcrumbs a:hover {
+  color: var(--beige);
+}
+.service-page .h1 {
+  margin-top: 24px;
+}
+.service-page .subheading {
+  margin-top: 16px;
+  max-width: 560px;
+  color: var(--text-65);
+}
+.service-card {
+  margin-top: 56px;
+  width: min(480px, 100%);
+  padding: 48px 32px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.service-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-stroke);
+  color: var(--gold-stroke);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.service-label {
+  font-size: 18px;
+  color: var(--text-65);
+}
+.service-number {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 48px;
+  color: var(--beige);
+  letter-spacing: 0.02em;
+}
+.service-number:hover {
+  color: var(--gold);
+}
+.service-card .btn {
+  margin-top: 8px;
+}
+
 .plain-page {
   padding: 200px var(--gutter) 112px;
   width: min(840px, 100%);
@@ -1661,8 +1818,12 @@ textarea {
   .menu-toggle {
     display: flex;
   }
-  .header-contact {
+  .header-contact,
+  .header-service {
     display: none;
+  }
+  .header-nav .nav-service {
+    display: block;
   }
   .header-nav {
     position: absolute;
@@ -1729,7 +1890,6 @@ textarea {
     align-items: center;
   }
   .about-copy .h2,
-  .about-lead,
   .about-copy .text,
   .testimonials-title {
     max-width: none !important;
@@ -1852,6 +2012,18 @@ textarea {
   .feature {
     white-space: normal;
     text-align: center;
+  }
+  .brand-card {
+    width: 120px;
+    height: 84px;
+    padding: 10px;
+  }
+  .solution-hero-features .features {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .solution-hero-features .feature-line {
+    display: none;
   }
   .testimonials-body {
     align-self: stretch;

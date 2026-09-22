@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Fragment } from "react";
-import { ImageFit, Product, beanPlaceholder } from "@/lib/data";
+import { ImageFit, Product, beanPlaceholder, servicePhone } from "@/lib/data";
 
 const src = (id: string) => `/images/${id}.webp`;
 
+// Opens a WhatsApp chat in a new tab.
 export function WhatsAppLink({
   className = "",
   onClick,
@@ -12,10 +13,16 @@ export function WhatsAppLink({
   onClick?: () => void;
 }) {
   return (
-    <Link href="#contact" className={`whatsapp ${className}`} onClick={onClick}>
+    <a
+      href={servicePhone.whatsapp}
+      className={`whatsapp ${className}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onClick}
+    >
       <img src="/images/d8c0a.svg" alt="" width={16} height={16} />
       צרו קשר
-    </Link>
+    </a>
   );
 }
 
@@ -133,7 +140,7 @@ export function ProductRow({ product: p }: { product: Product }) {
   // Only machines have product pages; bean rows are display-only.
   if (p.category === "beans")
     return (
-      <article className="product-row">
+      <article className="product-row" id={p.slug}>
         <div className="row-photo row-photo-dark">
           <Pic id={p.image} fit={{ kind: "contain" }} alt={p.name} />
         </div>

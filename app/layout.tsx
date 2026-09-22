@@ -66,7 +66,7 @@ const organization = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="he" dir="rtl">
+    <html lang="he" dir="rtl" data-scroll-behavior="smooth">
       <body>
         {children}
         <script

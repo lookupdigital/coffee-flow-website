@@ -74,6 +74,12 @@ const appiaSources = [
   "https://nuovasimonelli.com/en/machine/appia-life-2/",
 ];
 
+const whiteEagleNarrative = [
+  "טכנולוגיית T3 מאפשרת שליטה מלאה בטמפרטורת המים בכל שלב של החליטה, ולכל ראש חליטה אפשר להגדיר טמפרטורה משלו. כך ניתן להכין מגוון משקאות קפה וחלב באיכות עקבית, כוס אחרי כוס.",
+  "מערכת EasyCream מקציפה חלב ומשקאות צמחיים באופן אוטומטי בטמפרטורה ובכמות הקצף הרצויות, וזרועות הקיטור נשארות קרות למגע. מסך TFT ובקרים ארגונומיים מעניקים לבריסטה שליטה מלאה בחליטה ובתחזוקה, בגוף עשוי פלדה ואלומיניום.",
+];
+const whiteEagleSources = ["https://victoriaarduino.com/en/products-machines/white-eagle/"];
+
 export const products: Product[] = [
   {
     slug: "shabbat-coffee-machine",
@@ -292,7 +298,7 @@ export const products: Product[] = [
     slug: "nuova-simonelli-1gr",
     category: "machines",
     name: "Nuova Simonelli 1GR",
-    cardName: "Nouva Simonelli",
+    cardName: "Nuova Simonelli 1GR",
     image: "catalog/machine-nuova-simonelli-1gr",
     cardImage: "3acaf",
     cardFit: { kind: "contain" },
@@ -347,6 +353,68 @@ export const products: Product[] = [
     sources: appiaSources,
   },
   {
+    slug: "victoria-arduino-white-eagle-2gr",
+    category: "machines",
+    name: "Victoria Arduino White Eagle 2GR",
+    cardName: "White Eagle 2GR",
+    image: "catalog/machine-white-eagle-2gr",
+    cardFit: machineCardFit,
+    kinds: ["professional"],
+    description:
+      "מכונת אספרסו מקצועית מבית Victoria Arduino, עם שני ראשי חליטה ושליטה נפרדת בטמפרטורה של כל ראש — לבתי קפה ומסעדות שמחפשים דיוק, עקביות ועיצוב מרשים בגודל קומפקטי יותר.",
+    narrative: whiteEagleNarrative,
+    trust: [
+      ["2", "ראשי חליטה"],
+      ["T3", "שליטה בטמפרטורה"],
+      ["EasyCream", "הקצפת חלב אוטומטית"],
+    ],
+    specs: specs("82.5", "65.9", "51.2", "7,300W"),
+    sources: whiteEagleSources,
+  },
+  {
+    slug: "victoria-arduino-white-eagle-3gr",
+    category: "machines",
+    name: "Victoria Arduino White Eagle 3GR",
+    cardName: "White Eagle 3GR",
+    image: "catalog/machine-white-eagle-3gr",
+    cardFit: machineCardFit,
+    kinds: ["professional"],
+    description:
+      "מכונת אספרסו מקצועית מבית Victoria Arduino, עם שלושה ראשי חליטה ושליטה נפרדת בטמפרטורה של כל ראש — לרשתות ולבתי קפה עמוסים שצריכים תפוקה גבוהה, דיוק ועיצוב מרשים.",
+    narrative: whiteEagleNarrative,
+    trust: [
+      ["3", "ראשי חליטה"],
+      ["T3", "שליטה בטמפרטורה"],
+      ["EasyCream", "הקצפת חלב אוטומטית"],
+    ],
+    specs: specs("105.5", "65.9", "51.2", "9,100W"),
+    sources: whiteEagleSources,
+  },
+  {
+    slug: "la-marzocco-linea-classic-s",
+    category: "machines",
+    name: "La Marzocco Linea Classic S",
+    cardName: "Linea Classic S",
+    image: "catalog/machine-linea-classic-s",
+    cardFit: machineCardFit,
+    kinds: ["professional"],
+    description:
+      "מכונת האספרסו האיקונית של La Marzocco, עם שני ראשי חליטה ודודים נפרדים לקפה ולקיטור — לבתי קפה ומסעדות שמחפשים אמינות מוכחת, יציבות ואיכות לאורך שנים.",
+    narrative: [
+      "דוד נפרד לקפה ודוד נפרד לקיטור מאפשרים חליטה מדויקת והקצפת חלב במקביל, בלי פשרות. בקר PID כפול שולט אלקטרונית בטמפרטורת שני הדודים, והבידוד שלהם מפחית את צריכת האנרגיה ותורם ליציבות הטמפרטורה.",
+      "ה-Linea Classic S ממשיכה את העיצוב הקלאסי של הדגם שהפך לסטנדרט בבתי קפה בכל העולם, עם מבנה נירוסטה עמיד ותפעול פשוט. בהזמנה מיוחדת ניתן להוסיף זרועות קיטור Pro Touch שנשארות קרות למגע.",
+    ],
+    trust: [
+      ["2", "ראשי חליטה"],
+      ["2", "דודים נפרדים"],
+      ["7 ל׳", "דוד קיטור"],
+    ],
+    specs: specs("69.3", "58.5", "44.5", "3,350–5,670W", "220V / 380V", "חד / תלת פאזי"),
+    sources: [
+      "https://www.lamarzocco.com/fr/en/commercial-products/espresso-machines/linea-classic-s/",
+    ],
+  },
+  {
     slug: "lor-ultimo-13-capsules",
     category: "beans",
     name: "L’OR Ultimo 13",
@@ -367,6 +435,8 @@ export const products: Product[] = [
     image: "catalog/bean-jacobs-crema",
     cardImage: "31901",
     cardFit: { kind: "cover" },
+    description:
+      "בלנד קלאסי המעניק חוויית קפה רכה ומאוזנת עם אופי אירופאי מסורתי. תווי דגנים קלויים, תבלינים ופירות יבשים יוצרים כוס חלקה, נעימה ועקבית, המתאימה לשתייה יומיומית. אידיאלי למי שמעדיף קפה עדין עם קרמה קטיפתית.",
   },
   {
     slug: "jacobs-crema-harmonia",
@@ -376,6 +446,8 @@ export const products: Product[] = [
     image: "catalog/bean-jacobs-harmonia",
     cardImage: "25cef",
     cardFit: { kind: "cover" },
+    description:
+      "בלנד מאוזן ועדין המיועד לאוהבי קפה חלק ונעים בכל שעה של היום. פרופיל הטעמים משלב מתיקות טבעית, אגוזיות עדינה ורמזים להדרים, היוצרים כוס הרמונית עם קרמה עשירה וגוף מאוזן. בחירה מצוינת למי שמחפש קפה אלגנטי ונגיש.",
   },
   {
     slug: "jacobs-royal",
@@ -384,6 +456,8 @@ export const products: Product[] = [
     cardName: "Jacobs Royal",
     image: "catalog/bean-jacobs-royal",
     cardFit: beanCardFit,
+    description:
+      "בלנד עשיר ובעל גוף מלא המשלב עוצמה עם איזון מרשים. הקרמה הסמיכה והמרקם הקטיפתי מעניקים חוויית שתייה עמוקה, הנשמרת גם במשקאות המבוססים על חלב. בחירה מצוינת למי שמחפש קפה בעל נוכחות, ארומה עשירה וסיומת ממושכת.",
   },
   {
     slug: "lor-espresso-harmonieux",
@@ -393,15 +467,10 @@ export const products: Product[] = [
     image: "catalog/bean-lor-harmonieux",
     cardImage: "66f61",
     cardFit: { kind: "box", size: 292 },
+    description:
+      "בלנד 100% ערביקה המציע חוויית קפה אלגנטית, מאוזנת וארומטית. בפרופיל הטעמים תמצאו רמזים למשמש מיובש, בוטנים קלויים ונגיעות רעננות, המשתלבים בגוף קטיפתי ובסיומת נקייה. אידיאלי למי שמעדיף אספרסו עדין או קפה חלב בעל אופי מעודן.",
   },
-  {
-    slug: "lor-espresso-riche",
-    category: "beans",
-    name: "L’OR Espresso Riche",
-    cardName: "L’OR Espresso Riche",
-    image: "catalog/bean-lor-riche",
-    cardFit: beanCardFit,
-  },
+
   {
     slug: "lor-espresso-vibrant",
     category: "beans",
@@ -409,6 +478,8 @@ export const products: Product[] = [
     cardName: "L’OR Espresso Vibrant",
     image: "catalog/bean-lor-vibrant",
     cardFit: beanCardFit,
+    description:
+      "בלנד עשיר ובעל אופי המשלב 70% פולי ערביקה עם 30% רובוסטה ליצירת גוף מלא וקרמה קטיפתית. פרופיל הקלייה הבינוני-כהה חושף תווים קלויים, תבלינים ומתיקות עדינה, עם סיומת ארוכה ומאוזנת. בחירה מושלמת למי שמעדיף אספרסו עוצמתי או משקאות חלב בעלי נוכחות.",
   },
   {
     slug: "cafitesse-strong-roast",
@@ -417,6 +488,8 @@ export const products: Product[] = [
     cardName: "Cafitesse Strong Roast",
     image: "catalog/bean-cafitesse-strong-roast",
     cardFit: beanCardFit,
+    description:
+      "קפה נוזלי מרוכז בקלייה חזקה, המופק מקפה אמיתי ונארז מיד לאחר החליטה כדי לשמור על טריות וטעם עקבי. פרופיל הטעמים עשיר ובעל גוף מלא, עם תווים מעושנים ועציים ונגיעות של תבלינים, בעוצמה 9. אידיאלי לעסקים שמגישים כמויות גדולות ומחפשים כוס קפה עוצמתית ומהירה, וגם למשקאות חלב כמו קפוצ'ינו ולאטה.",
   },
 ];
 
@@ -449,13 +522,15 @@ export const machineCatalogOrder = [
   "nuova-simonelli-1gr",
   "nuova-simonelli-2gr",
   "nuova-simonelli-3gr",
+  "victoria-arduino-white-eagle-2gr",
+  "victoria-arduino-white-eagle-3gr",
+  "la-marzocco-linea-classic-s",
 ];
 export const beansCatalogOrder = [
   "jacobs-crema-traditional",
   "jacobs-crema-harmonia",
   "jacobs-royal",
   "lor-espresso-harmonieux",
-  "lor-espresso-riche",
   "lor-espresso-vibrant",
   "cafitesse-strong-roast",
   "lor-ultimo-13-capsules",
@@ -505,10 +580,13 @@ export const solutions: Record<
     image: string;
     cup: string;
     cupFit: "contain" | "cover";
-    whyTitle: string;
-    whyText: string;
-    whyWidth: number;
+    // Optional: the office page shows this copy in its hero instead.
+    whyTitle?: string;
+    whyText?: string;
+    whyWidth?: number;
     features: string[];
+    // Featured machine slugs, right to left; falls back to featuredMachines.
+    machines?: string[];
     machinesTitle: string;
     machinesText: string[];
     coffeeTitle: string;
@@ -524,18 +602,15 @@ export const solutions: Record<
 > = {
   office: {
     metaTitle: "פתרונות קפה למשרדים",
-    heroTitle: "פתרון קפה שמתאים לקצב של המשרד שלכם.",
+    heroTitle: "כל מה שמשרד צריך. מספק אחד.",
     heroText:
-      "בין אם מדובר במשרד קטן או בארגון גדול, Coffee Flow מספקת פתרון קפה מלא הכולל מכונות מקצועיות, חומרי גלם איכותיים, שירות ותחזוקה שוטפת – כך שאתם יכולים ליהנות מחוויית קפה מצוינת, בלי להתעסק בתפעול.",
+      "פתרון קפה טוב משפיע הרבה מעבר להפסקת הקפה. הוא משפר את חוויית העובדים, תורם לאירוח לקוחות, ומשאיר את ההתעסקות השוטפת בידיים שלנו.",
     heroTextStrong: true,
     image: "f68fe",
     cup: "4af34",
     cupFit: "contain",
-    whyTitle: "כל מה שמשרד צריך. מספק אחד.",
-    whyText:
-      "פתרון קפה טוב משפיע הרבה מעבר להפסקת הקפה. הוא משפר את חוויית העובדים, תורם לאירוח לקוחות, ומשאיר את ההתעסקות השוטפת בידיים שלנו.",
-    whyWidth: 499,
     features: ["שירות ותחזוקה שוטפים", "אספקה מסודרת של חומרי גלם", "פתרון בהתאמה אישית"],
+    machines: ["gt2-pro", "coffee-bar", "coffee-express"],
     machinesTitle: "המכונה הנכונה מתחילה בהיכרות עם העסק.",
     machinesText: [
       "לכל משרד הרגלי שימוש שונים, מספר עובדים אחר, וקצב עבודה ייחודי.",
@@ -560,7 +635,7 @@ export const solutions: Record<
     metaTitle: "פתרונות קפה לבתי קפה ומסעדות",
     heroTitle: "פתרון קפה שעומד בקצב של העסק שלכם.",
     heroText:
-      "Coffee Flow מספקת פתרונות קפה מקצועיים לבתי קפה, מסעדות ועסקי אירוח – עם ציוד מתקדם, חומרי גלם איכותיים, שירות מקצועי וליווי שוטף, כדי שתוכלו להגיש קפה מצוין בכל כוס ובכל שעה.",
+      "Coffee Flow מספקת פתרונות קפה מקצועיים לבתי קפה ומסעדות – עם ציוד מתקדם, חומרי גלם איכותיים, שירות מקצועי וליווי שוטף, כדי שתוכלו להגיש קפה מצוין בכל כוס ובכל שעה.",
     image: "76743",
     cup: "0b526",
     cupFit: "contain",
@@ -573,6 +648,13 @@ export const solutions: Record<
       "פתרון שנבנה לעבודה אינטנסיבית",
       "שירות שמבין את עולם האירוח",
       "אספקת חומרי גלם באופן מסודר",
+    ],
+    machines: [
+      "nuova-simonelli-1gr",
+      "nuova-simonelli-2gr",
+      "nuova-simonelli-3gr",
+      "la-marzocco-linea-classic-s",
+      "victoria-arduino-white-eagle-3gr",
     ],
     machinesTitle: "ציוד מקצועי לעבודה מקצועית",
     machinesText: [
@@ -628,6 +710,61 @@ export const solutions: Record<
     contactText:
       "השאירו פרטים, ואחד מהמומחים שלנו יחזור אליכם כדי להכיר את צורכי המלון ולהתאים עבורכם פתרון קפה מקצועי, בהתאם להיקף הפעילות, אופי האירוח, וסטנדרט השירות שלכם.",
   },
+};
+
+// Diplomat's brand portfolio (diplomat-culinary.co.il "המותגים שלנו"): [logo file in /images/brands, name].
+export const diplomatBrands: [string, string][] = [
+  ["01", "היינץ"],
+  ["02", "קיקומן"],
+  ["03", "Cirio"],
+  ["04", "יאן-ואל–יון"],
+  ["05", "רומו"],
+  ["06", "נישיקי"],
+  ["07", "בוטאן"],
+  ["08", "קאפוטו"],
+  ["09", "ביונד מיט"],
+  ["10", "סאקלה"],
+  ["11", "מיי-פלוי"],
+  ["12", "צ'יאו"],
+  ["13", "פומו דורו"],
+  ["14", "סינגה"],
+  ["15", "מבשלת הקצורו"],
+  ["16", "מבשלת אוזקי"],
+  ["17", "ג'יאקובאזי"],
+  ["18", "ריין דה–דיזון"],
+  ["19", "סטארקיסט"],
+  ["20", "מוניני"],
+  ["21", "רנדולינו"],
+  ["22", "ריזו סקוטי"],
+  ["23", "בלובנד"],
+  ["24", "מזולה"],
+  ["25", "נילסן"],
+  ["26", "טוסקי"],
+  ["27", "לוטוס בייקריס"],
+  ["28", "סקיפי"],
+  ["29", "Cholimex"],
+  ["30", "קוט ד'אור"],
+  ["31", "אוראו"],
+  ["32", "צ'אוקה"],
+  ["33", "TCC"],
+  ["34", "תאי הא"],
+  ["35", "לה גנוקריה"],
+  ["36", "מיזקאן"],
+  ["37", "מילקה"],
+  ["38", "פרינגלס"],
+  ["39", "סלמארין איל דה נויירמוטייר"],
+  ["40", "סומימוטו"],
+  ["41", "Violife"],
+  ["42", "Bonne Maman"],
+  ["43", "Giuliano Tartufi"],
+  ["44", "Saint Amour"],
+];
+
+// Technical service line, shown on /service. Every "צרו קשר" button opens WhatsApp on it.
+export const servicePhone = {
+  display: "052-547-4163",
+  tel: "+972525474163",
+  whatsapp: "https://wa.me/972525474163",
 };
 
 export const moreThanCoffee = {

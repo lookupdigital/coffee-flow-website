@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Fragment } from "react";
-import { Product, cardDescription } from "@/lib/data";
+import { Product, beanPlaceholder, cardDescription, diplomatBrands, servicePhone } from "@/lib/data";
 import { Pic, WhatsAppLink } from "./shared";
 import { ContactForm, Header } from "./interactive";
 
@@ -16,14 +16,14 @@ export function Footer({
   const links =
     variant === "solution"
       ? [
-          ["#contact", "צור קשר"],
+          [servicePhone.whatsapp, "צור קשר"],
           ["#reviews", "המלצות"],
           ["/beans", "הקפה שלנו"],
           ["/machines", "מכונות"],
           ["/#about", "עלינו"],
         ]
       : [
-          ["#contact", "צור קשר"],
+          [servicePhone.whatsapp, "צור קשר"],
           ["/privacy", "מדיניות פרטיות"],
           ["/accessibility", "הצהרת נגישות"],
         ];
@@ -31,11 +31,17 @@ export function Footer({
     <footer className={`footer footer-${size}`}>
       <div className="footer-inner">
         <nav className="footer-links" aria-label="קישורים">
-          {links.map(([href, label]) => (
-            <Link key={label} href={href}>
-              {label}
-            </Link>
-          ))}
+          {links.map(([href, label]) =>
+            href.startsWith("http") ? (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer">
+                {label}
+              </a>
+            ) : (
+              <Link key={label} href={href}>
+                {label}
+              </Link>
+            ),
+          )}
         </nav>
         <p className="footer-copy">
           © 2026 Coffee Flow. כל הזכויות שמורות{variant === "solution" ? "." : ""}
@@ -57,6 +63,19 @@ export function ButtonLink({
   children: React.ReactNode;
   tone?: "light" | "gold";
 }) {
+  // External sites open in a new tab so visitors keep their place here.
+  if (href.startsWith("http"))
+    return (
+      <a href={href} className={`btn btn-${tone}`} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    );
+  if (href.startsWith("tel:"))
+    return (
+      <a href={href} className={`btn btn-${tone}`}>
+        {children}
+      </a>
+    );
   return (
     <Link href={href} className={`btn btn-${tone}`}>
       {children}
@@ -136,19 +155,20 @@ export function MachineCard({
   );
 }
 
-// Coffee beans have no product page, so the card is not a link.
+// Beans have no product pages, so the card jumps to the product's row in the catalog.
 export function CoffeeCard({ product: p, outlined = false }: { product: Product; outlined?: boolean }) {
   return (
-    <article className="coffee-card">
+    <Link href={`/beans#${p.slug}`} className="coffee-card">
       <span className={`coffee-card-photo ${outlined ? "coffee-card-outlined" : ""}`}>
         <Pic id={p.cardImage ?? p.image} fit={p.cardFit} alt={p.cardName} />
       </span>
       <span className="coffee-card-meta">
         <span className="card-title">{p.cardName}</span>
-        <span className="coffee-card-percent">אחוזים</span>
-        <span className="coffee-card-text">פסקה</span>
+        <span className="coffee-card-text">
+          {p.description ? <RichText text={p.description} /> : beanPlaceholder}
+        </span>
       </span>
-    </article>
+    </Link>
   );
 }
 
@@ -196,6 +216,26 @@ export function Separated({ items }: { items: string[] }) {
           <span className="feature">{item}</span>
         </Fragment>
       ))}
+    </div>
+  );
+}
+
+// Endless logo strip. The list is rendered twice so the CSS loop can wrap seamlessly;
+// the copy is hidden from screen readers.
+export function BrandCarousel() {
+  return (
+    <div className="brand-carousel" aria-label="המותגים של דיפלומט">
+      <div className="brand-track">
+        {[false, true].map((copy) => (
+          <ul className="brand-list" aria-hidden={copy || undefined} key={String(copy)}>
+            {diplomatBrands.map(([file, name]) => (
+              <li className="brand-card" key={file}>
+                <img src={`/images/brands/${file}.webp`} alt={copy ? "" : name} loading="lazy" />
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
     </div>
   );
 }

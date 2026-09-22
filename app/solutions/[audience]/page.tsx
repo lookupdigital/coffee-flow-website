@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import {
+  BrandCarousel,
   ButtonLink,
   CoffeeCard,
   ContactSection,
@@ -21,7 +22,6 @@ import {
   solutions,
 } from "@/lib/data";
 
-const machines = featuredMachines.map((slug) => getProduct(slug)!);
 const beans = featuredBeans.map((slug) => getProduct(slug)!);
 
 export function generateStaticParams() {
@@ -45,6 +45,7 @@ export default async function SolutionPage({
   const { audience } = await params;
   if (!(audience in solutions)) notFound();
   const s = solutions[audience as Audience];
+  const machines = (s.machines ?? featuredMachines).map((slug) => getProduct(slug)!);
   return (
     <>
       <section className="hero">
@@ -75,22 +76,33 @@ export default async function SolutionPage({
           <ButtonLink href="#contact" tone="gold">
             לתיאום פגישת ייעוץ
           </ButtonLink>
+          {/* Without a "why" copy block, the features sit at the bottom of the hero. */}
+          {!s.whyTitle && (
+            <div className="solution-hero-features">
+              <Separated items={s.features} />
+            </div>
+          )}
         </div>
       </section>
 
-      <section className="why">
-        <SectionHeader title={s.whyTitle} text={s.whyText} width={s.whyWidth} />
-        <Separated items={s.features} />
-      </section>
+      {s.whyTitle && s.whyText && (
+        <section className="why">
+          <SectionHeader title={s.whyTitle} text={s.whyText} width={s.whyWidth ?? 499} />
+          <Separated items={s.features} />
+        </section>
+      )}
 
       <section className="more">
         <SectionHeader title={moreThanCoffee.title} text={moreThanCoffee.text} width={499} />
-        <ButtonLink href="/machines">לצפייה בקטלוג המלא</ButtonLink>
+        <BrandCarousel />
+        <ButtonLink href="https://www.diplomat-culinary.co.il/he/company/catalog/main/">
+          לצפייה בקטלוג המלא
+        </ButtonLink>
       </section>
 
       <section className="products-section products-section-dark">
         <SectionHeader title={s.machinesTitle} text={s.machinesText} width={730} condensedText />
-        <div className="machine-grid">
+        <div className={`machine-grid ${machines.length > 3 ? "machine-grid-wrap" : ""}`}>
           {machines.map((p) => (
             <MachineCard product={p} variant="solution" key={p.slug} />
           ))}
