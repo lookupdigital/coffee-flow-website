@@ -68,6 +68,7 @@ img {
 }
 button,
 input,
+select,
 textarea {
   font: inherit;
   color: inherit;
@@ -174,15 +175,15 @@ textarea {
   padding: 16px var(--gutter);
 }
 .header-logo {
-  width: 155px;
-  height: 67px;
+  width: 196px;
+  height: 85px;
   display: flex;
   align-items: center;
   flex-shrink: 0;
 }
 .header-logo img {
-  width: 158px;
-  height: 67px;
+  width: 200px;
+  height: 85px;
   object-fit: cover;
 }
 .header-nav {
@@ -193,8 +194,8 @@ textarea {
 .header-nav a {
   font-family: var(--font-ui);
   font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 16px;
+  line-height: 24px;
   color: rgba(247, 243, 236, 0.6);
   white-space: nowrap;
   transition: color 0.2s;
@@ -203,8 +204,8 @@ textarea {
   color: var(--beige);
 }
 .header-partner {
-  width: 85px;
-  height: 32px;
+  width: 112px;
+  height: 42px;
   object-fit: cover;
 }
 .header-end {
@@ -484,7 +485,7 @@ textarea {
 }
 .coffee-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 32px;
   width: 100%;
   max-width: 1232px;
@@ -544,6 +545,10 @@ textarea {
   padding-bottom: 10px;
 }
 .machine-card-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
   font-size: 14px;
   line-height: 22.75px;
   color: rgba(247, 243, 236, 0.55);
@@ -703,7 +708,44 @@ textarea {
 }
 .about-copy .text {
   padding-top: 24px;
+  font-size: 24px;
+  line-height: 34px;
   max-width: 571px;
+}
+.partner-logos {
+  width: 100%;
+  max-width: 571px;
+  margin: 32px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid rgba(247, 243, 236, 0.14);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: 18px;
+  list-style: none;
+}
+.partner-logo {
+  min-width: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.partner-logo img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 54px;
+  object-fit: contain;
+}
+.partner-logo-jde img {
+  max-height: 38px;
+  filter: invert(1);
+  opacity: 0.82;
+}
+.partner-logo-douwe-egberts img {
+  filter: brightness(1.45);
 }
 .about-photo {
   height: 730px;
@@ -1046,6 +1088,7 @@ textarea {
   color: var(--text-65);
 }
 .field input,
+.field select,
 .field textarea {
   width: 100%;
   border: 1px solid var(--beige);
@@ -1060,16 +1103,32 @@ textarea {
 .field input {
   height: 46px;
 }
+.field select {
+  height: 46px;
+  cursor: pointer;
+  color-scheme: dark;
+}
+.field select:invalid {
+  color: rgba(154, 142, 125, 0.55);
+}
+.field select option {
+  background: var(--dark-green);
+  color: var(--beige);
+}
 .field input::placeholder,
 .field textarea::placeholder {
   color: rgba(154, 142, 125, 0.4);
 }
 .field input:focus,
+.field select:focus,
 .field textarea:focus {
   outline: none;
   border-color: var(--gold);
 }
 .field-message {
+  padding: 12px 0 16px;
+}
+.field-business-type {
   padding: 12px 0 16px;
 }
 .field-message textarea {
@@ -1157,7 +1216,7 @@ textarea {
 }
 .filter-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 280px));
+  grid-template-columns: repeat(6, minmax(0, 220px));
   justify-content: center;
   gap: 20px;
   width: 100%;
@@ -1568,6 +1627,9 @@ textarea {
   .filter-grid {
     grid-template-columns: repeat(3, minmax(0, 280px));
   }
+  .coffee-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .product-row {
     gap: 48px;
     padding-inline: 48px;
@@ -1693,6 +1755,7 @@ textarea {
   }
   .field span,
   .field input,
+  .field select,
   .field textarea {
     text-align: center;
   }
@@ -1871,8 +1934,22 @@ textarea {
 @media (max-width: 560px) {
   .header-logo,
   .header-logo img {
-    width: 120px;
-    height: 51px;
+    width: 150px;
+    height: 64px;
+  }
+  .partner-logos {
+    margin-top: 24px;
+    padding-top: 20px;
+    gap: 10px;
+  }
+  .partner-logo {
+    height: 46px;
+  }
+  .partner-logo img {
+    max-height: 42px;
+  }
+  .partner-logo-jde img {
+    max-height: 26px;
   }
   .h1 {
     font-size: 44px;

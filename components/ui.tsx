@@ -128,7 +128,9 @@ export function MachineCard({
       </span>
       <span className="machine-card-body">
         <span className="card-title">{p.cardName}</span>
-        <span className="machine-card-text">{cardDescription}</span>
+        <span className="machine-card-text">
+          <RichText text={p.description ?? cardDescription} />
+        </span>
       </span>
     </Link>
   );

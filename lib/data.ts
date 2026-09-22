@@ -10,7 +10,7 @@ export type ImageFit =
   | { kind: "box"; size: number; scale?: number }
   | { kind: "fixed"; width: number; height: number };
 
-export type MachineKind = "office" | "professional" | "capsule" | "automatic";
+export type MachineKind = "office" | "professional" | "capsule" | "automatic" | "sabbath";
 
 export type Product = {
   slug: string;
@@ -75,6 +75,32 @@ const appiaSources = [
 ];
 
 export const products: Product[] = [
+  {
+    slug: "shabbat-coffee-machine",
+    category: "machines",
+    name: "מכונת שבת",
+    cardName: "מכונת שבת",
+    image: "catalog/machine-shabbat",
+    cardFit: machineCardFit,
+    kinds: ["sabbath"],
+    description:
+      "הדרך החדשה להגיש קפה איכותי גם בשבת. פתרון אידיאלי לבתי מלון, חדרי אוכל, מוסדות ואולמות אירועים. מאושר על ידי מכון צומת, עם קפה פילטר משובח מבית Douwe Egberts, איכות וטעם אחידים לאורך כל השבת, תפעול פשוט, שירות מהיר וחיסכון בכוח אדם.",
+    narrative: [
+      "מכונת השבת מרכזת את שירות הקפה והמים החמים בעמדה אחת מסודרת, כדי לאפשר רצף אירוח נוח ועקבי גם בסופי שבוע ובחגים. המבנה המשולב שומר על סביבת הגשה נקייה ומקצועית ומתאים במיוחד ללובי, לחדר אוכל ולטרקליני אירוח.",
+      "התצורה הסופית, אופן ההפעלה וההתאמות הנדרשות לשבת נקבעים לאחר אפיון של צורכי המקום, התשתיות ונפח הפעילות, ובכפוף להנחיות ולאישור של גורם הכשרות המלווה את העסק.",
+    ],
+    trust: [
+      ["שבת וחג", "רצף שירות מותאם"],
+      ["2 ב־1", "קפה ומים חמים"],
+      ["מותאם", "לתשתיות המקום"],
+    ],
+    specs: [
+      ["ייעוד", "בתי מלון ומתחמי אירוח"],
+      ["מבנה", "עמדת קפה ומים חמים"],
+      ["התקנה", "בהתאמה לתשתיות המקום"],
+      ["הפעלה בשבת", "לפי הנחיות גורם הכשרות"],
+    ],
+  },
   {
     slug: "coffee-express",
     category: "machines",
@@ -321,6 +347,19 @@ export const products: Product[] = [
     sources: appiaSources,
   },
   {
+    slug: "lor-ultimo-13-capsules",
+    category: "beans",
+    name: "L’OR Ultimo 13",
+    cardName: "L’OR Ultimo 13",
+    image: "catalog/capsules-lor-ultimo-13",
+    cardFit: beanCardFit,
+    description:
+      "קפסולות אלומיניום בעוצמת קלייה 13, עם גוף מלא, טעמים מורכבים ומאוזנים ותווים שוקולדיים. מתאימות להכנת אספרסו וריסטרטו במכונות Nespresso® Original. מארז של 10 קפסולות, 5.2 גרם לקפסולה.",
+    sources: [
+      "https://www.lor-espresso.co.il/%D7%90%D7%95%D7%9C%D7%98%D7%99%D7%9E%D7%95-13%2C-%D7%A7%D7%A4%D7%A1%D7%95%D7%9C%D7%95%D7%AA-%D7%A7%D7%A4%D7%94-%D7%9C%D7%95%D7%A8-2538048.html",
+    ],
+  },
+  {
     slug: "jacobs-crema-traditional",
     category: "beans",
     name: "Jacobs Crema Traditional",
@@ -385,14 +424,20 @@ export const getProduct = (slug: string) =>
   products.find((p) => p.slug === slug);
 
 // Card order as displayed in Figma, right to left.
-export const featuredMachines = ["coffee-express", "gt2-pro", "nuova-simonelli-1gr"];
+export const featuredMachines = [
+  "coffee-master-200",
+  "shabbat-coffee-machine",
+  "nuova-simonelli-3gr",
+];
 export const featuredBeans = [
   "jacobs-crema-traditional",
-  "jacobs-crema-harmonia",
   "lor-espresso-harmonieux",
+  "cafitesse-strong-roast",
+  "lor-ultimo-13-capsules",
 ];
 
 export const machineCatalogOrder = [
+  "shabbat-coffee-machine",
   "coffee-express",
   "gt2-pro",
   "coffee-break",
@@ -406,13 +451,14 @@ export const machineCatalogOrder = [
   "nuova-simonelli-3gr",
 ];
 export const beansCatalogOrder = [
+  "jacobs-crema-traditional",
+  "jacobs-crema-harmonia",
+  "jacobs-royal",
   "lor-espresso-harmonieux",
   "lor-espresso-riche",
   "lor-espresso-vibrant",
-  "jacobs-crema-harmonia",
-  "jacobs-royal",
-  "jacobs-crema-traditional",
   "cafitesse-strong-roast",
+  "lor-ultimo-13-capsules",
 ];
 
 // Filter cards, right to left as in Figma.
@@ -422,6 +468,7 @@ export const machineFilters: { value: "all" | MachineKind; label: string; icon: 
   { value: "professional", label: "מכונות מקצועיות", icon: "d5f83" },
   { value: "capsule", label: "מכונות קפסולות", icon: "0db2f" },
   { value: "automatic", label: "מכונות אוטומטיות", icon: "18930" },
+  { value: "sabbath", label: "מכונות שבת", icon: "shabbat" },
 ];
 
 export const catalogHero = {

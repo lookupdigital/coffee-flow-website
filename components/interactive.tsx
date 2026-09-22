@@ -8,9 +8,9 @@ import { ProductRow, Rich, WhatsAppLink } from "./shared";
 // Right to left: "בית" is the right-most menu item.
 const nav = [
   ["/", "בית"],
-  ["/solutions/office", "פתרונות למשרדים"],
-  ["/solutions/cafe", "פתרונות לבתי קפה ומסעדות"],
-  ["/solutions/hotel", "פתרונות למלונות"],
+  ["/solutions/office", "חברות ומשרדים"],
+  ["/solutions/cafe", "בתי קפה ומסעדות"],
+  ["/solutions/hotel", "בתי מלון ובתי הארחה"],
 ];
 
 // Pinned site header. On mobile the menu collapses behind a hamburger button.
@@ -53,7 +53,7 @@ export function Header({
     >
       <div className="header-inner">
         <Link href="/" className="header-logo" aria-label="Coffee Flow" onClick={close}>
-          <img src="/images/6373b.webp" alt="Coffee Flow" width={158} height={67} />
+          <img src="/images/6373b.webp" alt="Coffee Flow" width={200} height={85} />
         </Link>
         <nav id="site-nav" className="header-nav" aria-label="ניווט ראשי">
           {nav.map(([href, label]) => (
@@ -74,8 +74,8 @@ export function Header({
               className="header-partner"
               src="/images/94ed1.webp"
               alt="DIL Israel"
-              width={85}
-              height={32}
+              width={112}
+              height={42}
             />
           ) : (
             <WhatsAppLink className="header-contact" />
@@ -135,13 +135,17 @@ export function ContactForm() {
           ))}
         </div>
       ))}
-      <label className="field field-message" htmlFor={`${id}-message`}>
-        <span>הודעה</span>
-        <textarea
-          id={`${id}-message`}
-          name="message"
-          placeholder="ספרו לנו על העסק שלכם ומה אתם מחפשים..."
-        />
+      <label className="field field-business-type" htmlFor={`${id}-business-type`}>
+        <span>סוג עסק *</span>
+        <select id={`${id}-business-type`} name="businessType" defaultValue="" required>
+          <option value="" disabled>
+            בחרו סוג עסק
+          </option>
+          <option value="office">חברות ומשרדים</option>
+          <option value="cafe">בתי קפה ומסעדות</option>
+          <option value="hotel">בתי מלון ובתי הארחה</option>
+          <option value="other">אחר</option>
+        </select>
       </label>
       <button type="submit" className="contact-submit" disabled={sent}>
         {sent ? "תודה, הפרטים התקבלו" : "השאירו פרטים"}

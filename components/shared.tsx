@@ -139,7 +139,9 @@ export function ProductRow({ product: p }: { product: Product }) {
         </div>
         <div className="row-copy">
           <h2 className="row-title">{p.name}</h2>
-          <p className="text">{beanPlaceholder}</p>
+          <p className="text">
+            {p.description ? <Rich text={p.description} /> : beanPlaceholder}
+          </p>
         </div>
       </article>
     );

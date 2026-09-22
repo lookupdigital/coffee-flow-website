@@ -29,8 +29,8 @@ export default function Home() {
             להתעסק בעסק. לא בקפה.
           </h1>
           <p className="subheading">
-            מספקת פתרונות קפה מלאים לעסקים – החל מהתאמת המכונה וחומרי הגלם ועד
-            לשירות, תחזוקה ואספקה שוטפת.{" "}
+            <bdi dir="ltr">Coffee Flow</bdi> מספקת פתרונות קפה מלאים לעסקים –
+            החל מהתאמת המכונה וחומרי הגלם ועד לשירות, תחזוקה ואספקה שוטפת.{" "}
             <strong>פתרון אחד, שמותאם לצרכים שלכם ומלווה אתכם לאורך זמן.</strong>
           </p>
           <ButtonLink href="#contact" tone="gold">
@@ -71,8 +71,25 @@ export default function Home() {
               פתרון קפה איכותי הוא הרבה מעבר למכונה או לפולי קפה.
             </p>
             <p className="text">
-              <Rich text="הוא מתחיל באפיון נכון, ממשיך בהתאמת הפתרון לעסק, ונשען על שירות מקצועי, תחזוקה שוטפת וזמינות לאורך כל הדרך. כחלק מ-Culinary Diplomat ובשיתוף Coffee Flow, JDE Professional משלבת מותגים מובילים, ניסיון מקצועי, וליווי אישי כדי לאפשר לעסקים ליהנות מחוויית קפה איכותית, יציבה, וללא התעסקות מיותרת." />
+              <Rich text="הוא מתחיל באפיון נכון, ממשיך בהתאמת הפתרון לעסק, ונשען על שירות מקצועי, תחזוקה שוטפת וזמינות לאורך כל הדרך. Coffee Flow פועלת כחלק מ-Diplomat Culinary ובשיתוף JDE Professional, ומשלבת מותגים מובילים, ניסיון מקצועי וליווי אישי כדי לאפשר לעסקים ליהנות מחוויית קפה איכותית, יציבה וללא התעסקות מיותרת." />
             </p>
+            <ul className="partner-logos" aria-label="המותגים השותפים שלנו">
+              <li className="partner-logo partner-logo-jde">
+                <img src="/images/partners/jde-professional.webp" alt="JDE Professional" />
+              </li>
+              <li className="partner-logo">
+                <img src="/images/partners/jacobs-professional.webp" alt="Jacobs Professional" />
+              </li>
+              <li className="partner-logo">
+                <img src="/images/partners/lor-professional.webp" alt="L'OR Professional" />
+              </li>
+              <li className="partner-logo partner-logo-douwe-egberts">
+                <img
+                  src="/images/partners/douwe-egberts-professional.webp"
+                  alt="Douwe Egberts Professional"
+                />
+              </li>
+            </ul>
           </div>
           <div className="about-photo">
             <img className="pic pic-cover" src="/images/8d0fc.webp" alt="בריסטה מקצועי מכין אספרסו" />
@@ -102,7 +119,7 @@ export default function Home() {
         <div className="home-coffee-header">
           <h2 className="h2">קפה איכותי מתחיל בבחירה הנכונה.</h2>
           <p className="text">
-            <Rich text="Coffee Flow עובדת עם מותגי הקפה של JDE Professional ומציעה מגוון בלנדים וחומרי גלם שנבחרו כדי לספק טעם עקבי, איכות גבוהה, וחוויית שתייה שמתאימה לכל עובד ואורח." />
+            <Rich text="Coffee Flow עובדת עם קולקציית הקפה של JDE Professional ומציעה מגוון בלנדים וחומרי גלם שנבחרו כדי לספק טעם עקבי, איכות גבוהה, וחוויית שתייה שמתאימה לכל עובד ואורח." />
           </p>
         </div>
         <div className="coffee-grid">
