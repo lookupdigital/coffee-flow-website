@@ -587,6 +587,8 @@ export const solutions: Record<
     features: string[];
     // Featured machine slugs, right to left; falls back to featuredMachines.
     machines?: string[];
+    // Category preselected in the machine catalog; omitted means all machines.
+    machinesFilter?: MachineKind;
     machinesTitle: string;
     machinesText: string[];
     coffeeTitle: string;
@@ -611,6 +613,7 @@ export const solutions: Record<
     cupFit: "contain",
     features: ["שירות ותחזוקה שוטפים", "אספקה מסודרת של חומרי גלם", "פתרון בהתאמה אישית"],
     machines: ["gt2-pro", "coffee-bar", "coffee-express"],
+    machinesFilter: "office",
     machinesTitle: "המכונה הנכונה מתחילה בהיכרות עם העסק.",
     machinesText: [
       "לכל משרד הרגלי שימוש שונים, מספר עובדים אחר, וקצב עבודה ייחודי.",
@@ -649,6 +652,7 @@ export const solutions: Record<
       "שירות שמבין את עולם האירוח",
       "אספקת חומרי גלם באופן מסודר",
     ],
+    machinesFilter: "professional",
     machines: [
       "nuova-simonelli-1gr",
       "nuova-simonelli-2gr",

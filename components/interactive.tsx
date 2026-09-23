@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { FormEvent, ReactNode, useEffect, useId, useRef, useState } from "react";
 import { MachineKind, Product, machineFilters, reviews } from "@/lib/data";
 import { ProductRow, Rich, WhatsAppLink } from "./shared";
@@ -275,7 +275,11 @@ export function MachineCatalog({
   products: Product[];
   header: ReactNode;
 }) {
-  const [filter, setFilter] = useState<"all" | MachineKind>("all");
+  // ?kind=… preselects a category, so pages can link straight to their own machines.
+  const kind = useSearchParams().get("kind");
+  const linked = machineFilters.find((f) => f.value === kind)?.value ?? "all";
+  const [filter, setFilter] = useState<"all" | MachineKind>(linked);
+  useEffect(() => setFilter(linked), [linked]);
   const list = products.filter(
     (p) => filter === "all" || p.kinds?.includes(filter),
   );

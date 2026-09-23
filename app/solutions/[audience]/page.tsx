@@ -107,7 +107,9 @@ export default async function SolutionPage({
             <MachineCard product={p} variant="solution" key={p.slug} />
           ))}
         </div>
-        <ButtonLink href="/machines">לצפייה בקטלוג המלא</ButtonLink>
+        <ButtonLink href={s.machinesFilter ? `/machines?kind=${s.machinesFilter}` : "/machines"}>
+          לצפייה בקטלוג המלא
+        </ButtonLink>
       </section>
 
       <section className="products-section products-section-deep">
