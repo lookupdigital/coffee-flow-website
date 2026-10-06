@@ -9,9 +9,7 @@ import {
   MachineCard,
   SectionHeader,
   Separated,
-  Testimonials,
 } from "@/components/ui";
-import { RollingReviews } from "@/components/interactive";
 import { Rich } from "@/components/shared";
 import {
   Audience,
@@ -48,7 +46,7 @@ export default async function SolutionPage({
   const machines = (s.machines ?? featuredMachines).map((slug) => getProduct(slug)!);
   return (
     <>
-      <section className="hero">
+      <section className="hero solution-hero-compact">
         <img
           className="hero-bg"
           src={`/images/${s.image}.webp`}
@@ -73,31 +71,13 @@ export default async function SolutionPage({
               </p>
             </div>
           </div>
-          <ButtonLink href="#contact" tone="gold">
-            לתיאום פגישת ייעוץ
+          <ButtonLink href="#contact" tone="gold" size="compact">
+            לחץ לשיחה עם מומחי הקפה שלנו
           </ButtonLink>
-          {/* Without a "why" copy block, the features sit at the bottom of the hero. */}
-          {!s.whyTitle && (
-            <div className="solution-hero-features">
-              <Separated items={s.features} />
-            </div>
-          )}
+          <div className="solution-hero-features">
+            <Separated items={s.features} />
+          </div>
         </div>
-      </section>
-
-      {s.whyTitle && s.whyText && (
-        <section className="why">
-          <SectionHeader title={s.whyTitle} text={s.whyText} width={s.whyWidth ?? 499} />
-          <Separated items={s.features} />
-        </section>
-      )}
-
-      <section className="more">
-        <SectionHeader title={moreThanCoffee.title} text={moreThanCoffee.text} width={499} />
-        <BrandCarousel />
-        <ButtonLink href="https://www.diplomat-culinary.co.il/he/company/catalog/main/">
-          לצפייה בקטלוג המלא
-        </ButtonLink>
       </section>
 
       <section className="products-section products-section-dark">
@@ -126,9 +106,13 @@ export default async function SolutionPage({
         <SectionHeader title={s.servicesTitle} text={s.servicesText} width={606} />
       </section>
 
-      <Testimonials title={s.testimonialTitle} width={s.testimonialWidth}>
-        <RollingReviews />
-      </Testimonials>
+      <section className="more">
+        <SectionHeader title={moreThanCoffee.title} text={moreThanCoffee.text} width={499} />
+        <BrandCarousel />
+        <ButtonLink href="/catalogs/diplomat-catalog-2025.pdf">
+          לצפייה בקטלוג המלא
+        </ButtonLink>
+      </section>
 
       <ContactSection title={s.contactTitle} text={s.contactText} />
       <Footer variant="solution" />

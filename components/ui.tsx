@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Fragment } from "react";
+import { CSSProperties, Fragment } from "react";
 import { Product, beanPlaceholder, cardDescription, diplomatBrands, servicePhone } from "@/lib/data";
 import { Pic, WhatsAppLink } from "./shared";
-import { ContactForm, Header } from "./interactive";
+import { ContactForm, Header, CarouselStartOnView } from "./interactive";
 
 export { Header, WhatsAppLink };
 
@@ -17,7 +17,6 @@ export function Footer({
     variant === "solution"
       ? [
           [servicePhone.whatsapp, "צור קשר"],
-          ["#reviews", "המלצות"],
           ["/beans", "הקפה שלנו"],
           ["/machines", "מכונות"],
           ["/#about", "עלינו"],
@@ -58,26 +57,29 @@ export function ButtonLink({
   href,
   children,
   tone = "light",
+  size = "regular",
 }: {
   href: string;
   children: React.ReactNode;
   tone?: "light" | "gold";
+  size?: "regular" | "compact";
 }) {
-  // External sites open in a new tab so visitors keep their place here.
-  if (href.startsWith("http"))
+  const className = `btn btn-${tone}${size === "compact" ? " btn-compact" : ""}`;
+  // External sites and PDFs open in a new tab so visitors keep their place here.
+  if (href.startsWith("http") || href.endsWith(".pdf"))
     return (
-      <a href={href} className={`btn btn-${tone}`} target="_blank" rel="noopener noreferrer">
+      <a href={href} className={className} target="_blank" rel="noopener noreferrer">
         {children}
       </a>
     );
   if (href.startsWith("tel:"))
     return (
-      <a href={href} className={`btn btn-${tone}`}>
+      <a href={href} className={className}>
         {children}
       </a>
     );
   return (
-    <Link href={href} className={`btn btn-${tone}`}>
+    <Link href={href} className={className}>
       {children}
     </Link>
   );
@@ -172,29 +174,6 @@ export function CoffeeCard({ product: p, outlined = false }: { product: Product;
   );
 }
 
-export function Testimonials({
-  title,
-  width,
-  children,
-  className = "",
-}: {
-  title: string;
-  width: number;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <section className={`testimonials ${className}`} id="reviews">
-      <div className="testimonials-inner">
-        <h2 className="h2 testimonials-title" style={{ maxWidth: width }}>
-          {title}
-        </h2>
-        <div className="testimonials-body">{children}</div>
-      </div>
-    </section>
-  );
-}
-
 export function ContactSection({ title, text }: { title: string; text: string }) {
   return (
     <section className="contact" id="contact">
@@ -221,21 +200,52 @@ export function Separated({ items }: { items: string[] }) {
 }
 
 // Endless logo strip. The list is rendered twice so the CSS loop can wrap seamlessly;
-// the copy is hidden from screen readers.
-export function BrandCarousel() {
-  return (
-    <div className="brand-carousel" aria-label="המותגים של דיפלומט">
-      <div className="brand-track">
+// the copy is hidden from screen readers. Defaults to Diplomat's brands.
+export function BrandCarousel({
+  logos = diplomatBrands,
+  dir = "brands",
+  label = "המותגים של דיפלומט",
+  startOnView = false,
+}: {
+  logos?: [string, string][];
+  dir?: string;
+  label?: string;
+  /** Hold still until scrolled into view, then start with the first logo centred. */
+  startOnView?: boolean;
+}) {
+  // Short lists repeat so each half of the strip is wider than any screen.
+  const reps = Math.ceil(16 / logos.length);
+  const items = Array.from({ length: reps }, (_, r) => logos.map(([file, name]) => ({ file, name, r }))).flat();
+  const track = (
+    <>
+      {/* Duration scales with the list so every strip scrolls at the same speed. */}
+      <div
+        className="brand-track"
+        style={{ "--brand-duration": `${items.length * 2}s` } as CSSProperties}
+      >
         {[false, true].map((copy) => (
           <ul className="brand-list" aria-hidden={copy || undefined} key={String(copy)}>
-            {diplomatBrands.map(([file, name]) => (
-              <li className="brand-card" key={file}>
-                <img src={`/images/brands/${file}.webp`} alt={copy ? "" : name} loading="lazy" />
+            {items.map(({ file, name, r }) => (
+              <li className="brand-card" key={`${file}-${r}`}>
+                <img
+                  src={`/images/${dir}/${file}.webp`}
+                  alt={copy || r > 0 ? "" : name}
+                  // Eager: lazy images inside a moving strip often show up blank as they slide in.
+                  loading="eager"
+                  decoding="async"
+                />
               </li>
             ))}
           </ul>
         ))}
       </div>
+    </>
+  );
+  return startOnView ? (
+    <CarouselStartOnView label={label}>{track}</CarouselStartOnView>
+  ) : (
+    <div className="brand-carousel" aria-label={label}>
+      {track}
     </div>
   );
 }

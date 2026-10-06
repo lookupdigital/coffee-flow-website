@@ -56,8 +56,8 @@ export default async function ProductPage({
         <div className="product-hero-copy">
           <h1 className="product-title">{p.name}</h1>
           <p className="subheading">{p.description && <Rich text={p.description} />}</p>
-          <ButtonLink href="#contact" tone="gold">
-            לתיאום פגישת ייעוץ
+          <ButtonLink href="#contact" tone="gold" size="compact">
+            לחץ לשיחה עם מומחי הקפה שלנו
           </ButtonLink>
         </div>
       </section>

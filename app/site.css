@@ -45,6 +45,9 @@ html {
 }
 body {
   margin: 0;
+  /* Inherited site-wide: short multi-line text (up to ~6 lines) gets evenly balanced lines,
+     so no line ends with a short leftover. Longer paragraphs wrap normally. */
+  text-wrap: balance;
   background: var(--bg);
   color: var(--beige);
   font-family: var(--font-sans);
@@ -140,6 +143,14 @@ textarea {
   background: var(--gold);
   color: var(--beige);
 }
+/* Slimmer variant for the "talk to our coffee experts" call to action. */
+.btn-compact {
+  padding: 12px 26px;
+  border-width: 1.5px;
+  border-radius: 12px;
+  font-size: 15px;
+  line-height: 22px;
+}
 .btn-light {
   border-color: rgba(247, 243, 236, 0.3);
   color: var(--beige);
@@ -230,6 +241,25 @@ textarea {
   white-space: nowrap;
   transition: background-color 0.2s, color 0.2s;
 }
+.header-leave-details {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 18px;
+  border: 1px solid var(--gold-stroke);
+  border-radius: 12px;
+  background: var(--gold-stroke);
+  color: #000;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.header-leave-details:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+}
 .header-service:hover,
 .header-service[aria-current="page"] {
   background: var(--gold-stroke);
@@ -318,13 +348,20 @@ textarea {
   );
 }
 
+/* Home hero: short enough that the "clients" heading peeks in below the fold,
+   but never shorter than its content, so the button is never clipped. */
+.home-hero {
+  height: auto;
+  min-height: min(calc(100svh - 170px), 976px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .home-hero-content {
-  position: absolute;
-  top: 199.91px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   width: min(720px, 100%);
-  padding: 74px var(--gutter) 0;
+  margin-inline: auto;
+  padding: 140px var(--gutter) 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -344,7 +381,30 @@ textarea {
 .home-hero-content .btn {
   margin-top: 44px;
 }
-.home-hero-whatsapp {
+/* Short desktop screens: tighten the hero so the whole block, button included, fits on screen. */
+@media (min-width: 961px) and (max-height: 820px) {
+  /* Only the "clients" heading peeks in below the fold, not its paragraph. */
+  .home-hero {
+    min-height: calc(100svh - 115px);
+  }
+  .home-hero-content {
+    width: min(1000px, 100%);
+    padding-top: 124px;
+    padding-bottom: 24px;
+  }
+  /* Full-size copy; the subheading runs wider instead of taller to keep the hero short. */
+  .home-hero-content .subheading {
+    width: min(820px, 100%);
+    padding-top: 18px;
+  }
+  .home-hero-content .btn {
+    margin-top: 24px;
+  }
+  .home-hero + .clients {
+    padding-top: 48px;
+  }
+}
+.floating-whatsapp {
   position: fixed;
   bottom: 24px;
   right: 50px;
@@ -366,11 +426,23 @@ textarea {
 .solution-hero-content > .btn {
   align-self: center;
 }
+/* Hero that ends with the feature strip (office): ends right below it instead of at a fixed height. */
+.solution-hero-compact {
+  height: auto;
+}
+.solution-hero-compact .solution-hero-content {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  margin-inline: auto;
+  padding: 339px 0 56px;
+}
 .solution-hero-features {
   align-self: stretch;
   margin-top: 32px;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
+  padding-block: 28px;
+  border-block: 1px solid var(--line);
 }
 .solution-hero-features .feature {
   color: rgba(247, 243, 236, 0.8);
@@ -434,7 +506,7 @@ textarea {
 }
 .catalog-hero-content .subheading {
   width: min(640px, 100%);
-  text-align: right;
+  text-align: center;
 }
 
 /* ===== Generic sections ===== */
@@ -456,14 +528,6 @@ textarea {
   font-family: var(--font-con);
 }
 
-.why {
-  background: var(--bg-deep);
-  border: 1px solid var(--line);
-  padding: 64px 200px;
-  display: flex;
-  flex-direction: column;
-  gap: 64px;
-}
 .features {
   display: flex;
   align-items: center;
@@ -494,9 +558,16 @@ textarea {
 .brand-track {
   display: flex;
   width: max-content;
-  animation: brand-scroll 90s linear infinite;
+  animation: brand-scroll var(--brand-duration, 90s) linear infinite;
 }
-.brand-carousel:hover .brand-track {
+.brand-carousel-waiting .brand-track {
+  animation-play-state: paused;
+}
+.brand-carousel-waiting.is-playing .brand-track {
+  animation-play-state: running;
+}
+.brand-carousel:hover .brand-track,
+.brand-carousel-waiting.is-playing:hover .brand-track {
   animation-play-state: paused;
 }
 .brand-list {
@@ -598,8 +669,8 @@ textarea {
   display: block;
   font-family: var(--font-eng);
   font-weight: 700;
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 26px;
+  line-height: 32px;
   text-align: center;
   color: var(--beige);
 }
@@ -607,6 +678,8 @@ textarea {
   display: flex;
   flex-direction: column;
   height: 462px;
+  /* Every brown card on the site carries the same thin outline. */
+  border: 1px solid var(--line);
   border-radius: 16px;
   overflow: hidden;
   background: var(--surface);
@@ -616,14 +689,14 @@ textarea {
   transform: translateY(-4px);
 }
 .machine-card-bordered {
-  border: 1px solid var(--line);
   padding: 1px;
 }
 .machine-card-photo {
   position: relative;
   height: 292.5px;
   flex-shrink: 0;
-  background: var(--beige);
+  /* Same dark coffee surface as the machine catalog. */
+  background: var(--surface-coffee);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -655,6 +728,7 @@ textarea {
 .coffee-card-photo {
   position: relative;
   height: 389.328px;
+  border: 1px solid var(--line);
   border-radius: 16px;
   overflow: hidden;
   background: var(--surface-coffee);
@@ -667,7 +741,6 @@ textarea {
   transform: translateY(-4px);
 }
 .coffee-card-outlined {
-  border: 1px solid #000;
   padding: 1px;
 }
 .coffee-card-meta {
@@ -740,30 +813,6 @@ textarea {
   max-width: 672px;
   min-height: 88px;
 }
-.logos {
-  display: flex;
-  gap: 12px;
-  padding-inline: var(--gutter);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.logos::-webkit-scrollbar {
-  display: none;
-}
-.logo-box {
-  flex: 0 0 179px;
-  height: 120px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--beige);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-eng);
-  font-size: 14px;
-  line-height: 19.25px;
-  color: var(--brown);
-}
 
 .about {
   background: var(--bg-deep);
@@ -771,7 +820,7 @@ textarea {
 }
 .about-grid {
   display: grid;
-  grid-template-columns: 584px 584px;
+  grid-template-columns: 584px 500px;
   gap: 64px;
   justify-content: center;
   align-items: center;
@@ -834,7 +883,7 @@ textarea {
   filter: brightness(1.45);
 }
 .about-photo {
-  height: 730px;
+  height: 620px;
   border-radius: 16px;
   overflow: hidden;
   background: #2a2118;
@@ -1005,122 +1054,6 @@ textarea {
 }
 .carousel-prev img {
   transform: rotate(90deg);
-}
-
-/* ===== Testimonials ===== */
-.testimonials {
-  background: rgba(62, 44, 34, 0.2);
-  padding: 112px var(--gutter);
-  min-height: 596px;
-}
-.testimonials-inner {
-  width: min(1236px, 100%);
-  margin-inline: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.testimonials-title {
-  padding-top: 12px;
-  line-height: 48px;
-  text-align: right;
-}
-.testimonials-body {
-  align-self: flex-end;
-  width: min(618px, 100%);
-  padding-top: 64px;
-}
-.testimonials-home .testimonials-body {
-  padding-top: 0;
-}
-.quote {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-.quote-mark {
-  height: 59px;
-  font-size: 64px;
-  line-height: 1.6;
-  color: #fff;
-  overflow: visible;
-}
-.quote-mark-open {
-  text-align: right;
-}
-.quote-mark-close {
-  text-align: left;
-}
-.quote blockquote {
-  width: min(604px, 100%);
-  min-height: 64px;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 1.32;
-  color: var(--text-65);
-  text-align: right;
-}
-.quote figcaption {
-  display: flex;
-  flex-direction: column;
-  font-size: 20px;
-  line-height: 20px;
-  color: var(--text-65);
-  text-align: left;
-}
-.quote figcaption strong {
-  font-weight: 400;
-  color: var(--beige);
-}
-.rolling-reviews {
-  position: relative;
-  height: 222px;
-  overflow: hidden;
-}
-.rolling-track {
-  height: 100%;
-  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-}
-.rolling-slide {
-  height: 222px;
-}
-.rolling-wrap {
-  position: relative;
-}
-.rolling-controls {
-  position: absolute;
-  top: 50%;
-  left: -64px;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.rolling-controls button {
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 1px solid rgba(247, 243, 236, 0.18);
-  border-radius: 50%;
-  background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s, border-color 0.2s;
-}
-.rolling-controls button:hover,
-.rolling-controls button:focus-visible {
-  opacity: 1;
-  border-color: rgba(185, 138, 62, 0.6);
-}
-.rolling-controls img {
-  width: 14px;
-  height: 9px;
-}
-.rolling-controls .rolling-up {
-  transform: rotate(180deg);
 }
 
 /* ===== Contact ===== */
@@ -1302,7 +1235,7 @@ textarea {
 }
 .filter-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 220px));
+  grid-template-columns: repeat(5, minmax(0, 220px));
   justify-content: center;
   gap: 20px;
   width: 100%;
@@ -1379,13 +1312,19 @@ textarea {
   align-items: center;
   justify-content: center;
 }
+.row-photo-light {
+  flex-basis: 400px;
+  height: 400px;
+}
 .row-photo-light .machine-stage {
-  width: 480px;
-  height: 480px;
+  width: 400px;
+  height: 400px;
   flex-shrink: 0;
+  border: 1px solid var(--line);
   border-radius: 16px;
   overflow: hidden;
-  background: var(--beige);
+  /* Same dark coffee surface as the bean rows. */
+  background: var(--surface-coffee);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1412,6 +1351,7 @@ textarea {
   width: 480px;
   flex-basis: 480px;
   height: 480px;
+  border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--surface-coffee);
   overflow: hidden;
@@ -1424,6 +1364,49 @@ textarea {
   align-items: flex-start;
   gap: 28px;
   text-align: right;
+}
+/* Keep catalog descriptions to a comfortable line length. */
+.row-copy .text {
+  max-width: 560px;
+}
+/* Beans catalog: tighter rows than the machine catalog. */
+.catalog-list-beans .product-row {
+  padding-block: 56px;
+}
+.catalog-list-beans .row-photo-dark {
+  width: 400px;
+  flex-basis: 400px;
+  height: 400px;
+}
+.blend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.blend-pill {
+  display: flex;
+  border: 1px solid var(--beige);
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 1;
+}
+.blend-label,
+.blend-value {
+  padding: 10px 16px;
+}
+.blend-label {
+  background: var(--beige);
+  color: var(--bg);
+  font-weight: 500;
+}
+.blend-value {
+  color: var(--beige);
+  direction: ltr;
 }
 .row-title {
   width: 100%;
@@ -1748,7 +1731,6 @@ textarea {
 
 /* ===== Responsive ===== */
 @media (max-width: 1440px) {
-  .why,
   .more,
   .products-section {
     padding-inline: 80px;
@@ -1758,7 +1740,7 @@ textarea {
     padding-inline: 80px;
   }
   .about-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     max-width: 1232px;
     margin-inline: auto;
   }
@@ -1818,9 +1800,13 @@ textarea {
   .menu-toggle {
     display: flex;
   }
-  .header-contact,
   .header-service {
     display: none;
+  }
+  /* Stays in the bar next to the menu button, slightly smaller. */
+  .header-leave-details {
+    padding: 8px 14px;
+    font-size: 13px;
   }
   .header-nav .nav-service {
     display: block;
@@ -1870,11 +1856,6 @@ textarea {
   .solution-hero-text,
   .catalog-hero-content .subheading,
   .about-copy,
-  .testimonials-title,
-  .quote blockquote,
-  .quote figcaption,
-  .quote-mark-open,
-  .quote-mark-close,
   .contact-inner,
   .row-copy,
   .narrative,
@@ -1884,34 +1865,29 @@ textarea {
   }
   .about-copy,
   .row-copy,
-  .narrative,
-  .quote,
-  .testimonials-inner {
+  .narrative {
     align-items: center;
   }
   .about-copy .h2,
-  .about-copy .text,
-  .testimonials-title {
+  .about-copy .text {
     max-width: none !important;
-  }
-  .quote blockquote {
-    margin-inline: auto;
-  }
-  .quote figcaption {
-    align-items: center;
-  }
-  .testimonials-body {
-    align-self: center;
   }
   .metrics {
     justify-content: center;
   }
+  .blend {
+    justify-content: center;
+  }
+  .blend-pill {
+    font-size: 17px;
+  }
+  .blend-label,
+  .blend-value {
+    padding: 8px 12px;
+  }
   .metric,
   .metric-edge {
     align-items: center;
-  }
-  .rolling-controls {
-    justify-content: center !important;
   }
   .field span,
   .field input,
@@ -1922,6 +1898,15 @@ textarea {
   .hero {
     height: auto;
     min-height: 100svh;
+  }
+  .home-hero {
+    min-height: calc(100svh - 170px);
+  }
+  .solution-hero-compact {
+    min-height: 0;
+  }
+  .solution-hero-compact .solution-hero-content {
+    padding: 150px 0 48px;
   }
   .home-hero-content,
   .solution-hero-content {
@@ -1951,7 +1936,7 @@ textarea {
     width: 240px;
     height: 198px;
   }
-  .home-hero-whatsapp {
+  .floating-whatsapp {
     right: var(--gutter);
     bottom: 24px;
   }
@@ -1971,7 +1956,6 @@ textarea {
     font-size: 20px;
     line-height: 26px;
   }
-  .why,
   .more,
   .products-section,
   .services,
@@ -1985,7 +1969,6 @@ textarea {
   .services,
   .about,
   .home-machines,
-  .testimonials,
   .contact,
   .similar,
   .product-hero,
@@ -2025,9 +2008,6 @@ textarea {
   .solution-hero-features .feature-line {
     display: none;
   }
-  .testimonials-body {
-    align-self: stretch;
-  }
   .catalog-hero {
     height: auto;
     min-height: 640px;
@@ -2056,8 +2036,13 @@ textarea {
   }
   .row-photo-light .machine-stage,
   .row-photo-dark {
-    width: min(480px, 100vw - 2 * var(--gutter));
-    height: min(480px, 100vw - 2 * var(--gutter));
+    width: min(400px, 100vw - 2 * var(--gutter));
+    height: min(400px, 100vw - 2 * var(--gutter));
+  }
+  .catalog-list-beans .row-photo-dark {
+    flex-basis: auto;
+    width: min(400px, 100vw - 2 * var(--gutter));
+    height: min(400px, 100vw - 2 * var(--gutter));
   }
   .row-title {
     font-size: 40px;
@@ -2109,6 +2094,12 @@ textarea {
     width: 150px;
     height: 64px;
   }
+  .header-inner {
+    gap: 12px;
+  }
+  .header-end {
+    gap: 10px;
+  }
   .partner-logos {
     margin-top: 24px;
     padding-top: 20px;
@@ -2145,13 +2136,6 @@ textarea {
   .spec-row dd {
     width: 50%;
   }
-  .rolling-controls {
-    position: static;
-    transform: none;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-top: 16px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2162,5 +2146,18 @@ textarea {
   *::before,
   *::after {
     transition: none !important;
+  }
+}
+
+/* Very narrow phones: logo, "leave details" and the menu button must share one row. */
+@media (max-width: 380px) {
+  .header-logo,
+  .header-logo img {
+    width: 120px;
+    height: 51px;
+  }
+  .header-leave-details {
+    padding: 7px 10px;
+    font-size: 12px;
   }
 }

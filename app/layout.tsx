@@ -11,6 +11,7 @@ import "@fontsource/karantina/hebrew-700.css";
 import "@fontsource/karantina/latin-400.css";
 import "@fontsource/karantina/latin-700.css";
 import "./site.css";
+import { WhatsAppLink } from "@/components/shared";
 
 // Absolute URLs for share images: uses the Vercel production domain (or a custom domain once connected).
 const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
@@ -69,6 +70,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="he" dir="rtl" data-scroll-behavior="smooth">
       <body>
         {children}
+        {/* Pinned to the bottom-right corner on every page. */}
+        <WhatsAppLink className="floating-whatsapp" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }}

@@ -135,6 +135,26 @@ export function Metrics({
   );
 }
 
+// Arabica / Robusta split as label + percent pills, as on the blend sheet.
+function BlendBadges({ blend }: { blend: NonNullable<Product["blend"]> }) {
+  const parts: [string, number | undefined][] = [
+    ["Arabica", blend.arabica],
+    ["Robusta", blend.robusta],
+  ];
+  return (
+    <ul className="blend" aria-label="הרכב התערובת">
+      {parts
+        .filter(([, value]) => value)
+        .map(([label, value]) => (
+          <li className="blend-pill" key={label}>
+            <span className="blend-label">{label}</span>
+            <span className="blend-value">{value}%</span>
+          </li>
+        ))}
+    </ul>
+  );
+}
+
 export function ProductRow({ product: p }: { product: Product }) {
   const href = `/products/${p.slug}`;
   // Only machines have product pages; bean rows are display-only.
@@ -149,6 +169,7 @@ export function ProductRow({ product: p }: { product: Product }) {
           <p className="text">
             {p.description ? <Rich text={p.description} /> : beanPlaceholder}
           </p>
+          {p.blend && <BlendBadges blend={p.blend} />}
         </div>
       </article>
     );
@@ -166,7 +187,7 @@ export function ProductRow({ product: p }: { product: Product }) {
         <p className="text">{p.description && <Rich text={p.description} />}</p>
         {p.trust && <Metrics items={p.trust} />}
         <Link href={href} className="btn btn-gold">
-          למידע נוסף
+          למידע נוסף ומפרט טכני מלא
         </Link>
       </div>
     </article>

@@ -2,16 +2,24 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { FormEvent, ReactNode, useEffect, useId, useRef, useState } from "react";
-import { MachineKind, Product, machineFilters, reviews } from "@/lib/data";
-import { ProductRow, Rich, WhatsAppLink } from "./shared";
+import { MachineKind, Product, machineFilters } from "@/lib/data";
+import { ProductRow, WhatsAppLink } from "./shared";
 
-// Right to left: "בית" is the right-most menu item.
+// Right to left: "דף הבית" is the right-most menu item (hidden on the home page itself).
 const nav = [
-  ["/", "בית"],
+  ["/", "דף הבית"],
   ["/solutions/office", "חברות ומשרדים"],
   ["/solutions/cafe", "בתי קפה ומסעדות"],
   ["/solutions/hotel", "בתי מלון ובתי הארחה"],
 ];
+
+// Pages that end with the contact form link to it in place; the rest jump to the home page's form.
+const pagesWithContactForm = ["/machines", "/beans", "/products/", "/solutions/"];
+function contactHref(pathname: string) {
+  return pathname === "/" || pagesWithContactForm.some((p) => pathname.startsWith(p))
+    ? "#contact"
+    : "/#contact";
+}
 
 // Wrench icon for the technical-service button.
 function ServiceIcon() {
@@ -70,7 +78,7 @@ export function Header({
           <img src="/images/6373b.webp" alt="Coffee Flow" width={200} height={85} />
         </Link>
         <nav id="site-nav" className="header-nav" aria-label="ניווט ראשי">
-          {nav.map(([href, label]) => (
+          {nav.filter(([href]) => !(home && href === "/")).map(([href, label]) => (
             <Link
               key={href}
               href={href}
@@ -91,6 +99,11 @@ export function Header({
           <WhatsAppLink className="nav-contact" onClick={close} />
         </nav>
         <div className="header-end">
+          {!home && (
+            <Link href={contactHref(pathname)} className="header-leave-details">
+              להשארת פרטים
+            </Link>
+          )}
           <Link
             href="/service"
             className="header-service"
@@ -99,7 +112,7 @@ export function Header({
             <ServiceIcon />
             שירות טכני
           </Link>
-          {home ? (
+          {home && (
             <img
               className="header-partner"
               src="/images/94ed1.webp"
@@ -107,8 +120,6 @@ export function Header({
               width={112}
               height={42}
             />
-          ) : (
-            <WhatsAppLink className="header-contact" />
           )}
           <button
             type="button"
@@ -128,10 +139,23 @@ export function Header({
   );
 }
 
-const fields = [
+type Field = {
+  name: string;
+  label: string;
+  placeholder: string;
+  required: boolean;
+  autoComplete: string;
+  type?: "email" | "tel";
+};
+
+const fields: Field[][] = [
   [
     { name: "name", label: "שם מלא *", placeholder: "ישראל ישראלי", required: true, autoComplete: "name" },
     { name: "company", label: "שם החברה *", placeholder: "שם החברה", required: true, autoComplete: "organization" },
+  ],
+  [
+    { name: "phone", label: "טלפון *", placeholder: "050-0000000", required: true, autoComplete: "tel", type: "tel" },
+    { name: "email", label: "אימייל", placeholder: "name@company.co.il", required: false, autoComplete: "email", type: "email" },
   ],
   [
     { name: "city", label: "עיר", placeholder: "תל אביב", required: false, autoComplete: "address-level2" },
@@ -156,6 +180,9 @@ export function ContactForm() {
               <input
                 id={`${id}-${f.name}`}
                 name={f.name}
+                type={f.type ?? "text"}
+                // Phone numbers and addresses read left to right, even inside the Hebrew form.
+                dir={f.type ? "ltr" : undefined}
                 placeholder={f.placeholder}
                 required={f.required}
                 autoComplete={f.autoComplete}
@@ -184,61 +211,43 @@ export function ContactForm() {
   );
 }
 
-export function RollingReviews() {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+// Logo strip that waits off-screen: it starts moving only once scrolled into view, and
+// starts with its first logo in the middle (the logos before it wrap round to its left).
+export function CarouselStartOnView({ label, children }: { label: string; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [playing, setPlaying] = useState(false);
   useEffect(() => {
-    if (paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-      return;
-    const timer = setInterval(
-      () => setIndex((i) => (i + 1) % reviews.length),
-      6000,
+    const box = ref.current;
+    const track = box?.querySelector<HTMLElement>(".brand-track");
+    const lists = box?.querySelectorAll<HTMLElement>(".brand-list");
+    const first = lists?.[0]?.firstElementChild as HTMLElement | null | undefined;
+    if (!box || !track || !lists || lists.length < 2 || !first) return;
+    // One loop moves the strip by the width of one copy of the list.
+    const loop = lists[1].offsetLeft - lists[0].offsetLeft;
+    const duration = parseFloat(getComputedStyle(track).animationDuration) || 0;
+    const shift = box.clientWidth / 2 - (first.offsetLeft + first.offsetWidth / 2);
+    const offset = (((shift % loop) + loop) % loop) - loop; // in (-loop, 0]
+    track.style.animationDelay = `${(offset / loop) * duration}s`;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setPlaying(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.6 },
     );
-    return () => clearInterval(timer);
-  }, [paused, index]);
-  const go = (step: 1 | -1) =>
-    setIndex((i) => (i + step + reviews.length) % reviews.length);
+    io.observe(box);
+    return () => io.disconnect();
+  }, []);
   return (
     <div
-      className="rolling-wrap"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
+      ref={ref}
+      className={`brand-carousel brand-carousel-waiting ${playing ? "is-playing" : ""}`}
+      aria-label={label}
     >
-      <div className="rolling-reviews">
-        <div
-          className="rolling-track"
-          style={{ transform: `translateY(-${index * 100}%)` }}
-          aria-live="polite"
-        >
-          {reviews.map((review, i) => (
-            <figure className="quote rolling-slide" key={i} aria-hidden={i !== index}>
-              <span className="quote-mark quote-mark-open" aria-hidden>
-                “
-              </span>
-              <blockquote>
-                <Rich text={review.text} />
-              </blockquote>
-              <span className="quote-mark quote-mark-close" aria-hidden>
-                “
-              </span>
-              <figcaption>
-                <strong>{review.name}</strong>
-                <span>{review.role}</span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-      <div className="rolling-controls">
-        <button type="button" onClick={() => go(-1)} aria-label="להמלצה הקודמת">
-          <img src="/images/05291.svg" alt="" className="rolling-up" />
-        </button>
-        <button type="button" onClick={() => go(1)} aria-label="להמלצה הבאה">
-          <img src="/images/05291.svg" alt="" />
-        </button>
-      </div>
+      {children}
     </div>
   );
 }

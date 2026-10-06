@@ -10,7 +10,7 @@ export type ImageFit =
   | { kind: "box"; size: number; scale?: number }
   | { kind: "fixed"; width: number; height: number };
 
-export type MachineKind = "office" | "professional" | "capsule" | "automatic" | "sabbath";
+export type MachineKind = "professional" | "capsule" | "automatic" | "sabbath";
 
 export type Product = {
   slug: string;
@@ -30,6 +30,8 @@ export type Product = {
   trust?: [string, string][];
   specs?: [string, string][];
   sources?: string[];
+  /** Bean blend split in percent, from the Coffee Flow blend sheet (PDF). */
+  blend?: { arabica: number; robusta?: number };
 };
 
 export const cardDescription =
@@ -116,15 +118,15 @@ export const products: Product[] = [
     cardImage: "206d3",
     cardFit: machineInset,
     solutionFit: { kind: "fixed", width: 379, height: 285 },
-    kinds: ["office", "automatic"],
+    kinds: ["automatic"],
     description:
-      "מכונת קפה אוטומטית מסחרית של Dr.Coffee, עם שני מכלי פולים ומסך מגע 10.1 אינץ׳. מכינה משקאות קפה וחלב בלחיצה אחת, ומתאימה למשרדים ולמתחמי אירוח עם תפוקה יומית מומלצת של 200 כוסות.",
+      "מכונת קפה אוטומטית של Dr.Coffee, עם שני מכלי פולים ומסך מגע 10.1 אינץ׳. מכינה משקאות קפה וחלב בלחיצה אחת, ומתאימה לאירוח עם תפוקה יומית מומלצת של למעלה מ-200 כוסות.",
     narrative: [
-      "שני מכלי פולים (1,000 ו-1,200 גרם) מאפשרים להציע שני סוגי קפה במקביל, ומערכת החלב מתנקה אוטומטית. לפי היצרן, המכונה מספקת עד 100 כוסות בשעה ותפוקה יומית מומלצת של 200 כוסות.",
+      "שני מכלי פולים (1,000 ו-1,200 גרם) מאפשרים להציע שני סוגי קפה במקביל, ומערכת החלב מתנקה אוטומטית. לפי היצרן, המכונה מספקת עד 100 כוסות בשעה ותפוקה יומית מומלצת של למעלה מ-200 כוסות.",
       "המכונה עובדת עם מכל מים של 4 ליטר או בחיבור ישיר לרשת המים, וכוללת יציאת מים חמים. ניתן לשלב מקרר חלב ייעודי של Dr.Coffee להכנת משקאות חלב חמים וקרים.",
     ],
     trust: [
-      ["200", "כוסות ביום (מומלץ)"],
+      ["200+", "כוסות ביום (מומלץ)"],
       ["10.1″", "מסך מגע"],
       ["2", "מכלי פולים"],
     ],
@@ -139,11 +141,11 @@ export const products: Product[] = [
     image: "catalog/machine-gt2-pro",
     cardImage: "a2781",
     cardFit: { kind: "contain" },
-    kinds: ["office", "automatic"],
+    kinds: ["automatic"],
     description:
       "מכונת קפה אוטומטית מסדרת GT2 של Dr.Coffee, שנבנתה לעסקים ולמשרדים בגודל קטן עד בינוני — עם מסך צבעוני 10.1 אינץ׳, מטחנה סרמית ומשקאות חלב בלחיצה.",
     narrative: [
-      "מערכת חליטה בשני לחצים, יחד עם מטחנה סרמית, מספקת קפה איכותי ועקבי לשימוש מסחרי. ניתן לכוון את דרגת הטחינה, את כמות הקפה ואת זמן ההרטבה המקדימה, ולהתאים כל משקה לטעם המקום.",
+      "מערכת חליטה בשני לחצים, יחד עם מטחנה סרמית, מספקת קפה איכותי ועקבי לאורך כל היום. ניתן לכוון את דרגת הטחינה, את כמות הקפה ואת זמן ההרטבה המקדימה, ולהתאים כל משקה לטעם המקום.",
       "מסלול החלב נפרק כולו ומתנקה אוטומטית בלי להפריע לשימוש, וצינורות החלב מוסתרים לתחזוקה נוחה. המכונה משתלבת במערכת IoT של Dr.Coffee לשליטה וניהול מרחוק.",
     ],
     trust: [
@@ -161,7 +163,7 @@ export const products: Product[] = [
     cardName: "CoffeeBreak",
     image: "catalog/machine-coffee-break",
     cardFit: machineCardFit,
-    kinds: ["office", "automatic"],
+    kinds: ["automatic"],
     description:
       "מכונת קפה אוטומטית של Dr.Coffee לעסקים ולמשרדים בגודל קטן עד בינוני, עם מסך מגע צבעוני 10.1 אינץ׳ ומערכת חלב נשלפת שמתנקה מעצמה.",
     narrative: [
@@ -183,11 +185,11 @@ export const products: Product[] = [
     cardName: "CoffeeBar",
     image: "catalog/machine-coffee-bar",
     cardFit: machineCardFit,
-    kinds: ["office", "automatic"],
+    kinds: ["automatic"],
     description:
       "מכונת קפה אוטומטית קומפקטית של Dr.Coffee לחנויות נוחות, משרדים קטנים וחדרי ישיבות, עם מסך מגע 10.1 אינץ׳ ותפוקה יומית של עד 200 כוסות.",
     narrative: [
-      "המכונה טוחנת פולים טריים במטחנה עם להבים שטוחים מסרמיקה, ויחידת החליטה עשויה מתכת — לעבודה יציבה לאורך זמן בתנאים מסחריים.",
+      "המכונה טוחנת פולים טריים במטחנה עם להבים שטוחים מסרמיקה, ויחידת החליטה עשויה מתכת — לעבודה יציבה לאורך זמן גם בשימוש אינטנסיבי.",
       "מערכת הקצפת החלב כוללת ניקוי עצמי, ולצידה זרוע קיטור ויציאת מים חמים בלחיצה. מכל המים מכיל 4 ליטר, והעיצוב הקומפקטי מתאים גם לעמדות קפה קטנות.",
     ],
     trust: [
@@ -207,7 +209,7 @@ export const products: Product[] = [
     cardName: "CoffeeMaster 200",
     image: "catalog/machine-coffee-master-200",
     cardFit: machineCardFit,
-    kinds: ["professional", "automatic"],
+    kinds: ["automatic"],
     description:
       "מכונת הדגל של Dr.Coffee לרשתות, לבתי קפה ולמתחמים עמוסים — עם מטחנות שווייצריות, יחידת חליטה ממתכת ומערכת חלב טרי מקצועית.",
     narrative: [
@@ -232,7 +234,7 @@ export const products: Product[] = [
     cardName: "JURA W8",
     image: "catalog/machine-jura-w8",
     cardFit: machineCardFit,
-    kinds: ["office", "automatic"],
+    kinds: ["automatic"],
     description:
       "מכונת קפה אוטומטית מקצועית של JURA למשרדים, לסטודיואים ולחנויות — 17 משקאות קפה בלחיצה, עם תפוקה יומית מומלצת של עד 50 כוסות.",
     narrative: [
@@ -254,7 +256,7 @@ export const products: Product[] = [
     cardName: "JURA X10",
     image: "catalog/machine-jura-x10",
     cardFit: machineCardFit,
-    kinds: ["office", "automatic"],
+    kinds: ["automatic"],
     description:
       "מכונת קפה אוטומטית של JURA למשרדים גדולים, לקפיטריות ולאזורי שירות עצמי — 34 משקאות קפה, כולל משקאות קפה קר, ועד 100 כוסות ביום.",
     narrative: [
@@ -276,7 +278,7 @@ export const products: Product[] = [
     cardName: "Cafitesse Excellence",
     image: "catalog/machine-cafitesse-excellence",
     cardFit: machineCardFit,
-    kinds: ["office", "professional"],
+    kinds: ["sabbath"],
     description:
       "מערכת קפה נוזלי סגורה של Douwe Egberts (JDE Professional) להגשה מהירה בהיקפים גדולים — קפה עקבי בכל כוס, בלי טחינה ובלי התעסקות בפולים.",
     narrative: [
@@ -415,6 +417,38 @@ export const products: Product[] = [
     ],
   },
   {
+    slug: "lor-barista-sublime",
+    category: "machines",
+    name: "L’OR Barista Sublime",
+    cardName: "L’OR Barista Sublime",
+    image: "catalog/machine-lor-barista-sublime",
+    cardFit: machineCardFit,
+    kinds: ["capsule"],
+    description:
+      "מכונת קפסולות קומפקטית של L’OR בייצור Philips, עם מזיגה כפולה להכנת שתי כוסות אספרסו במקביל או כוס גדולה אחת, בלחץ של עד 19 בר.",
+    narrative: [
+      "המכונה עובדת עם קפסולות האלומיניום של L’OR ותואמת לקפסולות Nespresso® Original. היא מזהה אוטומטית את גודל הקפסולה ומכינה קפה תוך כ-30 שניות, כך שכל כוס יוצאת אחידה, בלי כיוונים ובלי התעסקות.",
+      "העיצוב הקומפקטי, ברוחב 15.7 ס״מ בלבד, משתלב בפינות קפה קטנות, בחדרי ישיבות ובעמדות אירוח. מגש הטפטוף נשלף ומתאים לכוסות בגדלים שונים ולניקוי נוח, ומכל המים מכיל 0.8 ליטר.",
+    ],
+    trust: [
+      ["19 בר", "לחץ משאבה"],
+      ["2", "כוסות במקביל"],
+      ["30 שנ׳", "להכנת קפה"],
+    ],
+    specs: [
+      ["רוחב", "15.7 ס״מ"],
+      ["עומק", "40.2 ס״מ"],
+      ["גובה", "27.6 ס״מ"],
+      ["מתח", "220–240V"],
+      ["לחץ משאבה", "19 בר"],
+      ["מכל מים", "0.8 ליטר"],
+      ["משקל", "3.35 ק״ג"],
+    ],
+    sources: [
+      "https://www.lor-espresso.co.il/%D7%9E%D7%9B%D7%95%D7%A0%D7%AA-%D7%A7%D7%A4%D7%94-lor-barista-sublime-2578304.html",
+    ],
+  },
+  {
     slug: "lor-ultimo-13-capsules",
     category: "beans",
     name: "L’OR Ultimo 13",
@@ -436,7 +470,8 @@ export const products: Product[] = [
     cardImage: "31901",
     cardFit: { kind: "cover" },
     description:
-      "בלנד קלאסי המעניק חוויית קפה רכה ומאוזנת עם אופי אירופאי מסורתי. תווי דגנים קלויים, תבלינים ופירות יבשים יוצרים כוס חלקה, נעימה ועקבית, המתאימה לשתייה יומיומית. אידיאלי למי שמעדיף קפה עדין עם קרמה קטיפתית.",
+      "תערובת קפה עשירה ומאוזנת, בעלת קלייה עמוקה שמעניקה גוף מלא וטעם מודגש, לצד חומציות עדינה ונעימה שמייצרת חוויית שתייה חלקה, אלגנטית ומדויקת.",
+    blend: { arabica: 30, robusta: 70 },
   },
   {
     slug: "jacobs-crema-harmonia",
@@ -447,7 +482,8 @@ export const products: Product[] = [
     cardImage: "25cef",
     cardFit: { kind: "cover" },
     description:
-      "בלנד מאוזן ועדין המיועד לאוהבי קפה חלק ונעים בכל שעה של היום. פרופיל הטעמים משלב מתיקות טבעית, אגוזיות עדינה ורמזים להדרים, היוצרים כוס הרמונית עם קרמה עשירה וגוף מאוזן. בחירה מצוינת למי שמחפש קפה אלגנטי ונגיש.",
+      "תערובת קפה הרמונית ומאוזנת, בעלת טעם רך, קרמה נעימה – קפה אלגנטי ונעים בהתאמה מושלמת לאספרסו וקפוצ׳ינו.",
+    blend: { arabica: 60, robusta: 40 },
   },
   {
     slug: "jacobs-royal",
@@ -457,7 +493,8 @@ export const products: Product[] = [
     image: "catalog/bean-jacobs-royal",
     cardFit: beanCardFit,
     description:
-      "בלנד עשיר ובעל גוף מלא המשלב עוצמה עם איזון מרשים. הקרמה הסמיכה והמרקם הקטיפתי מעניקים חוויית שתייה עמוקה, הנשמרת גם במשקאות המבוססים על חלב. בחירה מצוינת למי שמחפש קפה בעל נוכחות, ארומה עשירה וסיומת ממושכת.",
+      "תערובת קפה קלאסית ומאוזנת, בעלת טעם נעים, גוף רך וחמיצות מעודנת. קפה יציב ונגיש שמספק חוויית שתייה נעימה בכל כוס.",
+    blend: { arabica: 100 },
   },
   {
     slug: "lor-espresso-harmonieux",
@@ -468,7 +505,8 @@ export const products: Product[] = [
     cardImage: "66f61",
     cardFit: { kind: "box", size: 292 },
     description:
-      "בלנד 100% ערביקה המציע חוויית קפה אלגנטית, מאוזנת וארומטית. בפרופיל הטעמים תמצאו רמזים למשמש מיובש, בוטנים קלויים ונגיעות רעננות, המשתלבים בגוף קטיפתי ובסיומת נקייה. אידיאלי למי שמעדיף אספרסו עדין או קפה חלב בעל אופי מעודן.",
+      "אספרסו הרמוני בקלייה בינונית, המשלב גוף חלק, איזון מדויק וטעם אלגנטי שנשאר לאורך כל הלגימה. בחירה אידיאלית למי שמחפש חוויית קפה איכותית, נעימה ומעודנת – בלי עומס ובלי כבדות.",
+    blend: { arabica: 100 },
   },
 
   {
@@ -479,7 +517,8 @@ export const products: Product[] = [
     image: "catalog/bean-lor-vibrant",
     cardFit: beanCardFit,
     description:
-      "בלנד עשיר ובעל אופי המשלב 70% פולי ערביקה עם 30% רובוסטה ליצירת גוף מלא וקרמה קטיפתית. פרופיל הקלייה הבינוני-כהה חושף תווים קלויים, תבלינים ומתיקות עדינה, עם סיומת ארוכה ומאוזנת. בחירה מושלמת למי שמעדיף אספרסו עוצמתי או משקאות חלב בעלי נוכחות.",
+      "תערובת קפה צרפתי בקלייה איטלקית מסורתית, עם גוף מודגש, עומק טעמים ונוכחות עשירה בכל לגימה. קפה עוצמתי ומדויק שנבנה לחוויית אספרסו וקפוצ׳ינו מלאה, חלקה ובלתי מתפשרת.",
+    blend: { arabica: 70, robusta: 30 },
   },
   {
     slug: "cafitesse-strong-roast",
@@ -525,6 +564,7 @@ export const machineCatalogOrder = [
   "victoria-arduino-white-eagle-2gr",
   "victoria-arduino-white-eagle-3gr",
   "la-marzocco-linea-classic-s",
+  "lor-barista-sublime",
 ];
 export const beansCatalogOrder = [
   "jacobs-crema-traditional",
@@ -539,12 +579,16 @@ export const beansCatalogOrder = [
 // Filter cards, right to left as in Figma.
 export const machineFilters: { value: "all" | MachineKind; label: string; icon: string }[] = [
   { value: "all", label: "כל המכונות", icon: "acd33" },
-  { value: "office", label: "מכונות משרדיות", icon: "e3870" },
   { value: "professional", label: "מכונות מקצועיות", icon: "d5f83" },
   { value: "capsule", label: "מכונות קפסולות", icon: "0db2f" },
   { value: "automatic", label: "מכונות אוטומטיות", icon: "18930" },
-  { value: "sabbath", label: "מכונות שבת", icon: "shabbat" },
+  { value: "sabbath", label: "מכונת שבת / מכונת פילטר", icon: "shabbat" },
 ];
+
+export const beansHero = {
+  title: "פולי קפה מובחרים לכל כוס בעסק",
+  text: "תערובות פולים, קפסולות וקפה נוזלי ממותגי הקפה המובילים בעולם, שנבחרו כדי להעניק לעובדים, ללקוחות ולאורחים שלכם קפה עשיר ועקבי בכל כוס.",
+};
 
 export const catalogHero = {
   title: "מכונות קפה מקצועיות שעובדות בשבילכם",
@@ -560,14 +604,6 @@ export const defaultContact = {
   text: "השאירו פרטים, נכיר את העסק שלכם ונבנה עבורכם פתרון קפה מקצועי, המותאם לצרכים, לאופי הפעילות, ולתקציב שלכם.",
 };
 
-export const reviews = [
-  { text: "כארגון טכנולוגי עמוס, אנחנו צריכים פתרון קפה שפשוט עובד. ב-Coffee Flow מצאנו שותף אמיתי. הכל מתבצע בדייקנות חסרת פשרות, משלוח פולים תמיד בזמן.”", name: "יוסי לוי", role: "מנכ״ל" },
-  { text: "ביקורת 2", name: "יוסי לוי", role: "מנכ״ל" },
-  { text: "ביקורת 3", name: "יוסי לוי", role: "מנכ״ל" },
-  { text: "ביקורת 4", name: "יוסי לוי", role: "מנכ״ל" },
-  { text: "ביקורת 5", name: "יוסי לוי", role: "מנכ״ל" },
-];
-
 export type Audience = "office" | "cafe" | "hotel";
 
 export const solutions: Record<
@@ -581,9 +617,6 @@ export const solutions: Record<
     cup: string;
     cupFit: "contain" | "cover";
     // Optional: the office page shows this copy in its hero instead.
-    whyTitle?: string;
-    whyText?: string;
-    whyWidth?: number;
     features: string[];
     // Featured machine slugs, right to left; falls back to featuredMachines.
     machines?: string[];
@@ -596,8 +629,6 @@ export const solutions: Record<
     coffeeWidth: number;
     servicesTitle: string;
     servicesText: string[];
-    testimonialTitle: string;
-    testimonialWidth: number;
     contactTitle: string;
     contactText: string;
   }
@@ -613,7 +644,7 @@ export const solutions: Record<
     cupFit: "contain",
     features: ["שירות ותחזוקה שוטפים", "אספקה מסודרת של חומרי גלם", "פתרון בהתאמה אישית"],
     machines: ["gt2-pro", "coffee-bar", "coffee-express"],
-    machinesFilter: "office",
+    machinesFilter: "automatic",
     machinesTitle: "המכונה הנכונה מתחילה בהיכרות עם העסק.",
     machinesText: [
       "לכל משרד הרגלי שימוש שונים, מספר עובדים אחר, וקצב עבודה ייחודי.",
@@ -628,8 +659,6 @@ export const solutions: Record<
       "פתרון קפה טוב לא מסתיים ביום שבו המכונה מגיעה למשרד.",
       "אנחנו מלווים את הלקוחות שלנו עם שירות מקצועי, תחזוקה שוטפת, אספקת חומרי גלם, ומענה מהיר - כדי שאתם תוכלו להמשיך להתמקד בעבודה, ואנחנו נדאג לכל השאר.",
     ],
-    testimonialTitle: "הדרך הטובה ביותר להכיר אותנו היא דרך הלקוחות שלנו.",
-    testimonialWidth: 445,
     contactTitle: "בואו נתאים גם למשרד שלכם את פתרון הקפה הנכון.",
     contactText:
       "השאירו פרטים, ואחד המומחים שלנו יחזור אליכם כדי להכיר את הצרכים של המשרד ולהתאים עבורכם פתרון קפה מקצועי, ללא התחייבות.",
@@ -638,14 +667,10 @@ export const solutions: Record<
     metaTitle: "פתרונות קפה לבתי קפה ומסעדות",
     heroTitle: "פתרון קפה שעומד בקצב של העסק שלכם.",
     heroText:
-      "Coffee Flow מספקת פתרונות קפה מקצועיים לבתי קפה ומסעדות – עם ציוד מתקדם, חומרי גלם איכותיים, שירות מקצועי וליווי שוטף, כדי שתוכלו להגיש קפה מצוין בכל כוס ובכל שעה.",
+      "Coffee Flow מספקת פתרונות קפה מקצועיים לבתי קפה ומסעדות – עם ציוד מתקדם, פולי קפה איכותיים, שירות מקצועי וליווי שוטף, כדי שתוכלו להגיש קפה מצוין בכל כוס ובכל שעה.",
     image: "76743",
     cup: "0b526",
     cupFit: "contain",
-    whyTitle: "כשכל כוס משפיעה על חוויית הלקוח.",
-    whyText:
-      "בענף המסעדנות והאירוח, הקפה הוא חלק בלתי נפרד מהחוויה הכוללת. לכן חשוב לבחור בפתרון שמספק איכות עקבית, עבודה רציפה ושירות מקצועי – גם בשעות העומס.",
-    whyWidth: 499,
     features: [
       "איכות עקבית בכל הגשה",
       "פתרון שנבנה לעבודה אינטנסיבית",
@@ -668,12 +693,10 @@ export const solutions: Record<
     coffeeText:
       "קפה איכותי מתחיל בבחירה נכונה של חומרי הגלם. Coffee Flow מציעה מגוון בלנדים מבית JDE Professional, שנבחרו כדי לספק איכות עקבית, טעמים עשירים וביצועים המתאימים לעולם המסעדנות והאירוח.",
     coffeeWidth: 690,
-    servicesTitle: "כשהעסק עובד, גם אנחנו",
+    servicesTitle: "כשכל כוס משפיעה על הלקוח, אנחנו לצדכם.",
     servicesText: [
-      "פתרון קפה מקצועי דורש ליווי מקצועי. אנחנו מלווים את לקוחותינו בהתקנה, הדרכה, שירות טכני, תחזוקה שוטפת ואספקת חומרי גלם – כדי שאתם תוכלו להמשיך להתמקד במה שאתם עושים הכי טוב: להעניק חוויית אירוח מצוינת.",
+      "בענף המסעדנות והאירוח, הקפה הוא חלק בלתי נפרד מהחוויה הכוללת, ולכן הוא חייב לספק איכות עקבית ועבודה רציפה גם בשעות העומס. אנחנו מלווים אתכם בהתקנה, בהדרכה, בשירות טכני, בתחזוקה שוטפת ובאספקת חומרי גלם – כדי שתוכלו להמשיך להתמקד במה שאתם עושים הכי טוב: להעניק חוויית אירוח מצוינת.",
     ],
-    testimonialTitle: "הדרך הטובה ביותר להכיר אותנו היא דרך הלקוחות שלנו.",
-    testimonialWidth: 445,
     contactTitle: "בואו נמצא את פתרון הקפה המתאים לעסק שלכם.",
     contactText:
       "השאירו פרטים, ואחד מהמומחים שלנו יחזור אליכם כדי להכיר את אופי הפעילות, להבין את הצרכים שלכם, ולהתאים עבורכם פתרון קפה מקצועי, ללא התחייבות.",
@@ -682,14 +705,10 @@ export const solutions: Record<
     metaTitle: "פתרונות קפה למלונות",
     heroTitle: "חווית אירוח מתחילה בפרטים הקטנים.",
     heroText:
-      "Coffee Flow מספקת פתרונות קפה מקצועיים למלונות ולמתחמי אירוח, עם ציוד מתקדם, חומרי גלם איכותיים, שירות מקצועי וליווי שוטף – כדי שכל אורח יהנה מחוויית קפה שתואמת את רמת האירוח שאתם מעניקים.",
+      "Coffee Flow מספקת פתרונות קפה מקצועיים למלונות ולמתחמי אירוח, עם ציוד מתקדם, פולי קפה איכותיים, שירות מקצועי, ליווי שוטף ומערך הדרכות לצוותי הבריסטה. בנוסף, אנו מציעים סטיקים של קפה לחדרי האירוח ומכונת שבת באישור מכון צומת – כדי שכל אורח יהנה מחוויית קפה שתואמת את רמת האירוח שאתם מעניקים, גם בשבת.",
     image: "4d846",
     cup: "deb8d",
     cupFit: "cover",
-    whyTitle: "פתרון קפה שמתאים לסטנדרט האירוח שלכם.",
-    whyText:
-      "בענף המלונאות כל פרט משפיע על חוויית האורח. פתרון הקפה הנכון מאפשר להעניק שירות איכותי, לשמור על תפעול רציף ולהבטיח חוויית אירוח ברמה גבוהה בכל נקודת הגשה.",
-    whyWidth: 532,
     features: [
       "חוויית אירוח איכותית",
       "פתרון לכל נקודת הגשה",
@@ -704,64 +723,59 @@ export const solutions: Record<
     coffeeText:
       "חוויית קפה איכותית מתחילה בחומרי הגלם. Coffee Flow מציעה מגוון בלנדים מבית JDE Professional, שנבחרו כדי להבטיח איכות עקבית, טעמים עשירים וחוויית שתייה שמתאימה לסטנדרטים של עולם האירוח.",
     coffeeWidth: 690,
-    servicesTitle: "שירות שמאפשר לכם להתמקד באירוח.",
+    servicesTitle: "פתרון קפה ושירות ברמת האירוח שלכם.",
     servicesText: [
-      "אנחנו מלווים את לקוחותינו הרבה מעבר להתקנת הציוד, החל מהתאמת הפתרון, דרך תחזוקה שוטפת ועד אספקת חומרי גלם ושירות מקצועי – אנחנו דואגים לכל מה שנדרש, כדי שאתם תוכלו להמשיך להעניק לאורחים חוויית אירוח ברמה הגבוהה ביותר.",
+      "בענף המלונאות כל פרט משפיע על חוויית האורח, וגם הקפה. אנחנו מלווים אתכם הרבה מעבר להתקנת הציוד – מהתאמת הפתרון, דרך תחזוקה שוטפת ועד אספקת חומרי גלם ושירות מקצועי – כדי לשמור על תפעול רציף ולאפשר לכם להעניק לאורחים חוויית אירוח ברמה הגבוהה ביותר.",
     ],
-    testimonialTitle: "שותפים לאירוח של עסקים מובילים.",
-    testimonialWidth: 479,
     contactTitle: "בואו נתאים גם למלון שלכם את פתרון הקפה הנכון.",
     contactText:
       "השאירו פרטים, ואחד מהמומחים שלנו יחזור אליכם כדי להכיר את צורכי המלון ולהתאים עבורכם פתרון קפה מקצועי, בהתאם להיקף הפעילות, אופי האירוח, וסטנדרט השירות שלכם.",
   },
 };
 
-// Diplomat's brand portfolio (diplomat-culinary.co.il "המותגים שלנו"): [logo file in /images/brands, name].
+// Businesses that work with Coffee Flow: [logo file in /images/clients, name].
+// Kempinski starts in the middle of the strip with the key names following it in order;
+// the last three wrap round to its left. The strip only starts moving once it is in view.
+export const clientLogos: [string, string][] = [
+  ["kempinski", "Kempinski"],
+  ["isrotel", "ישרוטל"],
+  ["dan-hotels", "מלונות דן"],
+  ["toyota", "טויוטה"],
+  ["sheraton", "Sheraton Tel Aviv"],
+  ["bgu", "אוניברסיטת בן-גוריון בנגב"],
+  ["ein-hemed", "יער עין חמד"],
+  ["thai-house", "בית תאילנדי"],
+  ["aman", "Aman Group"],
+  ["mamilla", "מלון ממילא"],
+  ["black-burger", "Black Burger"],
+  ["city-market", "City Market 24/7"],
+  ["smart-hotels", "Smart Hotels"],
+  ["olive-tree", "מלון עץ הזית"],
+  ["newrest", "Newrest"],
+  ["jetex", "Jetex"],
+  ["sason-hogi", "קבוצת ששון חוגי"],
+  ["oren-mizrach", "אורן מזרח"],
+  ["lead-up", "Lead Up"],
+  ["greek-salon", "סלון יווני"],
+  ["kab-kem", "Kab Kem"],
+  ["dalinda", "דלינדה"],
+  ["look-up", "Look Up"],
+  ["logos-hotel", "מלון לוגוס"],
+  ["cafe-lev", "קפה לב"],
+];
+
+// Brands shown in "הרבה יותר מקפה" on the solution pages: [logo file in /images/brands, name].
+// Jacobs, L'OR, Allin, Sweetango, Golden Break and 7DAYS logos come from diplomat.co.il/he/the-brands.
 export const diplomatBrands: [string, string][] = [
-  ["01", "היינץ"],
-  ["02", "קיקומן"],
-  ["03", "Cirio"],
-  ["04", "יאן-ואל–יון"],
-  ["05", "רומו"],
-  ["06", "נישיקי"],
-  ["07", "בוטאן"],
-  ["08", "קאפוטו"],
-  ["09", "ביונד מיט"],
-  ["10", "סאקלה"],
-  ["11", "מיי-פלוי"],
-  ["12", "צ'יאו"],
-  ["13", "פומו דורו"],
-  ["14", "סינגה"],
-  ["15", "מבשלת הקצורו"],
-  ["16", "מבשלת אוזקי"],
-  ["17", "ג'יאקובאזי"],
-  ["18", "ריין דה–דיזון"],
-  ["19", "סטארקיסט"],
-  ["20", "מוניני"],
-  ["21", "רנדולינו"],
-  ["22", "ריזו סקוטי"],
-  ["23", "בלובנד"],
-  ["24", "מזולה"],
-  ["25", "נילסן"],
-  ["26", "טוסקי"],
-  ["27", "לוטוס בייקריס"],
-  ["28", "סקיפי"],
-  ["29", "Cholimex"],
-  ["30", "קוט ד'אור"],
-  ["31", "אוראו"],
-  ["32", "צ'אוקה"],
-  ["33", "TCC"],
-  ["34", "תאי הא"],
-  ["35", "לה גנוקריה"],
-  ["36", "מיזקאן"],
   ["37", "מילקה"],
-  ["38", "פרינגלס"],
-  ["39", "סלמארין איל דה נויירמוטייר"],
-  ["40", "סומימוטו"],
-  ["41", "Violife"],
-  ["42", "Bonne Maman"],
-  ["43", "Giuliano Tartufi"],
-  ["44", "Saint Amour"],
+  ["27", "לוטוס"],
+  ["31", "אוראו"],
+  ["jacobs", "Jacobs"],
+  ["lor", "L’OR"],
+  ["allin", "Allin"],
+  ["sweetango", "Sweetango"],
+  ["golden-break", "Golden Break"],
+  ["7days", "7DAYS"],
 ];
 
 // Technical service line, shown on /service. Every "צרו קשר" button opens WhatsApp on it.

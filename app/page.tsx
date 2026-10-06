@@ -1,16 +1,15 @@
 import {
+  BrandCarousel,
   ButtonLink,
   CoffeeCard,
   ContactSection,
   Footer,
   Header,
   MachineCard,
-  Testimonials,
-  WhatsAppLink,
 } from "@/components/ui";
-import { Carousel, RollingReviews } from "@/components/interactive";
+import { Carousel } from "@/components/interactive";
 import { Rich } from "@/components/shared";
-import { defaultContact, featuredBeans, featuredMachines, getProduct } from "@/lib/data";
+import { clientLogos, defaultContact, featuredBeans, featuredMachines, getProduct } from "@/lib/data";
 
 const machines = featuredMachines.map((slug) => getProduct(slug)!);
 const beans = featuredBeans.map((slug) => getProduct(slug)!);
@@ -18,7 +17,7 @@ const beans = featuredBeans.map((slug) => getProduct(slug)!);
 export default function Home() {
   return (
     <>
-      <section className="hero">
+      <section className="hero home-hero">
         <img className="hero-bg" src="/images/b4f9f.webp" alt="" />
         <div className="hero-shade" />
         <Header home />
@@ -33,11 +32,10 @@ export default function Home() {
             החל מהתאמת המכונה וחומרי הגלם ועד לשירות, תחזוקה ואספקה שוטפת.{" "}
             <strong>פתרון אחד, שמותאם לצרכים שלכם ומלווה אתכם לאורך זמן.</strong>
           </p>
-          <ButtonLink href="#contact" tone="gold">
-            לתיאום פגישת ייעוץ
+          <ButtonLink href="#contact" tone="gold" size="compact">
+            לחץ לשיחה עם מומחי הקפה שלנו
           </ButtonLink>
         </div>
-        <WhatsAppLink className="home-hero-whatsapp" />
       </section>
 
       <section className="clients">
@@ -51,13 +49,7 @@ export default function Home() {
             רוצים להעניק לעובדים, ללקוחות, ולאורחים שלהם.
           </p>
         </div>
-        <div className="logos" role="list" aria-label="לקוחות">
-          {Array.from({ length: 9 }, (_, i) => (
-            <div className="logo-box" role="listitem" key={i}>
-              logo
-            </div>
-          ))}
-        </div>
+        <BrandCarousel logos={clientLogos} dir="clients" label="לקוחות" startOnView />
       </section>
 
       <section className="about" id="about">
@@ -68,11 +60,14 @@ export default function Home() {
               <span>אנחנו מספקים שקט.</span>
             </h2>
             <p className="text">
-              <Rich text="פתרון קפה איכותי הוא הרבה מעבר למכונה או לפולי קפה. הוא מתחיל באפיון נכון, ממשיך בהתאמת הפתרון לעסק, ונשען על שירות מקצועי, תחזוקה שוטפת וזמינות לאורך כל הדרך. Coffee Flow פועלת כחלק מ-Diplomat Culinary ובשיתוף JDE Professional, ומשלבת מותגים מובילים, ניסיון מקצועי וליווי אישי כדי לאפשר לעסקים ליהנות מחוויית קפה איכותית, יציבה וללא התעסקות מיותרת." />
+              <Rich text="פתרון קפה איכותי הוא הרבה מעבר למכונה או לפולי קפה. הוא מתחיל באפיון נכון, ממשיך בהתאמת הפתרון לעסק, ונשען על שירות מקצועי, תחזוקה שוטפת וזמינות לאורך כל הדרך. Coffee Flow פועלת כחלק מ-Diplomat Culinary ובשיתוף תאגיד הקפה הגדול בעולם JDE Professional, ומשלבת מותגים מובילים, ניסיון מקצועי וליווי אישי כדי לאפשר לעסקים ליהנות מחוויית קפה איכותית, יציבה וללא התעסקות מיותרת." />
             </p>
             <ul className="partner-logos" aria-label="המותגים השותפים שלנו">
-              <li className="partner-logo partner-logo-jde">
-                <img src="/images/partners/jde-professional.webp" alt="JDE Professional" />
+              <li className="partner-logo partner-logo-douwe-egberts">
+                <img
+                  src="/images/partners/douwe-egberts-professional.webp"
+                  alt="Douwe Egberts Professional"
+                />
               </li>
               <li className="partner-logo">
                 <img src="/images/partners/jacobs-professional.webp" alt="Jacobs Professional" />
@@ -80,16 +75,13 @@ export default function Home() {
               <li className="partner-logo">
                 <img src="/images/partners/lor-professional.webp" alt="L'OR Professional" />
               </li>
-              <li className="partner-logo partner-logo-douwe-egberts">
-                <img
-                  src="/images/partners/douwe-egberts-professional.webp"
-                  alt="Douwe Egberts Professional"
-                />
+              <li className="partner-logo partner-logo-jde">
+                <img src="/images/partners/jde-professional.webp" alt="JDE Professional" />
               </li>
             </ul>
           </div>
           <div className="about-photo">
-            <img className="pic pic-cover" src="/images/8d0fc.webp" alt="בריסטה מקצועי מכין אספרסו" />
+            <img className="pic pic-cover" src="/images/about-us.webp" alt="אספרסו נמזג מידית מכונת הקפה" />
           </div>
         </div>
       </section>
@@ -149,14 +141,6 @@ export default function Home() {
           ))}
         </Carousel>
       </section>
-
-      <Testimonials
-        title="הדרך הטובה ביותר להכיר אותנו היא דרך הלקוחות שלנו."
-        width={445}
-        className="testimonials-home"
-      >
-        <RollingReviews />
-      </Testimonials>
 
       <ContactSection title={defaultContact.title} text={defaultContact.text} />
       <Footer />
