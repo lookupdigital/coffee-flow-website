@@ -695,8 +695,7 @@ textarea {
   position: relative;
   height: 292.5px;
   flex-shrink: 0;
-  /* Same dark coffee surface as the machine catalog. */
-  background: var(--surface-coffee);
+  background: var(--beige);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -1323,8 +1322,7 @@ textarea {
   border: 1px solid var(--line);
   border-radius: 16px;
   overflow: hidden;
-  /* Same dark coffee surface as the bean rows. */
-  background: var(--surface-coffee);
+  background: var(--beige);
   display: flex;
   align-items: center;
   justify-content: center;
