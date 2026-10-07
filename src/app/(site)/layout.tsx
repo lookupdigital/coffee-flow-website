@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { WhatsAppLink } from "@/components/shared";
 import { JsonLd, siteSchemas } from "@/lookup/schema";
 import { getSiteSettings } from "@/lookup/settings";
@@ -11,6 +12,7 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
   return (
     <>
       <JsonLd data={siteSchemas(settings, siteConfig)} />
+      <ScrollToTop />
       {children}
       {/* Pinned to the bottom-right corner on every public page. */}
       <WhatsAppLink className="floating-whatsapp" />
