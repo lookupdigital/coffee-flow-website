@@ -2354,11 +2354,16 @@ textarea {
 }
 
 /* ===== Phone tweaks =====
-   Hero titles a little larger, section descriptions a little smaller. */
+   Hero and section titles a little larger, section descriptions a little smaller. */
 @media (max-width: 560px) {
   .h1 {
     font-size: 52px;
     line-height: 54px;
+  }
+  .h2,
+  .contact-title {
+    font-size: 42px !important;
+    line-height: 46px !important;
   }
   .lead,
   .about-copy .text,
