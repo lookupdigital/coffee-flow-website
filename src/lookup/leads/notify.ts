@@ -1,0 +1,135 @@
+import "server-only";
+import { createHmac, randomUUID } from "node:crypto";
+import { getSiteEnvironment, isProductionSite } from "@/lookup/runtime";
+import { createServiceClient } from "@/lookup/supabase/service";
+
+// Lead notifications via a generic signed webhook (Make, Zapier, n8n, a CRM, or an email relay).
+// Delivery runs after the lead is stored; a failure only marks the lead, it never loses it.
+
+export const LEAD_WEBHOOK_EVENT = "lead.created";
+
+export function isLeadWebhookConfigured(): boolean {
+  return Boolean(process.env.LEAD_WEBHOOK_URL);
+}
+
+/**
+ * Test leads never reach the production webhook. Outside production they go to that environment's own webhook
+ * (set LEAD_WEBHOOK_URL for Preview to a test endpoint), marked with `test` and `environment` in the payload.
+ */
+export function shouldDeliverLead(isTest: boolean, env: Record<string, string | undefined> = process.env): boolean {
+  return !isTest || !isProductionSite(env);
+}
+
+/** HMAC-SHA256 over "<timestamp>.<body>", sent as `X-Lookup-Signature: sha256=<hex>`. */
+export function signWebhookPayload(body: string, timestamp: string, secret: string): string {
+  return `sha256=${createHmac("sha256", secret).update(`${timestamp}.${body}`).digest("hex")}`;
+}
+
+const NOTIFICATION_COLUMNS =
+  "id,created_at,name,phone,email,message,project_type,consent,form_name,landing_page,referrer,utm_source,utm_medium,utm_campaign,utm_content,utm_term,gclid,gbraid,wbraid,fbclid,ttclid,status,is_test";
+
+const RETRY_DELAYS_MS = [0, 1000, 3000];
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export async function deliverLeadNotification(leadId: string): Promise<{ ok: boolean; error?: string }> {
+  const url = process.env.LEAD_WEBHOOK_URL;
+  if (!url) return { ok: false, error: "LEAD_WEBHOOK_URL is not configured" };
+
+  const supabase = createServiceClient();
+  const { data: lead, error: loadError } = await supabase.from("leads").select(NOTIFICATION_COLUMNS).eq("id", leadId).single();
+  if (loadError || !lead) return { ok: false, error: `lead not found: ${loadError?.code ?? ""}` };
+  if (!shouldDeliverLead(lead.is_test)) return { ok: true };
+
+  const { id, created_at, ...rest } = lead;
+  const fields: Partial<typeof rest> = { ...rest };
+  delete fields.is_test;
+  const body = JSON.stringify({
+    event: LEAD_WEBHOOK_EVENT,
+    lead_id: id,
+    created_at,
+    environment: getSiteEnvironment(),
+    test: lead.is_test,
+    lead: fields,
+  });
+
+  const result = await postSignedWebhook(url, LEAD_WEBHOOK_EVENT, body);
+  const { error: updateError } = await supabase
+    .from("leads")
+    .update({
+      notification_status: result.ok ? "sent" : "failed",
+      notification_error: result.ok ? null : (result.error ?? "").slice(0, 500),
+      notified_at: new Date().toISOString(),
+    })
+    .eq("id", leadId);
+  if (updateError) console.error("[leads] notification state not saved:", updateError.code, updateError.message);
+  if (!result.ok) console.error("[leads] notification failed:", result.error);
+  return result;
+}
+
+/** Signed POST with retries: the single delivery path for real lead notifications and the Admin test. */
+export async function postSignedWebhook(url: string, event: string, body: string): Promise<{ ok: boolean; error?: string; status?: number }> {
+  const deliveryId = randomUUID();
+  let lastError = "";
+  let status: number | undefined;
+  for (const delay of RETRY_DELAYS_MS) {
+    if (delay) await wait(delay);
+    const timestamp = String(Math.floor(Date.now() / 1000));
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "User-Agent": "lookup-website-webhook/1",
+      "X-Lookup-Event": event,
+      "X-Lookup-Delivery": deliveryId,
+      "X-Lookup-Timestamp": timestamp,
+    };
+    const secret = process.env.LEAD_WEBHOOK_SECRET;
+    if (secret) headers["X-Lookup-Signature"] = signWebhookPayload(body, timestamp, secret);
+    try {
+      const response = await fetch(url, { method: "POST", headers, body, signal: AbortSignal.timeout(5000) });
+      status = response.status;
+      if (response.ok) return { ok: true, status };
+      lastError = `HTTP ${response.status}`;
+    } catch (error) {
+      lastError = (error as Error).message;
+    }
+  }
+  return { ok: false, error: lastError, status };
+}
+
+export const LEAD_TEST_WEBHOOK_EVENT = "lead.test";
+
+/**
+ * Admin → Integrations "Test webhook": the same shape as a real lead notification, with every value marked TEST.
+ * Nothing is stored — no lead row, no lead metrics.
+ */
+export function buildTestWebhookBody(environment: string, now: Date = new Date(), id: string = randomUUID()): string {
+  return JSON.stringify({
+    event: LEAD_TEST_WEBHOOK_EVENT,
+    lead_id: `TEST-${id}`,
+    created_at: now.toISOString(),
+    environment,
+    test: true,
+    lead: {
+      name: "TEST — Lookup webhook test (not a real lead)",
+      phone: "TEST-0000000000",
+      email: "webhook-test@example.invalid",
+      message: "TEST ONLY: sent from Admin → Integrations to verify the webhook. Do not contact or import.",
+      project_type: null,
+      consent: true,
+      form_name: "webhook_test",
+      landing_page: "/webhook-test",
+      referrer: null,
+      utm_source: "lookup_webhook_test",
+      utm_medium: "test",
+      utm_campaign: "webhook_test",
+      utm_content: null,
+      utm_term: null,
+      gclid: null,
+      gbraid: null,
+      wbraid: null,
+      fbclid: null,
+      ttclid: null,
+      status: "new",
+    },
+  });
+}
