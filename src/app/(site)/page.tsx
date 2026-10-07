@@ -9,8 +9,12 @@ import {
 } from "@/components/ui";
 import { Carousel } from "@/components/interactive";
 import { Rich } from "@/components/shared";
+import Link from "next/link";
 import { clientLogos, defaultContact, featuredBeans, featuredMachines, getProduct } from "@/lib/data";
+import { getPublishedPosts } from "@/lookup/posts";
 import { buildPageMetadata, registeredRoute } from "@/lookup/seo";
+import { postPath } from "@/lookup/seo-model";
+import { siteConfig } from "@/site.config";
 
 const machines = featuredMachines.map((slug) => getProduct(slug)!);
 const beans = featuredBeans.map((slug) => getProduct(slug)!);
@@ -20,7 +24,13 @@ export function generateMetadata() {
   return buildPageMetadata(registeredRoute("/"));
 }
 
-export default function Home() {
+/** The home blog section always shows this many cards: published posts first, design placeholders after. */
+const HOME_BLOG_CARDS = 3;
+
+export default async function Home() {
+  const posts = (await getPublishedPosts()).slice(0, HOME_BLOG_CARDS);
+  const placeholders = Math.max(0, HOME_BLOG_CARDS - posts.length);
+
   return (
     <>
       <section className="hero home-hero">
@@ -128,8 +138,30 @@ export default function Home() {
       <section className="blog">
         <h2 className="h2">בלוג</h2>
         <Carousel label="פוסטים">
-          {[0, 1, 2].map((i) => (
-            <article className="blog-card" key={i}>
+          {posts.map((post) => {
+            const href = postPath(siteConfig.routes.blog.path, post.slug);
+            return (
+              <article className="blog-card" key={post.id}>
+                <div className="blog-card-photo">
+                  <img
+                    className="pic pic-cover"
+                    src={post.featured_image_url || "/images/a5b88.webp"}
+                    alt={post.featured_image_alt ?? ""}
+                    loading="lazy"
+                  />
+                </div>
+                <div className="blog-card-body">
+                  <h3>{post.title}</h3>
+                  {post.excerpt && <p>{post.excerpt}</p>}
+                  <Link href={href} className="blog-btn" style={{ display: "inline-block", textDecoration: "none" }}>
+                    לצפייה
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
+          {Array.from({ length: placeholders }, (_, i) => (
+            <article className="blog-card" key={`placeholder-${i}`}>
               <div className="blog-card-photo">
                 <img className="pic pic-cover" src="/images/a5b88.webp" alt="" loading="lazy" />
               </div>
