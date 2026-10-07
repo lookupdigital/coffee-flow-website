@@ -8,12 +8,11 @@ import {
   MachineCard,
 } from "@/components/ui";
 import { Carousel } from "@/components/interactive";
+import PostCard from "@/components/PostCard";
 import { Rich } from "@/components/shared";
-import Link from "next/link";
 import { clientLogos, defaultContact, featuredBeans, featuredMachines, getProduct } from "@/lib/data";
 import { getHomePosts, HOME_POSTS_LIMIT } from "@/lookup/posts";
 import { buildPageMetadata, registeredRoute } from "@/lookup/seo";
-import { postPath } from "@/lookup/seo-model";
 import { siteConfig } from "@/site.config";
 
 const machines = featuredMachines.map((slug) => getProduct(slug)!);
@@ -136,28 +135,9 @@ export default async function Home() {
       <section className="blog">
         <h2 className="h2">בלוג</h2>
         <Carousel label="פוסטים">
-          {posts.map((post) => {
-            const href = postPath(siteConfig.routes.blog.path, post.slug);
-            return (
-              <article className="blog-card" key={post.id}>
-                <div className="blog-card-photo">
-                  <img
-                    className="pic pic-cover"
-                    src={post.featured_image_url || "/images/a5b88.webp"}
-                    alt={post.featured_image_alt ?? ""}
-                    loading="lazy"
-                  />
-                </div>
-                <div className="blog-card-body">
-                  <h3>{post.title}</h3>
-                  {post.excerpt && <p>{post.excerpt}</p>}
-                  <Link href={href} className="blog-btn" style={{ display: "inline-block", textDecoration: "none" }}>
-                    לצפייה
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
+          {posts.map((post) => (
+            <PostCard post={post} key={post.id} />
+          ))}
           {Array.from({ length: placeholders }, (_, i) => (
             <article className="blog-card" key={`placeholder-${i}`}>
               <div className="blog-card-photo">
