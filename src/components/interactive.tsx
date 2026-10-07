@@ -354,6 +354,17 @@ export function CarouselStartOnView({ label, children }: { label: string; childr
 
 export function Carousel({ children, label }: { children: ReactNode; label: string }) {
   const track = useRef<HTMLDivElement>(null);
+  // Arrows only when the cards don't all fit (e.g. 3 cards on desktop need none; on a phone they do).
+  const [scrollable, setScrollable] = useState(false);
+  useEffect(() => {
+    const el = track.current;
+    if (!el) return;
+    const check = () => setScrollable(el.scrollWidth > el.clientWidth + 1);
+    check();
+    const observer = new ResizeObserver(check);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   function move(direction: 1 | -1) {
     const el = track.current;
     if (!el) return;
@@ -364,13 +375,13 @@ export function Carousel({ children, label }: { children: ReactNode; label: stri
   }
   return (
     <div className="carousel">
-      <button className="carousel-arrow carousel-next" onClick={() => move(-1)} aria-label="הקודם">
+      <button className="carousel-arrow carousel-next" onClick={() => move(-1)} aria-label="הקודם" hidden={!scrollable}>
         <img src="/images/fba7f.svg" alt="" />
       </button>
       <div className="carousel-track" ref={track} role="region" aria-label={label}>
         {children}
       </div>
-      <button className="carousel-arrow carousel-prev" onClick={() => move(1)} aria-label="הבא">
+      <button className="carousel-arrow carousel-prev" onClick={() => move(1)} aria-label="הבא" hidden={!scrollable}>
         <img src="/images/05291.svg" alt="" />
       </button>
     </div>

@@ -1071,6 +1071,9 @@ textarea {
   align-items: center;
   justify-content: center;
 }
+.carousel-arrow[hidden] {
+  display: none;
+}
 .carousel-arrow img {
   width: 22px;
   height: 12px;
