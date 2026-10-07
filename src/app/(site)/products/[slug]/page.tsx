@@ -106,7 +106,6 @@ export default async function ProductPage({
             ))}
           </Carousel>
         </div>
-        <ButtonLink href="#contact">לצפייה בסרטוני הדרכה ושימוש</ButtonLink>
         <ButtonLink href="/machines">לצפייה בקטלוג המלא</ButtonLink>
       </section>
 
