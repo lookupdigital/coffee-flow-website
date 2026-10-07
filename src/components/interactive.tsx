@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { FormEvent, ReactNode, useEffect, useId, useRef, useState } from "react";
-import { MachineKind, Product, machineFilters } from "@/lib/data";
+import { MachineKind, Product } from "@/lib/data";
+import { pageCopy } from "@/lib/data-en";
+import { Locale, leadMessagesEn, localeOf, localePath, switchLocalePath, ui } from "@/lib/i18n";
 import { track } from "@/lookup/analytics/events";
 import { ATTRIBUTION_KEYS, getStoredAttribution } from "@/lookup/attribution";
 import Turnstile, { waitForTurnstileToken } from "@/lookup/forms/Turnstile";
@@ -11,27 +13,58 @@ import { siteConfig } from "@/site.config";
 import { ProductRow, WhatsAppLink } from "./shared";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
-const BUSINESS_TYPES: Record<string, string> = {
-  office: "חברות ומשרדים",
-  cafe: "בתי קפה ומסעדות",
-  hotel: "בתי מלון ובתי הארחה",
-  other: "אחר",
-};
+// Lead topics stay in Hebrew whatever the page language: they must match siteConfig.leads.projectTypes.
+const BUSINESS_TYPES: Record<string, string> = ui.he.form.types;
 
-// Right to left: "דף הבית" is the right-most menu item (hidden on the home page itself).
-const nav = [
-  ["/", "דף הבית"],
-  ["/solutions/office", "חברות ומשרדים"],
-  ["/solutions/cafe", "בתי קפה ומסעדות"],
-  ["/solutions/hotel", "בתי מלון ובתי הארחה"],
-];
+/** The language of the current page, from its path (/en/… is English). */
+export function useLocale(): Locale {
+  return localeOf(usePathname());
+}
+
+/** The WhatsApp button pinned to every public page, labelled in the page's language. */
+export function FloatingWhatsApp() {
+  return <WhatsAppLink className="floating-whatsapp" locale={useLocale()} />;
+}
 
 // Pages that end with the contact form link to it in place; the rest jump to the home page's form.
 const pagesWithContactForm = ["/machines", "/beans", "/products/", "/solutions/"];
-function contactHref(pathname: string) {
-  return pathname === "/" || pagesWithContactForm.some((p) => pathname.startsWith(p))
+function contactHref(pathname: string, locale: Locale) {
+  const path = locale === "en" ? pathname.slice(3) || "/" : pathname;
+  return path === "/" || pagesWithContactForm.some((p) => path.startsWith(p))
     ? "#contact"
-    : "/#contact";
+    : localePath(locale, "/#contact");
+}
+
+// Language switch: the current language highlighted, the other one links to the same page in it.
+function LanguageSwitch({ className, onClick }: { className: string; onClick?: () => void }) {
+  const pathname = usePathname();
+  const locale = localeOf(pathname);
+  const other = switchLocalePath(pathname);
+  return (
+    <div className={`lang-switch ${className}`} role="group" aria-label={ui[locale].languageSwitch}>
+      {locale === "he" ? (
+        <>
+          <span className="lang-current" lang="he" aria-current="true">
+            עב
+          </span>
+          <span className="lang-divider" aria-hidden />
+          <Link href={other} lang="en" hrefLang="en" onClick={onClick} aria-label="English">
+            EN
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link href={other} lang="he" hrefLang="he" onClick={onClick} aria-label="עברית">
+            עב
+          </Link>
+          <span className="lang-divider" aria-hidden />
+          <span className="lang-current" lang="en" aria-current="true">
+            EN
+          </span>
+        </>
+      )}
+    </div>
+  );
 }
 
 // Wrench icon for the technical-service button.
@@ -51,7 +84,7 @@ function ServiceIcon() {
 // Pinned site header. On mobile the menu collapses behind a hamburger button.
 export function Header({
   overlay = true,
-  home = false,
+  home: homeProp = false,
 }: {
   overlay?: boolean;
   home?: boolean;
@@ -59,6 +92,9 @@ export function Header({
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const locale = localeOf(pathname);
+  const t = ui[locale];
+  const home = homeProp || pathname === localePath(locale, "/");
 
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 24);
@@ -92,43 +128,45 @@ export function Header({
       className={`header ${overlay ? "header-overlay" : ""} ${scrolled ? "is-scrolled" : ""} ${open ? "menu-open" : ""}`}
     >
       <div className="header-inner">
-        <Link href="/" className="header-logo" aria-label="Coffee Flow" onClick={close}>
+        <Link href={localePath(locale, "/")} className="header-logo" aria-label="Coffee Flow" onClick={close}>
           <img src="/images/6373b.webp" alt="Coffee Flow" width={200} height={85} />
         </Link>
-        <nav id="site-nav" className="header-nav" aria-label="ניווט ראשי">
-          {nav.filter(([href]) => !(home && href === "/")).map(([href, label]) => (
+        <nav id="site-nav" className="header-nav" aria-label={t.mainNav}>
+          {t.nav.filter(([href]) => !(home && href === "/")).map(([href, label]) => (
             <Link
               key={href}
-              href={href}
+              href={localePath(locale, href)}
               onClick={close}
-              aria-current={pathname === href ? "page" : undefined}
+              aria-current={pathname === localePath(locale, href) ? "page" : undefined}
             >
               {label}
             </Link>
           ))}
           <Link
-            href="/service"
+            href={localePath(locale, "/service")}
             className="nav-service"
             onClick={close}
-            aria-current={pathname === "/service" ? "page" : undefined}
+            aria-current={pathname === localePath(locale, "/service") ? "page" : undefined}
           >
-            שירות טכני
+            {t.service}
           </Link>
-          <WhatsAppLink className="nav-contact" onClick={close} />
+          <LanguageSwitch className="nav-lang" onClick={close} />
+          <WhatsAppLink className="nav-contact" onClick={close} locale={locale} />
         </nav>
         <div className="header-end">
+          <LanguageSwitch className="header-lang" />
           {!home && (
-            <Link href={contactHref(pathname)} className="header-leave-details">
-              להשארת פרטים
+            <Link href={contactHref(pathname, locale)} className="header-leave-details">
+              {t.leaveDetails}
             </Link>
           )}
           <Link
-            href="/service"
+            href={localePath(locale, "/service")}
             className="header-service"
-            aria-current={pathname === "/service" ? "page" : undefined}
+            aria-current={pathname === localePath(locale, "/service") ? "page" : undefined}
           >
             <ServiceIcon />
-            שירות טכני
+            {t.service}
           </Link>
           {home && (
             <img
@@ -144,7 +182,7 @@ export function Header({
             className="menu-toggle"
             aria-expanded={open}
             aria-controls="site-nav"
-            aria-label={open ? "סגירת תפריט" : "פתיחת תפריט"}
+            aria-label={open ? t.closeMenu : t.openMenu}
             onClick={() => setOpen((v) => !v)}
           >
             <span />
@@ -166,23 +204,30 @@ type Field = {
   type?: "email" | "tel";
 };
 
-const fields: Field[][] = [
-  [
-    { name: "name", label: "שם מלא *", placeholder: "ישראל ישראלי", required: true, autoComplete: "name" },
-    { name: "company", label: "שם החברה *", placeholder: "שם החברה", required: true, autoComplete: "organization" },
-  ],
-  [
-    { name: "phone", label: "טלפון *", placeholder: "050-0000000", required: true, autoComplete: "tel", type: "tel" },
-    { name: "email", label: "אימייל", placeholder: "name@company.co.il", required: false, autoComplete: "email", type: "email" },
-  ],
-  [
-    { name: "city", label: "עיר", placeholder: "תל אביב", required: false, autoComplete: "address-level2" },
-    { name: "employees", label: "מספר עובדים משוער", placeholder: "לדוגמה: 50", required: false, autoComplete: "off" },
-  ],
-];
+function formFields(locale: Locale): Field[][] {
+  const f = ui[locale].form;
+  return [
+    [
+      { name: "name", label: f.name, placeholder: f.namePh, required: true, autoComplete: "name" },
+      { name: "company", label: f.company, placeholder: f.companyPh, required: true, autoComplete: "organization" },
+    ],
+    [
+      { name: "phone", label: f.phone, placeholder: "050-0000000", required: true, autoComplete: "tel", type: "tel" },
+      { name: "email", label: f.email, placeholder: "name@company.co.il", required: false, autoComplete: "email", type: "email" },
+    ],
+    [
+      { name: "city", label: f.city, placeholder: f.cityPh, required: false, autoComplete: "address-level2" },
+      { name: "employees", label: f.employees, placeholder: f.employeesPh, required: false, autoComplete: "off" },
+    ],
+  ];
+}
 
 export function ContactForm({ formName = "contact" }: { formName?: string }) {
   const id = useId();
+  const locale = useLocale();
+  const f = ui[locale].form;
+  // Server messages are Hebrew; English pages translate the known ones.
+  const message = (text: string) => (locale === "en" ? (leadMessagesEn[text] ?? text) : text);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [started, setStarted] = useState(false);
@@ -223,6 +268,8 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
       value("city") && `עיר: ${value("city")}`,
       value("employees") && `מספר עובדים משוער: ${value("employees")}`,
     ].filter(Boolean);
+    // Leads are read in Hebrew, so English-page leads are flagged rather than translated.
+    if (locale === "en") details.push("שפת האתר: אנגלית");
     if (details.length) formData.set("message", details.join(" · "));
     for (const name of ["company", "city", "employees", "businessType"]) formData.delete(name);
 
@@ -243,10 +290,10 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
         setPending(false);
         return;
       }
-      setError(result.error === "server" ? siteConfig.leads.messages.serverError : result.message);
+      setError(message(result.error === "server" ? siteConfig.leads.messages.serverError : result.message));
       track({ event: "form_submit_error", form_name: formName, page_path, error_type: result.error });
     } catch {
-      setError(siteConfig.leads.messages.serverError);
+      setError(message(siteConfig.leads.messages.serverError));
       track({ event: "form_submit_error", form_name: formName, page_path, error_type: "network" });
     }
     // Turnstile tokens are single-use: render a fresh widget before the next attempt.
@@ -257,7 +304,7 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
 
   return (
     <form className="contact-form" onSubmit={submit} onFocus={handleStart}>
-      {fields.map((row, r) => (
+      {formFields(locale).map((row, r) => (
         <div className="field-row" key={r}>
           {row.map((f) => (
             <label className="field" htmlFor={`${id}-${f.name}`} key={f.name}>
@@ -278,15 +325,16 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
         </div>
       ))}
       <label className="field field-business-type" htmlFor={`${id}-business-type`}>
-        <span>סוג עסק *</span>
+        <span>{f.businessType}</span>
         <select id={`${id}-business-type`} name="businessType" defaultValue="" required>
           <option value="" disabled>
-            בחרו סוג עסק
+            {f.chooseType}
           </option>
-          <option value="office">חברות ומשרדים</option>
-          <option value="cafe">בתי קפה ומסעדות</option>
-          <option value="hotel">בתי מלון ובתי הארחה</option>
-          <option value="other">אחר</option>
+          {Object.entries(f.types).map(([value, label]) => (
+            <option value={value} key={value}>
+              {label}
+            </option>
+          ))}
         </select>
       </label>
       {/* Spam trap: a real visitor never fills this in (hidden from people and assistive technology). */}
@@ -305,7 +353,7 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
         </p>
       )}
       <button type="submit" className="contact-submit" disabled={sent || pending}>
-        {sent ? "תודה, הפרטים התקבלו" : pending ? "שולח…" : "השאירו פרטים"}
+        {sent ? f.sent : pending ? f.sending : f.submit}
       </button>
     </form>
   );
@@ -354,6 +402,7 @@ export function CarouselStartOnView({ label, children }: { label: string; childr
 
 export function Carousel({ children, label }: { children: ReactNode; label: string }) {
   const track = useRef<HTMLDivElement>(null);
+  const t = ui[useLocale()];
   // Arrows only when the cards don't all fit (e.g. 3 cards on desktop need none; on a phone they do).
   const [scrollable, setScrollable] = useState(false);
   useEffect(() => {
@@ -370,18 +419,19 @@ export function Carousel({ children, label }: { children: ReactNode; label: stri
     if (!el) return;
     const card = el.firstElementChild as HTMLElement | null;
     const step = (card?.offsetWidth ?? 392) + 24;
-    // In RTL, scrolling "forward" means moving towards negative scrollLeft.
-    el.scrollBy({ left: -direction * step, behavior: "smooth" });
+    // In RTL, scrolling "forward" means moving towards negative scrollLeft; in LTR towards positive.
+    const rtl = getComputedStyle(el).direction === "rtl";
+    el.scrollBy({ left: (rtl ? -direction : direction) * step, behavior: "smooth" });
   }
   return (
     <div className="carousel">
-      <button className="carousel-arrow carousel-next" onClick={() => move(-1)} aria-label="הקודם" hidden={!scrollable}>
+      <button className="carousel-arrow carousel-next" onClick={() => move(-1)} aria-label={t.previous} hidden={!scrollable}>
         <img src="/images/fba7f.svg" alt="" />
       </button>
       <div className="carousel-track" ref={track} role="region" aria-label={label}>
         {children}
       </div>
-      <button className="carousel-arrow carousel-prev" onClick={() => move(1)} aria-label="הבא" hidden={!scrollable}>
+      <button className="carousel-arrow carousel-prev" onClick={() => move(1)} aria-label={t.next} hidden={!scrollable}>
         <img src="/images/05291.svg" alt="" />
       </button>
     </div>
@@ -395,6 +445,9 @@ export function MachineCatalog({
   products: Product[];
   header: ReactNode;
 }) {
+  const locale = useLocale();
+  const t = ui[locale];
+  const { machineFilters } = pageCopy(locale);
   // ?kind=… preselects a category, so pages can link straight to their own machines.
   const kind = useSearchParams().get("kind");
   const linked = machineFilters.find((f) => f.value === kind)?.value ?? "all";
@@ -411,7 +464,7 @@ export function MachineCatalog({
   return (
     <>
       <section className="filters-block">
-        <div className="filter-grid" role="group" aria-label="סינון מכונות">
+        <div className="filter-grid" role="group" aria-label={t.filterMachines}>
           {machineFilters.map((f) => (
             <button
               key={f.value}
@@ -432,9 +485,9 @@ export function MachineCatalog({
       </section>
       <div className="catalog-list" aria-live="polite">
         {list.length ? (
-          list.map((p) => <ProductRow product={p} key={p.slug} />)
+          list.map((p) => <ProductRow product={p} locale={locale} key={p.slug} />)
         ) : (
-          <p className="catalog-empty">אין כרגע מכונות בקטגוריה זו.</p>
+          <p className="catalog-empty">{t.emptyCategory}</p>
         )}
       </div>
     </>

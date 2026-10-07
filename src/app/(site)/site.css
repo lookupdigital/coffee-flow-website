@@ -2383,3 +2383,88 @@ textarea {
     text-align: center;
   }
 }
+
+/* ===== Language switch (עב │ EN) =====
+   Desktop: in the header bar. Mobile: inside the hamburger menu, above "Contact us". */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 4px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  direction: ltr;
+}
+.lang-switch .lang-current {
+  color: var(--gold-stroke);
+  font-weight: 600;
+}
+.lang-switch a {
+  color: rgba(247, 243, 236, 0.5);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.lang-switch a:hover,
+.lang-switch a:focus-visible {
+  color: var(--beige);
+}
+.lang-switch .lang-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(247, 243, 236, 0.3);
+}
+.header-nav .nav-lang {
+  display: none;
+}
+@media (max-width: 960px) {
+  .header-end .header-lang {
+    display: none;
+  }
+  .header-nav .nav-lang {
+    display: inline-flex;
+    align-self: center;
+    gap: 14px;
+    margin-top: 20px;
+    font-size: 17px;
+  }
+  .header-nav .nav-lang a {
+    padding: 4px 2px;
+    border-bottom: 0;
+    font-size: 17px;
+    color: rgba(247, 243, 236, 0.55);
+  }
+  .header-nav .nav-lang .lang-divider {
+    height: 16px;
+  }
+}
+
+/* ===== English pages: left to right =====
+   Desktop copy that the Hebrew site aligns right aligns left here; mobile keeps its centred layout. */
+@media (min-width: 961px) {
+  .locale-en .solution-hero-text,
+  .locale-en .about-copy,
+  .locale-en .contact-inner,
+  .locale-en .field input,
+  .locale-en .field select,
+  .locale-en .field textarea,
+  .locale-en .row-copy,
+  .locale-en .narrative,
+  .locale-en .spec-row dt {
+    text-align: left;
+  }
+  .locale-en .spec-row dd {
+    text-align: right;
+  }
+}
+.locale-en .plain-page {
+  text-align: left;
+}
+/* The arrow icons are drawn for right-to-left; mirror them so they point the way they scroll. */
+.locale-en .carousel-next img {
+  transform: rotate(90deg);
+}
+.locale-en .carousel-prev img {
+  transform: rotate(-90deg);
+}

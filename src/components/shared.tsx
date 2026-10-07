@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Fragment } from "react";
 import { ImageFit, Product, beanPlaceholder, servicePhone } from "@/lib/data";
+import { localizeProduct } from "@/lib/data-en";
+import { Locale, localePath, ui } from "@/lib/i18n";
 
 const src = (id: string) => `/images/${id}.webp`;
 
@@ -8,9 +10,11 @@ const src = (id: string) => `/images/${id}.webp`;
 export function WhatsAppLink({
   className = "",
   onClick,
+  locale = "he",
 }: {
   className?: string;
   onClick?: () => void;
+  locale?: Locale;
 }) {
   return (
     <a
@@ -21,7 +25,7 @@ export function WhatsAppLink({
       onClick={onClick}
     >
       <img src="/images/d8c0a.svg" alt="" width={16} height={16} />
-      צרו קשר
+      {ui[locale].contact}
     </a>
   );
 }
@@ -136,13 +140,13 @@ export function Metrics({
 }
 
 // Arabica / Robusta split as label + percent pills, as on the blend sheet.
-function BlendBadges({ blend }: { blend: NonNullable<Product["blend"]> }) {
+function BlendBadges({ blend, locale }: { blend: NonNullable<Product["blend"]>; locale: Locale }) {
   const parts: [string, number | undefined][] = [
     ["Arabica", blend.arabica],
     ["Robusta", blend.robusta],
   ];
   return (
-    <ul className="blend" aria-label="הרכב התערובת">
+    <ul className="blend" aria-label={ui[locale].blendLabel}>
       {parts
         .filter(([, value]) => value)
         .map(([label, value]) => (
@@ -155,8 +159,9 @@ function BlendBadges({ blend }: { blend: NonNullable<Product["blend"]> }) {
   );
 }
 
-export function ProductRow({ product: p }: { product: Product }) {
-  const href = `/products/${p.slug}`;
+export function ProductRow({ product, locale = "he" }: { product: Product; locale?: Locale }) {
+  const p = localizeProduct(product, locale);
+  const href = localePath(locale, `/products/${p.slug}`);
   // Only machines have product pages; bean rows are display-only.
   if (p.category === "beans")
     return (
@@ -169,7 +174,7 @@ export function ProductRow({ product: p }: { product: Product }) {
           <p className="text">
             {p.description ? <Rich text={p.description} /> : beanPlaceholder}
           </p>
-          {p.blend && <BlendBadges blend={p.blend} />}
+          {p.blend && <BlendBadges blend={p.blend} locale={locale} />}
         </div>
       </article>
     );
@@ -187,7 +192,7 @@ export function ProductRow({ product: p }: { product: Product }) {
         <p className="text">{p.description && <Rich text={p.description} />}</p>
         {p.trust && <Metrics items={p.trust} />}
         <Link href={href} className="btn btn-gold">
-          למידע נוסף ומפרט טכני מלא
+          {ui[locale].moreInfo}
         </Link>
       </div>
     </article>

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { CSSProperties, Fragment } from "react";
 import { Product, beanPlaceholder, cardDescription, diplomatBrands, servicePhone } from "@/lib/data";
+import { localizeProduct } from "@/lib/data-en";
+import { Locale, localePath, ui } from "@/lib/i18n";
 import { navigationRoutes } from "@/lookup/config";
 import { getPublishedPosts } from "@/lookup/posts";
 import { siteConfig } from "@/site.config";
@@ -12,48 +14,55 @@ export { Header, WhatsAppLink };
 export async function Footer({
   variant = "default",
   size = "wide",
+  locale = "he",
 }: {
   variant?: "default" | "solution";
   size?: "wide" | "catalog" | "product";
+  locale?: Locale;
 }) {
+  const t = ui[locale];
   // The blog is listed once a post is published; routes marked nav: false stay out of the menus by design.
-  const posts = await getPublishedPosts();
-  const managed = navigationRoutes(siteConfig.routes, posts.length > 0).filter((route) => route.path !== "/");
-  const links =
+  // The blog is Hebrew-only, so English pages leave it out.
+  const posts = locale === "he" ? await getPublishedPosts() : [];
+  const managed = navigationRoutes(siteConfig.routes, posts.length > 0).filter(
+    (route) => route.path !== "/" && locale === "he",
+  );
+  const links: [string, string][] =
     variant === "solution"
       ? [
-          [servicePhone.whatsapp, "צור קשר"],
-          ["/beans", "הקפה שלנו"],
-          ["/machines", "מכונות"],
-          ["/#about", "עלינו"],
+          [servicePhone.whatsapp, t.footerContact],
+          ["/beans", t.ourCoffee],
+          ["/machines", t.machines],
+          ["/#about", t.about],
         ]
       : [
-          [servicePhone.whatsapp, "צור קשר"],
-          ["/privacy", "מדיניות פרטיות"],
-          ["/accessibility", "הצהרת נגישות"],
+          [servicePhone.whatsapp, t.footerContact],
+          ["/privacy", t.privacy],
+          ["/accessibility", t.accessibility],
         ];
   links.splice(1, 0, ...managed.map((route) => [route.path, route.navLabel ?? route.label] as [string, string]));
 
   return (
     <footer className={`footer footer-${size}`}>
       <div className="footer-inner">
-        <nav className="footer-links" aria-label="קישורים">
+        <nav className="footer-links" aria-label={t.footerLinks}>
           {links.map(([href, label]) =>
             href.startsWith("http") ? (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer">
                 {label}
               </a>
             ) : (
-              <Link key={label} href={href}>
+              <Link key={label} href={localePath(locale, href)}>
                 {label}
               </Link>
             ),
           )}
         </nav>
         <p className="footer-copy">
-          © 2026 Coffee Flow. כל הזכויות שמורות{variant === "solution" ? "." : ""}
+          {t.rights}
+          {variant === "solution" ? "." : ""}
         </p>
-        <Link href="/" className="footer-logo" aria-label="Coffee Flow">
+        <Link href={localePath(locale, "/")} className="footer-logo" aria-label="Coffee Flow">
           <img src="/images/6373b.webp" alt="Coffee Flow" />
         </Link>
       </div>
@@ -62,16 +71,19 @@ export async function Footer({
 }
 
 export function ButtonLink({
-  href,
+  href: rawHref,
   children,
   tone = "light",
   size = "regular",
+  locale = "he",
 }: {
   href: string;
   children: React.ReactNode;
   tone?: "light" | "gold";
   size?: "regular" | "compact";
+  locale?: Locale;
 }) {
+  const href = localePath(locale, rawHref);
   const className = `btn btn-${tone}${size === "compact" ? " btn-compact" : ""}`;
   // External sites and PDFs open in a new tab so visitors keep their place here.
   if (href.startsWith("http") || href.endsWith(".pdf"))
@@ -140,16 +152,19 @@ function RichText({ text }: { text: string }) {
 }
 
 export function MachineCard({
-  product: p,
+  product,
   variant,
+  locale = "he",
 }: {
   product: Product;
   variant: "home" | "solution" | "plain";
+  locale?: Locale;
 }) {
+  const p = localizeProduct(product, locale);
   const fit = variant === "solution" && p.solutionFit ? p.solutionFit : p.cardFit;
   return (
     <Link
-      href={`/products/${p.slug}`}
+      href={localePath(locale, `/products/${p.slug}`)}
       className={`machine-card ${variant === "solution" ? "machine-card-bordered" : ""}`}
     >
       <span className="machine-card-photo">
@@ -166,9 +181,18 @@ export function MachineCard({
 }
 
 // Beans have no product pages, so the card jumps to the product's row in the catalog.
-export function CoffeeCard({ product: p, outlined = false }: { product: Product; outlined?: boolean }) {
+export function CoffeeCard({
+  product,
+  outlined = false,
+  locale = "he",
+}: {
+  product: Product;
+  outlined?: boolean;
+  locale?: Locale;
+}) {
+  const p = localizeProduct(product, locale);
   return (
-    <Link href={`/beans#${p.slug}`} className="coffee-card">
+    <Link href={localePath(locale, `/beans#${p.slug}`)} className="coffee-card">
       <span className={`coffee-card-photo ${outlined ? "coffee-card-outlined" : ""}`}>
         <Pic id={p.cardImage ?? p.image} fit={p.cardFit} alt={p.cardName} />
       </span>
