@@ -21,9 +21,37 @@ export function useLocale(): Locale {
   return localeOf(usePathname());
 }
 
-/** The WhatsApp button pinned to every public page, labelled in the page's language. */
+/**
+ * The button pinned to the bottom corner of every public page: WhatsApp on desktop; on mobile a
+ * "more details" button to the contact form instead, hidden while the form itself is on screen.
+ */
 export function FloatingWhatsApp() {
-  return <WhatsAppLink className="floating-whatsapp" locale={useLocale()} />;
+  const pathname = usePathname();
+  const locale = localeOf(pathname);
+  const [formInView, setFormInView] = useState(false);
+
+  useEffect(() => {
+    // The observer reports the form's visibility right away, so a new page starts from its real state.
+    const form = document.getElementById("contact");
+    if (!form) return;
+    const io = new IntersectionObserver(([entry]) => setFormInView(entry.isIntersecting), { threshold: 0.15 });
+    io.observe(form);
+    return () => io.disconnect();
+  }, [pathname]);
+
+  return (
+    <>
+      <WhatsAppLink className="floating-whatsapp" locale={locale} />
+      <Link
+        href={contactHref(pathname, locale)}
+        className={`floating-details ${formInView ? "is-hidden" : ""}`}
+        aria-hidden={formInView || undefined}
+        tabIndex={formInView ? -1 : undefined}
+      >
+        {ui[locale].moreDetails}
+      </Link>
+    </>
+  );
 }
 
 // Pages that end with the contact form link to it in place; the rest jump to the home page's form.

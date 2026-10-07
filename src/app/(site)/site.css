@@ -2468,3 +2468,42 @@ textarea {
 .locale-en .carousel-prev img {
   transform: rotate(-90deg);
 }
+
+/* ===== Mobile floating button =====
+   Desktop keeps the floating WhatsApp button. On mobile it becomes "more details" to the contact form,
+   which fades out while the form is on screen; the header's "leave details" button is dropped there. */
+.floating-details {
+  display: none;
+}
+@media (max-width: 960px) {
+  .floating-whatsapp {
+    display: none;
+  }
+  .floating-details {
+    position: fixed;
+    right: var(--gutter);
+    bottom: 24px;
+    z-index: 45;
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 22px;
+    border-radius: 12px;
+    background: var(--gold-stroke);
+    color: #000;
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 20px;
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+  }
+  .floating-details.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+  }
+  .header-end .header-leave-details {
+    display: none;
+  }
+}
