@@ -176,6 +176,7 @@ export default async function Home() {
             </article>
           ))}
         </Carousel>
+        <ButtonLink href={siteConfig.routes.blog.path}>לכל המאמרים</ButtonLink>
       </section>
 
       <ContactSection title={defaultContact.title} text={defaultContact.text} />
