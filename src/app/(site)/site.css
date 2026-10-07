@@ -1009,6 +1009,8 @@ textarea {
   margin-bottom: 20px;
 }
 .blog-card-body .blog-btn {
+  display: inline-block;
+  text-decoration: none;
   align-self: center;
   margin-top: auto;
   padding: 12px 32px;
@@ -2203,6 +2205,10 @@ textarea {
 }
 
 /* ===== Blog (Admin-managed posts) ===== */
+/* Blog index page: clear the fixed header, like .plain-page. */
+.blog-index {
+  padding-top: 200px;
+}
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

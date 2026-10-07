@@ -47,6 +47,7 @@ const postSchema = z.object({
   og_image_url: optional(imageUrl),
   robots_index: checkbox,
   robots_follow: checkbox,
+  show_on_home: checkbox,
   // The post version (updated_at) the editor loaded; a save based on an older version is rejected, never merged.
   base_updated_at: optional(z.string().max(64)),
   // Uploads the post referenced at its last explicit save. Draft autosave may already have removed a reference, so

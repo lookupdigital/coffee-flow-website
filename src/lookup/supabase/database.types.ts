@@ -187,6 +187,7 @@ export type Database = {
           published_at: string | null;
           robots_follow: boolean;
           robots_index: boolean;
+          show_on_home: boolean;
           slug: string;
           status: string;
           title: string;
@@ -210,6 +211,7 @@ export type Database = {
           published_at?: string | null;
           robots_follow?: boolean;
           robots_index?: boolean;
+          show_on_home?: boolean;
           slug: string;
           status?: string;
           title: string;
@@ -233,6 +235,7 @@ export type Database = {
           published_at?: string | null;
           robots_follow?: boolean;
           robots_index?: boolean;
+          show_on_home?: boolean;
           slug?: string;
           status?: string;
           title?: string;

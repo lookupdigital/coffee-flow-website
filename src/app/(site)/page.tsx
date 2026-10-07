@@ -8,9 +8,12 @@ import {
   MachineCard,
 } from "@/components/ui";
 import { Carousel } from "@/components/interactive";
+import PostCard from "@/components/PostCard";
 import { Rich } from "@/components/shared";
 import { clientLogos, defaultContact, featuredBeans, featuredMachines, getProduct } from "@/lib/data";
+import { getHomePosts, HOME_POSTS_LIMIT } from "@/lookup/posts";
 import { buildPageMetadata, registeredRoute } from "@/lookup/seo";
+import { siteConfig } from "@/site.config";
 
 const machines = featuredMachines.map((slug) => getProduct(slug)!);
 const beans = featuredBeans.map((slug) => getProduct(slug)!);
@@ -20,7 +23,11 @@ export function generateMetadata() {
   return buildPageMetadata(registeredRoute("/"));
 }
 
-export default function Home() {
+export default async function Home() {
+  // Only posts ticked "show on home" in Admin → Posts; empty slots keep the design placeholders.
+  const posts = await getHomePosts();
+  const placeholders = Math.max(0, HOME_POSTS_LIMIT - posts.length);
+
   return (
     <>
       <section className="hero home-hero">
@@ -130,8 +137,11 @@ export default function Home() {
       <section className="blog">
         <h2 className="h2">בלוג</h2>
         <Carousel label="פוסטים">
-          {[0, 1, 2].map((i) => (
-            <article className="blog-card" key={i}>
+          {posts.map((post) => (
+            <PostCard post={post} key={post.id} />
+          ))}
+          {Array.from({ length: placeholders }, (_, i) => (
+            <article className="blog-card" key={`placeholder-${i}`}>
               <div className="blog-card-photo">
                 <img className="pic pic-cover" src="/images/a5b88.webp" alt="" loading="lazy" />
               </div>
@@ -148,6 +158,7 @@ export default function Home() {
             </article>
           ))}
         </Carousel>
+        <ButtonLink href={siteConfig.routes.blog.path}>לכל המאמרים</ButtonLink>
       </section>
 
       <ContactSection title={defaultContact.title} text={defaultContact.text} />
