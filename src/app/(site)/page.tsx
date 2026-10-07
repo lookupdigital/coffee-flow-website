@@ -11,7 +11,7 @@ import { Carousel } from "@/components/interactive";
 import { Rich } from "@/components/shared";
 import Link from "next/link";
 import { clientLogos, defaultContact, featuredBeans, featuredMachines, getProduct } from "@/lib/data";
-import { getPublishedPosts } from "@/lookup/posts";
+import { getHomePosts, HOME_POSTS_LIMIT } from "@/lookup/posts";
 import { buildPageMetadata, registeredRoute } from "@/lookup/seo";
 import { postPath } from "@/lookup/seo-model";
 import { siteConfig } from "@/site.config";
@@ -24,12 +24,10 @@ export function generateMetadata() {
   return buildPageMetadata(registeredRoute("/"));
 }
 
-/** The home blog section always shows this many cards: published posts first, design placeholders after. */
-const HOME_BLOG_CARDS = 3;
-
 export default async function Home() {
-  const posts = (await getPublishedPosts()).slice(0, HOME_BLOG_CARDS);
-  const placeholders = Math.max(0, HOME_BLOG_CARDS - posts.length);
+  // Only posts ticked "show on home" in Admin → Posts; empty slots keep the design placeholders.
+  const posts = await getHomePosts();
+  const placeholders = Math.max(0, HOME_POSTS_LIMIT - posts.length);
 
   return (
     <>

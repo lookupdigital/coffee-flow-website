@@ -13,6 +13,9 @@ export const POSTS_TAG = "posts";
  */
 export const POST_FRESHNESS_SECONDS = 60;
 
+/** Cards in the home page blog section. */
+export const HOME_POSTS_LIMIT = 3;
+
 export type PostRow = Database["public"]["Tables"]["posts"]["Row"];
 export type PostStatus = "draft" | "published";
 
@@ -49,6 +52,24 @@ async function loadPublishedPosts(): Promise<PostSummary[]> {
   return data ?? [];
 }
 
+/** Published posts the admin ticked "show on home", newest first. Missing column (migration not run yet) = none. */
+async function loadHomePosts(): Promise<PostSummary[]> {
+  const supabase = createPublicClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("posts")
+    .select(SUMMARY_COLUMNS)
+    .eq("status", "published")
+    .eq("show_on_home", true)
+    .order("published_at", { ascending: false })
+    .limit(HOME_POSTS_LIMIT);
+  if (error) {
+    if (error.code === "42703" || error.message?.includes("show_on_home")) return [];
+    throw new Error(`posts: ${error.message}`);
+  }
+  return data ?? [];
+}
+
 async function loadPublishedPost(slug: string): Promise<PostRow | null> {
   const supabase = createPublicClient();
   if (!supabase) return null;
@@ -58,6 +79,11 @@ async function loadPublishedPost(slug: string): Promise<PostRow | null> {
 }
 
 const readPublishedPosts = unstable_cache(() => takeSnapshot(loadPublishedPosts), ["lookup-published-posts", CACHE_BUILD_KEY], {
+  tags: [POSTS_TAG],
+  revalidate: POST_FRESHNESS_SECONDS,
+});
+
+const readHomePosts = unstable_cache(() => takeSnapshot(loadHomePosts), ["lookup-home-posts", CACHE_BUILD_KEY], {
   tags: [POSTS_TAG],
   revalidate: POST_FRESHNESS_SECONDS,
 });
@@ -73,6 +99,16 @@ export async function getPublishedPosts(): Promise<PostSummary[]> {
     return await freshValue(readPublishedPosts, loadPublishedPosts, POST_FRESHNESS_SECONDS);
   } catch (error) {
     console.warn("[lookup] Posts unavailable:", (error as Error).message);
+    return [];
+  }
+}
+
+/** Up to HOME_POSTS_LIMIT published posts marked "show on home". */
+export async function getHomePosts(): Promise<PostSummary[]> {
+  try {
+    return await freshValue(readHomePosts, loadHomePosts, POST_FRESHNESS_SECONDS);
+  } catch (error) {
+    console.warn("[lookup] Home posts unavailable:", (error as Error).message);
     return [];
   }
 }

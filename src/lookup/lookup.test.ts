@@ -484,7 +484,8 @@ describe("scheduled publication", () => {
     expect(POST_FRESHNESS_SECONDS).toBeGreaterThan(0);
     expect(POST_FRESHNESS_SECONDS).toBeLessThanOrEqual(60);
     const posts = readFileSync(join(process.cwd(), "src", "lookup", "posts.ts"), "utf8");
-    expect(posts.match(/revalidate: POST_FRESHNESS_SECONDS/g)).toHaveLength(2);
+    // Published posts, home posts (Coffee Flow) and single posts.
+    expect(posts.match(/revalidate: POST_FRESHNESS_SECONDS/g)).toHaveLength(3);
     expect(posts).not.toMatch(/revalidate: \d/);
   });
 
