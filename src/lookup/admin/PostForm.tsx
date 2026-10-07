@@ -353,6 +353,12 @@ function PostFields({ post, seo }: { post: Partial<PostRow> | null; seo: PostSeo
         <ImageField label={t.posts.fields.featuredImage} name="featured_image_url" defaultValue={post?.featured_image_url} />
         <TextField label={t.posts.fields.featuredImageAlt} name="featured_image_alt" defaultValue={post?.featured_image_alt} maxLength={200} />
         <FeaturedAltStatus />
+        <CheckboxField
+          label="להציג בדף הבית"
+          name="show_on_home"
+          defaultChecked={post?.show_on_home ?? false}
+          hint="הפוסט יופיע בחלק הבלוג בדף הבית (עד 3 פוסטים, מהחדש לישן). רק פוסטים שפורסמו מוצגים."
+        />
       </Fieldset>
 
       <div className="flex flex-col gap-2">
