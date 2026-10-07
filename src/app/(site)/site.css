@@ -1005,7 +1005,7 @@ textarea {
 .blog-card-body p {
   font-size: 14px;
   line-height: 22px;
-  text-align: right;
+  text-align: center;
   margin-bottom: 20px;
 }
 .blog-card-body .blog-btn {
@@ -2215,7 +2215,8 @@ textarea {
   gap: 32px;
   width: min(1240px, 100%);
 }
-.blog-card {
+/* In the blog index grid the column sets the width; the home carousel keeps its fixed card width. */
+.blog-grid .blog-card {
   flex: initial;
   min-height: 0;
 }
