@@ -17,7 +17,7 @@ export default async function BlogPage() {
     <>
       <Header />
       <main>
-        <section className="blog">
+        <section className="blog blog-index">
           <div className="section-header">
             <h1 className="h2">{blog.title ?? blog.label}</h1>
           </div>
