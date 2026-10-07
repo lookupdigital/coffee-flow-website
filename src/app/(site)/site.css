@@ -13,6 +13,12 @@
 @font-face { font-family: "Fb ElectronCon Eng"; font-weight: 700; font-display: swap; src: url("/fonts/FbElectronConEng-Bold.woff2") format("woff2"); }
 */
 
+/* Body copy: OS Aran by Ofir Shavit (free for commercial use, FFC licence). Only the regular
+   cut is used: the family's "W" and "R" cuts are wider display styles, not heavier weights,
+   so semibold and bold text is emboldened by the browser instead. */
+/* Aran draws small for its size, so it is scaled up to read like the previous body font. */
+@font-face { font-family: "OS Aran"; font-weight: 400; font-display: swap; size-adjust: 112%; src: url("/fonts/aran/os-aran-400.woff2") format("woff2"); }
+
 :root {
   --bg: #0d0a07;
   --bg-deep: #0a0806;
@@ -29,9 +35,9 @@
   --text-65: rgba(247, 243, 236, 0.65);
   --line: rgba(185, 138, 62, 0.18);
   --font-con: "Fb ElectronCon Heb", "Karantina", "Heebo", sans-serif;
-  --font-sans: "Fb ElectronSans Heb", "Heebo", sans-serif;
+  --font-sans: "OS Aran", "Heebo", sans-serif;
   --font-eng: "Fb ElectronCon Eng", "Karantina", "Heebo", sans-serif;
-  --font-ui: "Heebo", sans-serif;
+  --font-ui: "OS Aran", "Heebo", sans-serif;
   --gutter: 24px;
 }
 
@@ -90,21 +96,32 @@ textarea {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+/* Latin words take the English heading font inside headings, and the body font elsewhere. */
 .eng {
+  font-family: inherit;
+}
+.h1 .eng,
+.h2 .eng,
+.blog-card-body h3 .eng,
+.contact-title .eng,
+.trust-item strong .eng,
+.legal h2 .eng,
+.post .rich-text h2 .eng,
+.post .rich-text h3 .eng {
   font-family: var(--font-eng);
 }
 
 /* ===== Type ===== */
 .h1 {
   font-family: var(--font-con);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 96px;
   line-height: 92px;
   color: var(--beige);
 }
 .h2 {
   font-family: var(--font-con);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 48px;
   line-height: 56px;
   color: var(--beige);
@@ -668,7 +685,7 @@ textarea {
 .card-title {
   display: block;
   font-family: var(--font-eng);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 26px;
   line-height: 32px;
   text-align: center;
@@ -717,7 +734,9 @@ textarea {
   font-size: 14px;
   line-height: 22.75px;
   color: rgba(247, 243, 236, 0.55);
-  text-align: right;
+  /* Centred like the card title: balanced lines are shorter than the card, so right-aligned
+     text looked shifted off-centre. */
+  text-align: center;
 }
 
 .coffee-card {
@@ -845,6 +864,8 @@ textarea {
   font-size: 24px;
   line-height: 34px;
   max-width: 571px;
+  /* Too long for "balance" (6 lines max), so "pretty" keeps the last line from being a stub. */
+  text-wrap: pretty;
 }
 .partner-logos {
   width: 100%;
@@ -904,7 +925,11 @@ textarea {
 .home-machines .text {
   padding-top: 16px;
   color: var(--muted);
-  max-width: 576px;
+  /* Widened with the larger (24px) description size, so the copy keeps a few long lines. */
+  max-width: 860px;
+}
+.text .line {
+  display: block;
 }
 .home-coffee {
   background: var(--bg-deep);
@@ -971,7 +996,7 @@ textarea {
 }
 .blog-card-body h3 {
   font-family: var(--font-con);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 20px;
   line-height: 28px;
   text-align: center;
@@ -1069,9 +1094,9 @@ textarea {
 .contact-title {
   padding-top: 12px;
   font-family: var(--font-con);
-  font-weight: 700;
-  font-size: 36px;
-  line-height: 40px;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 52px;
   color: var(--beige);
 }
 .contact-text {
@@ -1488,7 +1513,7 @@ textarea {
 }
 .product-title {
   font-family: var(--font-eng);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 64px;
   line-height: 92px;
   color: var(--beige);
@@ -1515,7 +1540,7 @@ textarea {
 }
 .trust-item strong {
   font-family: var(--font-con);
-  font-weight: 500;
+  font-weight: 400;
   font-size: 32px;
   line-height: normal;
   color: var(--beige);
@@ -1685,7 +1710,7 @@ textarea {
 .legal h2 {
   margin-top: 24px;
   font-family: var(--font-con);
-  font-weight: 700;
+  font-weight: 500;
   font-size: 32px;
   line-height: 40px;
   color: var(--beige);
@@ -1725,6 +1750,23 @@ textarea {
 }
 .trust-strip-wrap {
   display: block;
+}
+
+/* ===== Section descriptions =====
+   The copy under every section title matches the "about" paragraph (24/34), so titles and
+   their descriptions read the same size across the site. */
+.lead,
+.clients-header .subheading,
+.home-machines .text,
+.home-coffee-header .text,
+.filters-header .subheading,
+.contact-text {
+  font-size: 24px;
+  line-height: 34px;
+}
+/* Section descriptions are body copy, so they use the body font like the rest of the text. */
+.lead-con {
+  font-family: inherit;
 }
 
 /* ===== Responsive ===== */
@@ -2081,8 +2123,8 @@ textarea {
     white-space: normal;
   }
   .contact-title {
-    font-size: 30px;
-    line-height: 36px;
+    font-size: 36px;
+    line-height: 40px;
   }
 }
 
@@ -2253,6 +2295,7 @@ textarea {
 .post .rich-text h2,
 .post .rich-text h3 {
   font-family: var(--font-con);
+  font-weight: 500;
   color: var(--beige);
   margin-top: 1.6em;
 }

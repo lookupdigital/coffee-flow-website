@@ -95,11 +95,13 @@ export default function Home() {
       <section className="home-machines">
         <div className="home-title">
           <h2 className="h2">לכל עסק יש את פתרון הקפה שמתאים לו.</h2>
+          {/* Each sentence is its own block so line balancing applies to both. */}
           <p className="text">
-            הצרכים של משרד, בית מלון או מסעדה אינם זהים.
-            <br />
-            לכן אנחנו מתאימים לכל לקוח את המכונה הנכונה בהתאם לכמות המשתמשים, אופי
-            השימוש, סביבת העבודה, והחוויה שהוא רוצה ליצור.
+            <span className="line">הצרכים של משרד, בית מלון או מסעדה אינם זהים.</span>
+            <span className="line">
+              לכן אנחנו מתאימים לכל לקוח את המכונה הנכונה בהתאם לכמות המשתמשים, אופי
+              השימוש, סביבת העבודה, והחוויה שהוא רוצה ליצור.
+            </span>
           </p>
         </div>
         <div className="machine-grid">
