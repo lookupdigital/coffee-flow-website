@@ -2349,3 +2349,29 @@ textarea {
   font-size: 15px;
   color: #ff9d8a;
 }
+
+/* ===== Phone tweaks =====
+   Hero titles a little larger, section descriptions a little smaller. */
+@media (max-width: 560px) {
+  .h1 {
+    font-size: 52px;
+    line-height: 54px;
+  }
+  .lead,
+  .about-copy .text,
+  .clients-header .subheading,
+  .home-machines .text,
+  .home-coffee-header .text,
+  .filters-header .subheading,
+  .contact-text {
+    font-size: 20px;
+    line-height: 30px;
+  }
+}
+
+/* Bean card descriptions are centred under their centred titles on mobile, like the machines. */
+@media (max-width: 960px) {
+  .coffee-card-text {
+    text-align: center;
+  }
+}
