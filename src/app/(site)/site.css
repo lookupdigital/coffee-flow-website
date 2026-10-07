@@ -1766,6 +1766,14 @@ textarea {
   font-size: 24px;
   line-height: 34px;
 }
+/* Contact intro: centred, and wider than the form column so the description fits in two lines. */
+.contact-title,
+.contact-text {
+  --contact-intro: min(960px, 100vw - 2 * var(--gutter));
+  width: var(--contact-intro);
+  margin-inline: calc((100% - var(--contact-intro)) / 2);
+  text-align: center;
+}
 /* Section descriptions are body copy, so they use the body font like the rest of the text. */
 .lead-con {
   font-family: inherit;
