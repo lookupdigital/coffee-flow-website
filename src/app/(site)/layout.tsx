@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import CookieBanner from "@/components/CookieBanner";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { FloatingWhatsApp } from "@/components/interactive";
 import { JsonLd, siteSchemas } from "@/lookup/schema";
@@ -16,6 +17,8 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       {children}
       {/* Pinned to the bottom-right corner on every public page. */}
       <FloatingWhatsApp />
+      {/* Consent Mode default is "denied" (Admin → Site settings): ask before measuring. */}
+      {settings.consentDefault === "denied" && <CookieBanner />}
     </>
   );
 }
