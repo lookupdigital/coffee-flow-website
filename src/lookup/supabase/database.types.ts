@@ -36,6 +36,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      survey_responses: {
+        Row: {
+          comments: string | null;
+          created_at: string;
+          coffee_taste: number;
+          id: string;
+          machine_experience: number;
+          submission_id: string | null;
+          survey: string;
+        };
+        Insert: {
+          comments?: string | null;
+          created_at?: string;
+          coffee_taste: number;
+          id?: string;
+          machine_experience: number;
+          submission_id?: string | null;
+          survey: string;
+        };
+        Update: {
+          comments?: string | null;
+          created_at?: string;
+          coffee_taste?: number;
+          id?: string;
+          machine_experience?: number;
+          submission_id?: string | null;
+          survey?: string;
+        };
+        Relationships: [];
+      };
       leads: {
         Row: {
           consent: boolean;
