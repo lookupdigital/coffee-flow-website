@@ -136,6 +136,43 @@ export function initializeConsent(defaultValue: ConsentValue) {
     wait_for_update: 500,
   });
   window.lookupConsent = { update: (state) => gtag("consent", "update", state) };
+  // A choice the visitor already made in the cookie banner applies before any tag reads consent.
+  const stored = readStoredConsent();
+  if (stored) gtag("consent", "update", consentState(stored));
+}
+
+// Cookie banner choice (Coffee Flow) -------------------------------------------------------------------
+
+export const CONSENT_STORAGE_KEY = "cf_cookie_consent";
+
+function consentState(value: ConsentValue): Record<ConsentType, ConsentValue> {
+  return { ad_storage: value, ad_user_data: value, ad_personalization: value, analytics_storage: value };
+}
+
+/** The visitor's saved banner choice, or null when they have not chosen yet (or storage is unavailable). */
+export function readStoredConsent(): ConsentValue | null {
+  try {
+    const value = window.localStorage.getItem(CONSENT_STORAGE_KEY);
+    return value === "granted" || value === "denied" ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Saves the banner choice and applies it: a Consent Mode update, then a "cookie_consent_update" dataLayer event
+ * so GTM tags that need consent (e.g. the Meta pixel) can fire right away on the current page.
+ */
+export function applyConsentChoice(value: ConsentValue) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(CONSENT_STORAGE_KEY, value);
+  } catch {
+    // Private mode: the choice still applies to this page view.
+  }
+  window.gtag ??= gtag;
+  gtag("consent", "update", consentState(value));
+  dataLayer().push({ event: "cookie_consent_update", consent_value: value });
 }
 
 let configPushed = false;
