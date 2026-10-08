@@ -10,6 +10,8 @@ const NAV = [
   { href: "/admin/posts", label: t.nav.posts },
   { href: "/admin/media", label: t.nav.media },
   { href: "/admin/leads", label: t.nav.leads },
+  // Coffee Flow: QR-code satisfaction surveys (src/lib/surveys.ts).
+  { href: "/admin/surveys", label: "שאלונים" },
   { href: "/admin/redirects", label: t.nav.redirects },
   { href: "/admin/system", label: t.nav.system },
 ];
