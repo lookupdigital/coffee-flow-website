@@ -241,11 +241,11 @@ function formFields(locale: Locale): Field[][] {
     ],
     [
       { name: "phone", label: f.phone, placeholder: "050-0000000", required: true, autoComplete: "tel", type: "tel" },
-      { name: "email", label: f.email, placeholder: "name@company.co.il", required: false, autoComplete: "email", type: "email" },
+      { name: "email", label: f.email, placeholder: "name@company.co.il", required: true, autoComplete: "email", type: "email" },
     ],
     [
       { name: "city", label: f.city, placeholder: f.cityPh, required: false, autoComplete: "address-level2" },
-      { name: "employees", label: f.employees, placeholder: f.employeesPh, required: false, autoComplete: "off" },
+      { name: "employees", label: f.employees, placeholder: f.employeesPh, required: true, autoComplete: "off" },
     ],
   ];
 }
