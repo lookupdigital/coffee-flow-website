@@ -2833,3 +2833,172 @@ textarea {
     flex: 1;
   }
 }
+
+/* ===== Digital catalog (/catalog) ===== */
+/* page-flip 2.0.7 base styles (the browser build does not inject them). */
+.stf__parent {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  transform: translateZ(0);
+
+  -ms-touch-action: pan-y;
+  touch-action: pan-y;
+}
+
+.stf__wrapper {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stf__parent canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.stf__block {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  perspective: 2000px;
+}
+
+.stf__item {
+  display: none;
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+.stf__outerShadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.stf__innerShadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.stf__hardShadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.stf__hardInnerShadow {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.catalog-page {
+  padding: 140px var(--gutter) 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  overflow: hidden;
+}
+.catalog-page-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.flipbook {
+  width: min(1240px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.flipbook-stage {
+  /* Two A4 pages side by side, never taller than the screen (header and controls stay visible). */
+  width: min(100%, calc((100svh - 330px) / 1.414 * 2));
+  min-width: min(100%, 520px);
+  transition: transform 0.6s ease;
+}
+/* A closed book is one page wide: slide it to the middle. */
+.flipbook-shift-start {
+  transform: translateX(25%);
+}
+.flipbook-shift-end {
+  transform: translateX(-25%);
+}
+.flipbook-book {
+  margin-inline: auto;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.flipbook-book.is-ready {
+  opacity: 1;
+}
+.flipbook-page {
+  background: var(--surface);
+  overflow: hidden;
+}
+.flipbook-page img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}
+.flipbook-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+.flipbook-btn {
+  font: 500 16px/1 var(--font-ui);
+  color: var(--beige);
+  background: transparent;
+  border: 1px solid var(--gold-stroke);
+  border-radius: 999px;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.flipbook-btn:hover:not(:disabled) {
+  background: var(--gold);
+  color: var(--bg);
+}
+.flipbook-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.flipbook-counter {
+  min-width: 150px;
+  text-align: center;
+  color: var(--text-65);
+  font-size: 15px;
+}
+.catalog-download {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (max-width: 767px) {
+  .catalog-page {
+    padding-top: 130px;
+  }
+  .flipbook-controls {
+    gap: 12px;
+  }
+  .flipbook-btn {
+    padding: 10px 16px;
+  }
+  .flipbook-counter {
+    min-width: 0;
+    font-size: 14px;
+  }
+}

@@ -19,6 +19,7 @@ export const siteConfig = defineSiteConfig({
       { path: "/machines", label: "מכונות קפה", title: "מכונות קפה", nav: false },
       { path: "/beans", label: "הקפה שלנו", title: "הקפה שלנו", nav: false },
       { path: "/service", label: "שירות טכני", title: "שירות טכני", nav: false },
+      { path: "/catalog", label: "קטלוג", title: "קטלוג דיגיטלי", nav: false },
       { path: "/privacy", label: "מדיניות פרטיות", title: "מדיניות פרטיות", nav: false },
       { path: "/accessibility", label: "הצהרת נגישות", title: "הצהרת נגישות", nav: false },
     ],
