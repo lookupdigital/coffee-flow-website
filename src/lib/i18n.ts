@@ -31,6 +31,8 @@ export const ui = {
       ["/solutions/office", "חברות ומשרדים"],
       ["/solutions/cafe", "בתי קפה ומסעדות"],
       ["/solutions/hotel", "בתי מלון ובתי הארחה"],
+      // Hebrew only: the catalog has no English page.
+      ["/catalog", "קטלוג 2026"],
     ] as [string, string][],
     mainNav: "ניווט ראשי",
     service: "שירות טכני",
