@@ -6,7 +6,7 @@ import { buildPageMetadata, registeredRoute } from "@/lookup/seo";
 
 // Digital brochure: the print catalog (public/catalogs/coffee-flow-catalog.pdf) rendered page by page as images
 // (public/images/flipbook). To replace it, export the new PDF's pages at 1000×1414 and keep the file names.
-const PAGE_COUNT = 20;
+const PAGE_COUNT = 26;
 const pages = Array.from({ length: PAGE_COUNT }, (_, i) => `/images/flipbook/page-${String(i + 1).padStart(2, "0")}.webp`);
 
 export function generateMetadata() {
