@@ -126,6 +126,9 @@ export function initializeConsent(defaultValue: ConsentValue) {
   if (typeof window === "undefined" || consentInitialized) return;
   consentInitialized = true;
   window.gtag ??= gtag;
+  window.lookupConsent = { update: (state) => gtag("consent", "update", state) };
+  // The <head> GTM script (src/app/layout.tsx) already set the default and the saved choice before GTM loaded.
+  if ((window as unknown as { __lookupConsentReady?: boolean }).__lookupConsentReady) return;
   gtag("consent", "default", {
     ad_storage: defaultValue,
     ad_user_data: defaultValue,

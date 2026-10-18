@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, ReactNode, useEffect, useId, useRef, useState } from "react";
 import { MachineKind, Product } from "@/lib/data";
 import { pageCopy } from "@/lib/data-en";
@@ -254,6 +254,7 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
   const id = useId();
   const locale = useLocale();
   const f = ui[locale].form;
+  const router = useRouter();
   // Server messages are Hebrew; English pages translate the known ones.
   const message = (text: string) => (locale === "en" ? (leadMessagesEn[text] ?? text) : text);
   const [sent, setSent] = useState(false);
@@ -316,6 +317,9 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
         track({ event: "generate_lead", form_name: formName, page_path, lead_type: result.leadType, event_id: result.eventId });
         setSent(true);
         setPending(false);
+        // Thank-you page: a client-side navigation, so the tags fired by generate_lead are not cut off, and the
+        // page_view of /thank-you gives Tag Manager a URL-based conversion trigger as well.
+        router.push(localePath(locale, "/thank-you"));
         return;
       }
       setError(message(result.error === "server" ? siteConfig.leads.messages.serverError : result.message));
