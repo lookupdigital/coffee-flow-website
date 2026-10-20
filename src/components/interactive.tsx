@@ -282,6 +282,8 @@ export function ContactForm({
   // Server messages are Hebrew; English pages translate the known ones.
   const message = (text: string) => (locale === "en" ? (leadMessagesEn[text] ?? text) : text);
   const [sent, setSent] = useState(false);
+  // hr_expo: "details received" message shown above the cleared form.
+  const [notice, setNotice] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [started, setStarted] = useState(false);
   const [pending, setPending] = useState(false);
@@ -343,6 +345,18 @@ export function ContactForm({
       if (result.ok) {
         // The conversion fires only after the server confirmed the lead was stored.
         track({ event: "generate_lead", form_name: formName, page_path, lead_type: result.leadType, event_id: result.eventId });
+        if (variant === "hr_expo") {
+          // Exhibition stand: confirm, then clear the form for the next visitor instead of leaving the page.
+          form.reset();
+          submissionId.current = null;
+          setStarted(false);
+          setNotice(true);
+          window.setTimeout(() => setNotice(false), 6000);
+          if (TURNSTILE_SITE_KEY) setTurnstileKey((key) => key + 1);
+          submitting.current = false;
+          setPending(false);
+          return;
+        }
         setSent(true);
         setPending(false);
         // Thank-you page: a client-side navigation, so the tags fired by generate_lead are not cut off, and the
@@ -364,6 +378,11 @@ export function ContactForm({
 
   return (
     <form className="contact-form" onSubmit={submit} onFocus={handleStart}>
+      {notice && (
+        <p role="status" className="contact-success">
+          {f.sent}! אפשר למלא את הטופס שוב עבור ליד נוסף.
+        </p>
+      )}
       {formFields(locale, variant).map((row, r) => (
         <div className="field-row" key={r}>
           {row.map((f) => (
