@@ -232,8 +232,26 @@ type Field = {
   type?: "email" | "tel";
 };
 
-function formFields(locale: Locale): Field[][] {
+/** "hr_expo": the HR exhibition landing page (/hr-expo) — no city or business type, every field required. */
+export type ContactFormVariant = "default" | "hr_expo";
+
+/** Lead topic (project_type) for HR exhibition leads, so they can be told apart in the admin, sheet and email. */
+export const HR_EXPO_LEAD_TYPE = "תערוכת HR";
+
+function formFields(locale: Locale, variant: ContactFormVariant = "default"): Field[][] {
   const f = ui[locale].form;
+  if (variant === "hr_expo")
+    return [
+      [
+        { name: "name", label: f.name, placeholder: f.namePh, required: true, autoComplete: "name" },
+        { name: "company", label: f.company, placeholder: f.companyPh, required: true, autoComplete: "organization" },
+      ],
+      [
+        { name: "phone", label: f.phone, placeholder: "050-0000000", required: true, autoComplete: "tel", type: "tel" },
+        { name: "email", label: f.email, placeholder: "name@company.co.il", required: true, autoComplete: "email", type: "email" },
+      ],
+      [{ name: "employees", label: f.employees, placeholder: f.employeesPh, required: true, autoComplete: "off" }],
+    ];
   return [
     [
       { name: "name", label: f.name, placeholder: f.namePh, required: true, autoComplete: "name" },
@@ -250,7 +268,13 @@ function formFields(locale: Locale): Field[][] {
   ];
 }
 
-export function ContactForm({ formName = "contact" }: { formName?: string }) {
+export function ContactForm({
+  formName = "contact",
+  variant = "default",
+}: {
+  formName?: string;
+  variant?: ContactFormVariant;
+}) {
   const id = useId();
   const locale = useLocale();
   const f = ui[locale].form;
@@ -291,8 +315,12 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
     // Coffee Flow asks for details the shared lead schema does not model as columns: the business type becomes
     // the lead's topic, and the rest are kept as the lead message so nothing the visitor typed is lost.
     const value = (name: string) => String(formData.get(name) ?? "").trim();
-    formData.set("projectType", BUSINESS_TYPES[value("businessType")] ?? value("businessType"));
+    formData.set(
+      "projectType",
+      variant === "hr_expo" ? HR_EXPO_LEAD_TYPE : (BUSINESS_TYPES[value("businessType")] ?? value("businessType")),
+    );
     const details = [
+      variant === "hr_expo" && `מקור: ${HR_EXPO_LEAD_TYPE}`,
       value("company") && `חברה: ${value("company")}`,
       value("city") && `עיר: ${value("city")}`,
       value("employees") && `מספר עובדים משוער: ${value("employees")}`,
@@ -336,7 +364,7 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
 
   return (
     <form className="contact-form" onSubmit={submit} onFocus={handleStart}>
-      {formFields(locale).map((row, r) => (
+      {formFields(locale, variant).map((row, r) => (
         <div className="field-row" key={r}>
           {row.map((f) => (
             <label className="field" htmlFor={`${id}-${f.name}`} key={f.name}>
@@ -356,19 +384,21 @@ export function ContactForm({ formName = "contact" }: { formName?: string }) {
           ))}
         </div>
       ))}
-      <label className="field field-business-type" htmlFor={`${id}-business-type`}>
-        <span>{f.businessType}</span>
-        <select id={`${id}-business-type`} name="businessType" defaultValue="" required>
-          <option value="" disabled>
-            {f.chooseType}
-          </option>
-          {Object.entries(f.types).map(([value, label]) => (
-            <option value={value} key={value}>
-              {label}
+      {variant === "default" && (
+        <label className="field field-business-type" htmlFor={`${id}-business-type`}>
+          <span>{f.businessType}</span>
+          <select id={`${id}-business-type`} name="businessType" defaultValue="" required>
+            <option value="" disabled>
+              {f.chooseType}
             </option>
-          ))}
-        </select>
-      </label>
+            {Object.entries(f.types).map(([value, label]) => (
+              <option value={value} key={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
       {/* Spam trap: a real visitor never fills this in (hidden from people and assistive technology). */}
       <input
         type="text"

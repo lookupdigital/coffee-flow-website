@@ -3028,3 +3028,13 @@ textarea {
   gap: 16px;
   margin-top: 8px;
 }
+
+/* ===== HR exhibition landing page (/hr-expo) ===== */
+.hr-expo {
+  padding-top: 120px;
+}
+@media (max-width: 767px) {
+  .hr-expo {
+    padding-top: 80px;
+  }
+}
