@@ -6,6 +6,7 @@ import { deliverLeadNotification, isLeadWebhookConfigured } from "@/lookup/leads
 import {
   clientIp,
   consumeLeadRateLimit,
+  EVENT_FORM_RATE_LIMIT,
   isAuthorizedTestSubmission,
   isTestLead,
   verifyTurnstile,
@@ -50,7 +51,10 @@ export async function submitLead(formData: FormData): Promise<LeadSubmissionResu
   const turnstile = await verifyTurnstile(parsed.data["cf-turnstile-response"], ip);
   if (turnstile === "failed") return { ok: false, error: "verification", message: messages.verificationFailed };
 
-  const rateLimit = await consumeLeadRateLimit(ip);
+  const rateLimit = await consumeLeadRateLimit(
+    ip,
+    parsed.data.form_name === "hr_expo" ? { bucketPrefix: "hr_expo:", limit: EVENT_FORM_RATE_LIMIT } : {},
+  );
   if (rateLimit === "limited") return { ok: false, error: "rate_limited", message: messages.rateLimited };
 
   const isE2eSubmission = isAuthorizedTestSubmission(parsed.data.e2e_token);

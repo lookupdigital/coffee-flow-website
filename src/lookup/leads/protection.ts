@@ -20,13 +20,22 @@ export function rateLimitBucket(ip: string, secret: string): string {
 
 export type RateLimitResult = "allowed" | "limited" | "unavailable";
 
-export async function consumeLeadRateLimit(ip: string): Promise<RateLimitResult> {
+/**
+ * Event forms (e.g. the HR exhibition page) are filled one after another on the same stand device, so they get
+ * their own bucket and a higher limit than the public contact form.
+ */
+export const EVENT_FORM_RATE_LIMIT = { maxSubmissions: 60, windowSeconds: 600 };
+
+export async function consumeLeadRateLimit(
+  ip: string,
+  options: { bucketPrefix?: string; limit?: { maxSubmissions: number; windowSeconds: number } } = {},
+): Promise<RateLimitResult> {
   const secret = process.env.LEAD_RATE_LIMIT_SALT || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!secret) return "unavailable";
-  const { maxSubmissions, windowSeconds } = siteConfig.leads.rateLimit;
+  const { maxSubmissions, windowSeconds } = options.limit ?? siteConfig.leads.rateLimit;
   try {
     const { data, error } = await createServiceClient().rpc("lead_rate_limit_consume", {
-      p_bucket: rateLimitBucket(ip, secret),
+      p_bucket: `${options.bucketPrefix ?? ""}${rateLimitBucket(ip, secret)}`,
       p_limit: maxSubmissions,
       p_window_seconds: windowSeconds,
     });

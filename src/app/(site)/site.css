@@ -3038,3 +3038,12 @@ textarea {
     padding-top: 80px;
   }
 }
+.contact-success {
+  background: rgba(194, 136, 42, 0.15);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: var(--beige);
+  text-align: center;
+  font-weight: 600;
+}
