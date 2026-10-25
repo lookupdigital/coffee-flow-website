@@ -86,10 +86,12 @@ export default async function HomeView({ locale }: { locale: Locale }) {
 
   return (
     <>
+      {/* The header is position: fixed, so it sits outside the hero (and outside <main>) as the page banner. */}
+      <Header home />
+      <main id="main-content">
       <section className="hero home-hero">
         <img className="hero-bg" src="/images/b4f9f.webp" alt="" />
         <div className="hero-shade" />
-        <Header home />
         <div className="home-hero-content">
           <h1 className="h1">
             {c.heroTitle[0]}
@@ -110,7 +112,7 @@ export default async function HomeView({ locale }: { locale: Locale }) {
           </h2>
           <p className="subheading">{c.clientsText}</p>
         </div>
-        <BrandCarousel logos={clientLogos} dir="clients" label={t.clients} startOnView />
+        <BrandCarousel logos={clientLogos} dir="clients" label={t.clients} startOnView locale={locale} />
       </section>
 
       <section className="about" id="about">
@@ -216,6 +218,7 @@ export default async function HomeView({ locale }: { locale: Locale }) {
       )}
 
       <ContactSection title={defaultContact.title} text={defaultContact.text} />
+      </main>
       <Footer locale={locale} />
     </>
   );

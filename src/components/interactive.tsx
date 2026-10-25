@@ -109,6 +109,16 @@ function ServiceIcon() {
   );
 }
 
+/** Moves focus to the page's <main> (every public page has exactly one), whatever its id. */
+function skipToMain(event: React.MouseEvent<HTMLAnchorElement>) {
+  const main = document.querySelector<HTMLElement>("main");
+  if (!main) return;
+  event.preventDefault();
+  if (!main.hasAttribute("tabindex")) main.setAttribute("tabindex", "-1");
+  main.focus({ preventScroll: true });
+  main.scrollIntoView();
+}
+
 // Pinned site header. On mobile the menu collapses behind a hamburger button.
 export function Header({
   overlay = true,
@@ -155,6 +165,10 @@ export function Header({
     <header
       className={`header ${overlay ? "header-overlay" : ""} ${scrolled ? "is-scrolled" : ""} ${open ? "menu-open" : ""}`}
     >
+      {/* WCAG 2.4.1: first focusable element, jumps past the navigation to the page's <main>. */}
+      <a className="skip-link" href="#main-content" onClick={skipToMain}>
+        {locale === "en" ? "Skip to main content" : "דילוג לתוכן הראשי"}
+      </a>
       <div className="header-inner">
         <Link href={localePath(locale, "/")} className="header-logo" aria-label="Coffee Flow" onClick={close}>
           <img src="/images/6373b.webp" alt="Coffee Flow" width={200} height={85} />
@@ -442,7 +456,7 @@ export function ContactForm({
 
 // Logo strip that waits off-screen: it starts moving only once scrolled into view, and
 // starts with its first logo in the middle (the logos before it wrap round to its left).
-export function CarouselStartOnView({ label, children }: { label: string; children: ReactNode }) {
+export function CarouselStartOnView({ label, id, children }: { label: string; id?: string; children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
   useEffect(() => {
@@ -473,6 +487,7 @@ export function CarouselStartOnView({ label, children }: { label: string; childr
   return (
     <div
       ref={ref}
+      id={id}
       className={`brand-carousel brand-carousel-waiting ${playing ? "is-playing" : ""}`}
       aria-label={label}
     >
@@ -572,5 +587,25 @@ export function MachineCatalog({
         )}
       </div>
     </>
+  );
+}
+
+/**
+ * Pause / play control for a moving logo strip (WCAG 2.2.2: moving content that lasts more than 5 seconds needs a
+ * way to stop it, also for keyboard and touch users who cannot hover).
+ */
+export function CarouselPauseButton({ targetId, locale = "he" }: { targetId: string; locale?: Locale }) {
+  const [paused, setPaused] = useState(false);
+  function toggle() {
+    const next = !paused;
+    setPaused(next);
+    document.getElementById(targetId)?.classList.toggle("is-paused", next);
+  }
+  const label = locale === "en" ? (paused ? "Play logos" : "Pause logos") : paused ? "הפעלת התנועה" : "עצירת התנועה";
+  return (
+    <button type="button" className="brand-pause" aria-controls={targetId} aria-pressed={paused} onClick={toggle}>
+      <span aria-hidden="true">{paused ? "▶" : "❚❚"}</span>
+      {label}
+    </button>
   );
 }

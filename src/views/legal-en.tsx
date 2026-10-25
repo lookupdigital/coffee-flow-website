@@ -4,36 +4,6 @@ import { Footer, Header } from "@/components/ui";
 // English translations of the Hebrew legal pages (src/app/(site)/privacy and /accessibility).
 // The Hebrew text is the binding version; each page links back to it.
 
-const menuOptions = [
-  "Keyboard navigation – the site can be navigated with the keyboard.",
-  "Screen reader support – the site is adapted for assistive technologies such as NVDA and JAWS.",
-  "Flash blocking – stops moving elements and blocks flashing content.",
-  "Optical character recognition.",
-  "Site font enlargement in 5 sizes.",
-  "Voice commands.",
-  "Contrast adjustment – colour contrast changes on a dark background.",
-  "Contrast adjustment – colour contrast changes on a light background.",
-  "Site colour changes – background, headings and content.",
-  "Colour-blind mode.",
-  "Switching to a readable font.",
-  "Larger cursor, in black or white.",
-  "Zooming the display to about 200%.",
-  "Highlighting links.",
-  "Highlighting headings.",
-  "Showing alternative text for images.",
-  "Magnifying the content under the cursor in a tooltip.",
-  "Showing the site's content in a new, clear and readable window.",
-  "A virtual keyboard for typing with the mouse.",
-];
-
-const thirdParty = [
-  "Facebook's accessibility policy",
-  "YouTube's accessibility policy",
-  "Instagram's accessibility policy",
-  "Twitter's accessibility policy",
-  "LinkedIn's accessibility policy",
-];
-
 function BindingNote({ href }: { href: string }) {
   return (
     <p className="text">
@@ -46,90 +16,110 @@ function BindingNote({ href }: { href: string }) {
   );
 }
 
+const enAdjustments = [
+  'A "Skip to main content" link at the start of every page.',
+  "Semantic structure: headings in hierarchical order and marked page regions (header, navigation, main content, footer).",
+  "Full keyboard operation with a clearly visible focus indicator.",
+  "Text alternatives for meaningful images; decorative images are hidden from assistive technologies.",
+  "Text-to-background colour contrast at the level the standard requires.",
+  "Forms with a label for every field, marked required fields and error messages announced to screen readers.",
+  'A control to stop the moving logo strips, and no motion at all for visitors who chose "reduce motion" on their device.',
+  "Responsive layout for every screen size and zoom up to 200% without loss of content.",
+  "The page language (Hebrew / English) is declared for screen readers.",
+  "A text version of the digital catalogue.",
+];
+
+const enToolbar = [
+  "Increase and decrease the font size",
+  "High contrast (dark, light, inverted), dark mode and greyscale",
+  "Text spacing and a dyslexia-friendly font",
+  "Highlighted links and focus",
+  "Stop animations and mute sounds",
+  "Large cursor, reading guide and line focus",
+  "A map of the page headings",
+  "Text-to-speech",
+];
+
 export function AccessibilityEn() {
   return (
     <>
       <Header />
-      <main className="plain-page legal">
+      <main id="main-content" className="plain-page legal">
         <h1 className="h2">Accessibility statement</h1>
 
         <h2>Introduction</h2>
         <p>
-          The internet is today the largest source of free information for all users, and for users with
-          disabilities in particular. We therefore place great importance on giving people with disabilities equal
-          access to the information on this site and a better browsing experience.
-        </p>
-        <p>
-          We strive to make our digital services accessible to people with disabilities, and have invested
-          considerable resources in making the site as easy as possible to use for people with disabilities, in the
-          belief that everyone deserves to live with equality, dignity, comfort and independence.
-        </p>
-        <p>This site was made accessible by the web accessibility company &quot;Nagish BeClick&quot;.</p>
-        <p>
-          The website meets, as far as possible, the requirements of the Equal Rights for Persons with Disabilities
-          Regulations (Service Accessibility Adjustments), 2013. The accessibility adjustments follow the
-          recommendations of Israeli Standard IS 5568 for web content accessibility at level AA and the
-          international WCAG 2.0 guidelines.
-        </p>
-        <p>
-          The site provides a semantic structure for assistive technologies and supports standard keyboard
-          operation. For the best experience with screen-reading software, we recommend the latest version of NVDA.
-          Responsibility for use and implementation lies with the site owner and/or anyone on its behalf, including
-          the content shown on the site, subject to the software&apos;s terms of use and the company&apos;s privacy
-          policy.
+          Coffee Flow is committed to giving equal service to all customers and visitors, including people with
+          disabilities. We work to make this website accessible, convenient and easy for everyone to use.
         </p>
 
-        <h2>How does accessibility work on this site?</h2>
+        <h2>Accessibility level</h2>
         <p>
-          This site runs accessibility software by &quot;Nagish BeClick&quot;, operated through a dedicated
-          accessibility server. The software helps the site follow the Web Content Accessibility Guidelines (WCAG)
-          2.1 at level AA. The software is subject to the manufacturer&apos;s terms of use and privacy policy, as
-          well as the site owner&apos;s privacy policy.
+          The site has been adapted in accordance with the Equal Rights for Persons with Disabilities Regulations
+          (Service Accessibility Adjustments), 2013, and Israeli Standard IS 5568 for web content accessibility at
+          level AA (based on WCAG 2.0). We also work to meet WCAG 2.1 level AA, in line with the European standard
+          EN 301 549.
         </p>
         <p>
-          The site has an accessibility menu. Clicking the accessibility button opens the menu with the
-          accessibility options. After choosing an option, please wait for the page to load.
+          The site was tested on 25 October 2026 with automated tools and manual checks, on desktop and mobile, and
+          the issues found were fixed. It supports current browsers (Chrome, Safari, Edge, Firefox) and common screen
+          readers such as NVDA and VoiceOver.
         </p>
-        <p>The software works in the popular browsers: Chrome, Firefox, Explorer 10+, Safari and Opera.</p>
 
-        <h3>Accessibility options in the menu</h3>
+        <h2>Accessibility adjustments on the site</h2>
         <ul>
-          {menuOptions.map((item) => (
+          {enAdjustments.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>
 
-        <p className="legal-subtitle">Third-party components and websites:</p>
+        <h2>Accessibility toolbar</h2>
         <p>
-          Where the site uses third-party components or websites such as Facebook, Instagram, YouTube, Twitter,
-          external chats and others that are not under our control, people with disabilities may face challenges
-          we are unable to fix.
+          An accessibility button in the corner of the screen opens a toolbar that lets every visitor adapt the
+          display to their needs. The toolbar is an additional aid and does not replace the accessibility work done
+          on the site itself. Its options:
         </p>
-        <p>Some examples of third-party accessibility policies:</p>
         <ul>
-          {thirdParty.map((item) => (
+          {enToolbar.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>
+        <p>Toolbar settings are stored only in the visitor&apos;s own browser.</p>
 
-        <p className="legal-subtitle">Contacting the accessibility coordinator</p>
+        <h2>Known limitations</h2>
+        <ul>
+          <li>
+            The digital catalogue pages are shown as images. Their content is also available as text on the
+            catalogue page. The downloadable PDF is not accessible to screen readers; contact us to receive the
+            information in an accessible format.
+          </li>
+          <li>
+            The site links to third-party services (such as WhatsApp and Google). Their accessibility is the
+            responsibility of their operators.
+          </li>
+        </ul>
+
+        <h2>Accessibility enquiries</h2>
         <p>
-          If you encounter an accessibility difficulty while browsing the site, the company&apos;s accessibility
-          team is available through a range of channels. We would be glad to hear your feedback.
+          If you encounter a difficulty on the site or content that is not accessible, please let us know. It helps
+          to mention the page, the difficulty, and the browser or assistive technology you used.
+        </p>
+        <ul>
+          <li>
+            Phone: <a href="tel:039766422">03-9766422</a>
+          </li>
+          <li>
+            Email: <a href="mailto:Coffeeflow.sales@diplomat-global.com">Coffeeflow.sales@diplomat-global.com</a>
+          </li>
+        </ul>
+
+        <h2>Physical accessibility</h2>
+        <p>
+          Coffee Flow&apos;s service is mostly provided at the customer&apos;s premises. For accessibility
+          arrangements for meetings, demonstrations or installations, please contact us using the details above.
         </p>
 
-        <p className="legal-subtitle">Physical accessibility arrangements</p>
-
-        <p className="legal-subtitle">Disclaimer</p>
-        <p>
-          Despite our efforts to make every page of the site accessible, some pages may not yet be accessible, or a
-          suitable technological solution may not yet have been found.
-        </p>
-        <p>
-          We continue working to improve the site&apos;s accessibility as far as possible, out of a belief in and
-          moral commitment to making the site usable by everyone, including people with disabilities.
-        </p>
-        <p>Last updated: 22 September 2025</p>
+        <p>Last updated: 25 October 2026</p>
         <BindingNote href="/accessibility" />
       </main>
       <Footer locale="en" />
@@ -141,7 +131,7 @@ export function PrivacyEn() {
   return (
     <>
       <Header />
-      <main className="plain-page legal">
+      <main id="main-content" className="plain-page legal">
         <h1 className="h2">Cookie policy</h1>
         <ol>
           <li>

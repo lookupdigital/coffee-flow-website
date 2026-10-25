@@ -61,7 +61,8 @@ export function buildPublicCsp({ development, supabaseOrigin }: CspOptions): str
     "style-src": ["'self'", "'unsafe-inline'", ...TRACKING_ORIGINS.style],
     // Tracking pixels are image requests to many hosts; images cannot execute code.
     "img-src": ["'self'", "data:", "blob:", "https:"],
-    "font-src": ["'self'", "data:", ...TRACKING_ORIGINS.font],
+    // cdn.jsdelivr.net: the OpenDyslexic font loaded by the accessibility toolbar (open-nagish) on demand.
+    "font-src": ["'self'", "data:", "https://cdn.jsdelivr.net", ...TRACKING_ORIGINS.font],
     "connect-src": ["'self'", supabaseOrigin, TURNSTILE_ORIGIN, ...TRACKING_ORIGINS.connect, ...(development ? ["ws:"] : [])],
     "frame-src": [TURNSTILE_ORIGIN, ...TRACKING_ORIGINS.frame],
     "worker-src": ["'self'", "blob:"],

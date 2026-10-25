@@ -12,7 +12,7 @@ export default function PrivacyPage() {
   return (
     <>
       <Header />
-      <main className="plain-page legal">
+      <main id="main-content" className="plain-page legal">
         <h1 className="h2">מדיניות עוגיות</h1>
         <ol>
           <li>
