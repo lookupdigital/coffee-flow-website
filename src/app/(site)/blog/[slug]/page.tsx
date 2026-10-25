@@ -56,7 +56,7 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         <JsonLd
           data={[
             blogPostingSchema({

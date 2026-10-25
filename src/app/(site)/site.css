@@ -777,7 +777,8 @@ textarea {
   padding-top: 6px;
   font-size: 14px;
   line-height: 20px;
-  color: rgba(247, 243, 236, 0.45);
+  /* 0.6 alpha: WCAG AA contrast (4.5:1) on the dark card background. */
+  color: rgba(247, 243, 236, 0.6);
 }
 
 /* ===== Images ===== */
@@ -1022,12 +1023,14 @@ textarea {
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
-  color: var(--gold);
+  /* Darker gold: WCAG AA contrast on the light card. */
+  color: #7a4f12;
+  border-color: #7a4f12;
   transition: background-color 0.2s, color 0.2s;
 }
 .blog-card-body .blog-btn:hover {
-  background: var(--gold);
-  color: var(--beige);
+  background: #7a4f12;
+  color: #fff;
 }
 
 /* ===== Carousel ===== */
@@ -1109,7 +1112,8 @@ textarea {
   min-height: 60px;
   font-size: 16px;
   line-height: 20px;
-  color: var(--muted);
+  /* Light text on the green contact section (WCAG AA contrast). */
+  color: #e3dccf;
 }
 .contact-form {
   padding-top: 24px;
@@ -1133,7 +1137,7 @@ textarea {
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: var(--text-65);
+  color: #e3dccf;
 }
 .field input,
 .field select,
@@ -1157,7 +1161,7 @@ textarea {
   color-scheme: dark;
 }
 .field select:invalid {
-  color: rgba(154, 142, 125, 0.55);
+  color: #cfd3cb;
 }
 .field select option {
   background: var(--dark-green);
@@ -1165,13 +1169,19 @@ textarea {
 }
 .field input::placeholder,
 .field textarea::placeholder {
-  color: rgba(154, 142, 125, 0.4);
+  color: rgba(227, 220, 207, 0.6);
 }
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
   outline: none;
   border-color: var(--gold);
+}
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
 }
 .field-message {
   padding: 12px 0 16px;
@@ -3046,4 +3056,68 @@ textarea {
   color: var(--beige);
   text-align: center;
   font-weight: 600;
+}
+
+/* ===== Accessibility ===== */
+/* Skip link: hidden until focused with the keyboard (WCAG 2.4.1). */
+.skip-link {
+  position: absolute;
+  inset-inline-start: 16px;
+  top: -100px;
+  z-index: 1000;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: var(--gold);
+  color: var(--bg);
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 16px;
+}
+main:focus {
+  outline: none;
+}
+/* Pause button for the moving logo strips (WCAG 2.2.2). */
+.brand-pause {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px auto 0;
+  padding: 6px 14px;
+  border: 1px solid var(--gold-stroke);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--beige);
+  font: 500 13px/1 var(--font-ui);
+  cursor: pointer;
+}
+.brand-pause:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.brand-carousel.is-paused .brand-track {
+  animation-play-state: paused !important;
+}
+/* Catalog text alternative (/catalog). */
+.catalog-text {
+  width: min(840px, 100%);
+  text-align: right;
+}
+.catalog-text summary {
+  cursor: pointer;
+  text-align: center;
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.catalog-text section {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.catalog-text-page {
+  font-size: 18px;
+  color: var(--gold);
 }

@@ -23,6 +23,8 @@ export default function SolutionView({ audience, locale }: { audience: Audience;
   const machines = (s.machines ?? featuredMachines).map((slug) => getProduct(slug)!);
   return (
     <>
+      <Header />
+      <main id="main-content">
       <section className="hero solution-hero-compact">
         <img
           className="hero-bg"
@@ -31,7 +33,6 @@ export default function SolutionView({ audience, locale }: { audience: Audience;
           style={{ opacity: 0.6 }}
         />
         <div className={`hero-shade ${audience === "office" ? "hero-shade-office" : ""}`} />
-        <Header />
         <div className="solution-hero-content">
           <div className="solution-hero-row">
             <div className="solution-hero-cup">
@@ -87,11 +88,12 @@ export default function SolutionView({ audience, locale }: { audience: Audience;
 
       <section className="more">
         <SectionHeader title={copy.moreThanCoffee.title} text={copy.moreThanCoffee.text} width={499} />
-        <BrandCarousel label={t.diplomatBrands} />
+        <BrandCarousel label={t.diplomatBrands} locale={locale} />
         <ButtonLink href="/catalogs/diplomat-catalog-2025.pdf">{t.viewCatalog}</ButtonLink>
       </section>
 
       <ContactSection title={s.contactTitle} text={s.contactText} />
+      </main>
       <Footer variant="solution" locale={locale} />
     </>
   );

@@ -1,4 +1,3 @@
-import { Header } from "./ui";
 import { pageCopy } from "@/lib/data-en";
 import type { Locale } from "@/lib/i18n";
 
@@ -16,7 +15,6 @@ export function CatalogHero({
     <section className="catalog-hero">
       <img className="hero-bg" src="/images/b4f9f.webp" alt="" />
       <div className="hero-shade" />
-      <Header />
       <div className="catalog-hero-content">
         <h1 className="h1">{title ?? catalogHero.title}</h1>
         <p className="subheading">{text ?? catalogHero.text}</p>

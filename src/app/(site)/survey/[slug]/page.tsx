@@ -23,7 +23,7 @@ export default async function SurveyPage({ params }: PageProps<"/survey/[slug]">
   if (!survey) notFound();
 
   return (
-    <main className="survey-page">
+    <main id="main-content" className="survey-page">
       <div className="survey-logos">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/6373b.webp" alt="Coffee Flow" width={200} height={85} className="survey-logo-cf" />

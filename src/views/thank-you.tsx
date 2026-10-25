@@ -26,7 +26,7 @@ export default function ThankYouView({ locale }: { locale: Locale }) {
   return (
     <>
       <Header />
-      <main className="plain-page thank-you">
+      <main id="main-content" className="plain-page thank-you">
         <span className="thank-you-mark" aria-hidden="true">
           ✓
         </span>

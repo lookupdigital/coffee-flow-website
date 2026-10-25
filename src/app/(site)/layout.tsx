@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import AccessibilityWidget from "@/components/AccessibilityWidget";
 import CookieBanner from "@/components/CookieBanner";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { FloatingWhatsApp } from "@/components/interactive";
@@ -16,7 +17,12 @@ export default async function SiteLayout({ children }: { children: ReactNode }) 
       <ScrollToTop />
       {children}
       {/* Pinned to the bottom-right corner on every public page. */}
-      <FloatingWhatsApp />
+      {/* In a landmark so screen-reader users can find it (WCAG 1.3.1). */}
+      <aside aria-label="יצירת קשר מהירה">
+        <FloatingWhatsApp />
+      </aside>
+      {/* Accessibility toolbar, bottom-left (WhatsApp is bottom-right). */}
+      <AccessibilityWidget />
       {/* Consent Mode default is "denied" (Admin → Site settings): ask before measuring. */}
       {settings.consentDefault === "denied" && <CookieBanner />}
     </>

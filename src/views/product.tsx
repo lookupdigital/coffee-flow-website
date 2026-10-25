@@ -24,6 +24,7 @@ export default function ProductView({ product, locale }: { product: Product; loc
   return (
     <>
       <Header overlay={false} />
+      <main id="main-content">
       <section className="product-hero">
         <div className="product-frame">
           <div className="product-frame-inner">
@@ -89,6 +90,7 @@ export default function ProductView({ product, locale }: { product: Product; loc
       </section>
 
       <ContactSection title={defaultContact.title} text={defaultContact.text} />
+      </main>
       <Footer size="product" locale={locale} />
     </>
   );

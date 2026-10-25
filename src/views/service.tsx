@@ -27,7 +27,7 @@ export default function ServiceView({ locale }: { locale: Locale }) {
   return (
     <>
       <Header />
-      <main className="service-page">
+      <main id="main-content" className="service-page">
         <nav className="breadcrumbs" aria-label={c.breadcrumbs}>
           <Link href={localePath(locale, "/")}>{c.home}</Link>
           <span aria-hidden>›</span>

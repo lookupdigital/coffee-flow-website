@@ -7,7 +7,7 @@ import { navigationRoutes } from "@/lookup/config";
 import { getPublishedPosts } from "@/lookup/posts";
 import { siteConfig } from "@/site.config";
 import { Pic, WhatsAppLink } from "./shared";
-import { ContactForm, Header, CarouselStartOnView } from "./interactive";
+import { ContactForm, Header, CarouselPauseButton, CarouselStartOnView } from "./interactive";
 
 export { Header, WhatsAppLink };
 
@@ -238,7 +238,9 @@ export function BrandCarousel({
   dir = "brands",
   label = "המותגים של דיפלומט",
   startOnView = false,
+  locale = "he",
 }: {
+  locale?: Locale;
   logos?: [string, string][];
   dir?: string;
   label?: string;
@@ -273,11 +275,19 @@ export function BrandCarousel({
       </div>
     </>
   );
-  return startOnView ? (
-    <CarouselStartOnView label={label}>{track}</CarouselStartOnView>
-  ) : (
-    <div className="brand-carousel" aria-label={label}>
-      {track}
-    </div>
+  const id = `carousel-${dir}`;
+  return (
+    <>
+      {startOnView ? (
+        <CarouselStartOnView label={label} id={id}>
+          {track}
+        </CarouselStartOnView>
+      ) : (
+        <div className="brand-carousel" aria-label={label} id={id}>
+          {track}
+        </div>
+      )}
+      <CarouselPauseButton targetId={id} locale={locale} />
+    </>
   );
 }

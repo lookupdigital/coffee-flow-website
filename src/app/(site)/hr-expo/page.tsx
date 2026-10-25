@@ -13,7 +13,7 @@ export default function HrExpoPage() {
   return (
     <>
       <Header />
-      <main className="hr-expo">
+      <main id="main-content" className="hr-expo">
         <section className="contact" id="contact">
           <div className="contact-inner">
             <h1 className="contact-title">נפגשנו בתערוכת HR? בואו נדבר על הקפה במשרד</h1>

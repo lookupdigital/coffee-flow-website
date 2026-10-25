@@ -15,7 +15,7 @@ export default function MissingPostPage() {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content">
         <NotFoundView />
       </main>
       <Footer />
