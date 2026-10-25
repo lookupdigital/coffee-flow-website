@@ -738,8 +738,6 @@ export const solutions: Record<
 // the last three wrap round to its left. The strip only starts moving once it is in view.
 export const clientLogos: [string, string][] = [
   ["kempinski", "Kempinski"],
-  ["isrotel", "ישרוטל"],
-  ["dan-hotels", "מלונות דן"],
   ["toyota", "טויוטה"],
   ["sheraton", "Sheraton Tel Aviv"],
   ["bgu", "אוניברסיטת בן-גוריון בנגב"],
@@ -762,6 +760,7 @@ export const clientLogos: [string, string][] = [
   ["look-up", "Look Up"],
   ["logos-hotel", "מלון לוגוס"],
   ["cafe-lev", "קפה לב"],
+  ["anna-bakery", "Anna Bakery"],
 ];
 
 // Brands shown in "הרבה יותר מקפה" on the solution pages: [logo file in /images/brands, name].
