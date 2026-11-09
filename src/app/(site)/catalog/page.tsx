@@ -22,7 +22,7 @@ export default function CatalogPage() {
         <div className="catalog-page">
         <header className="catalog-page-header">
           <h1 className="h2">קטלוג Coffee Flow</h1>
-          <p className="subheading">דפדפו בקטלוג: לחצו על פינת העמוד, גררו אותו או השתמשו בחיצים.</p>
+          <p className="subheading">דפדפו בקטלוג: לחצו על פינת העמוד, גררו אותו או השתמשו בחיצים. להגדלה: צבטו עם שתי אצבעות.</p>
         </header>
         <CatalogFlipbook pages={pages} width={1000} height={1414} title="קטלוג Coffee Flow" />
         <a className="catalog-download" href="/catalogs/coffee-flow-catalog.pdf" download>
