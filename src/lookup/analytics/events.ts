@@ -1,6 +1,7 @@
 // The single tracking layer: typed events → PII guard → window.dataLayer → Google Tag Manager.
 // See docs/gtm-container-contract.md for how the container must consume these events.
 import { ATTRIBUTION_KEYS } from "@/lookup/attribution";
+import { forwardToMeta, setMetaConsent } from "@/lookup/analytics/meta-pixel";
 
 export type ContactLinkEvent = "phone_click" | "whatsapp_click" | "email_click";
 
@@ -101,7 +102,10 @@ function dataLayer(): DataLayerEntry[] {
 
 export function track(event: AnalyticsEvent) {
   if (typeof window === "undefined") return;
-  dataLayer().push(sanitizeEvent(event));
+  const safe = sanitizeEvent(event);
+  dataLayer().push(safe);
+  // The Meta pixel is loaded by the site itself (not via GTM) and receives the same sanitized events.
+  forwardToMeta(safe);
 }
 
 // Consent Mode v2 --------------------------------------------------------------------------------------
@@ -175,6 +179,7 @@ export function applyConsentChoice(value: ConsentValue) {
   }
   window.gtag ??= gtag;
   gtag("consent", "update", consentState(value));
+  setMetaConsent(value);
   dataLayer().push({ event: "cookie_consent_update", consent_value: value });
 }
 

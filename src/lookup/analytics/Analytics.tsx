@@ -7,10 +7,12 @@ import {
   classifyClick,
   initializeConsent,
   pushTrackingConfig,
+  readStoredConsent,
   sanitizeLocation,
   track,
   type ConsentValue,
 } from "@/lookup/analytics/events";
+import { initMetaPixel } from "@/lookup/analytics/meta-pixel";
 import { captureAttribution } from "@/lookup/attribution";
 
 type Props = {
@@ -18,6 +20,8 @@ type Props = {
   gtmId: string | null;
   consentDefault: ConsentValue;
   trackingConfig: Record<string, string>;
+  /** Meta pixel ID loaded directly by the site, or null when it must not load (not production). */
+  metaPixelId?: string | null;
 };
 
 let lastPageView: string | null = null;
@@ -37,7 +41,7 @@ function linkLocation(element: Element) {
   return "content";
 }
 
-export default function Analytics({ gtmId, consentDefault, trackingConfig }: Props) {
+export default function Analytics({ gtmId, consentDefault, trackingConfig, metaPixelId = null }: Props) {
   const pathname = usePathname();
   const disabled = isAdminPath(pathname);
 
@@ -46,12 +50,14 @@ export default function Analytics({ gtmId, consentDefault, trackingConfig }: Pro
     if (trackingDisabled(pathname)) return;
     initializeConsent(consentDefault);
     pushTrackingConfig(trackingConfig);
+    // Before the first page_view, so it is forwarded to Meta as PageView.
+    if (metaPixelId) initMetaPixel(metaPixelId, readStoredConsent() ?? consentDefault);
     captureAttribution();
     const pageKey = window.location.pathname + window.location.search;
     if (pageKey === lastPageView) return;
     lastPageView = pageKey;
     track({ event: "page_view", page_path: window.location.pathname, page_location: sanitizeLocation(window.location.href) });
-  }, [pathname, consentDefault, trackingConfig]);
+  }, [pathname, consentDefault, trackingConfig, metaPixelId]);
 
   // One delegated listener; each click produces at most one event (see classifyClick).
   useEffect(() => {

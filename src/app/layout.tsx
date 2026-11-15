@@ -50,6 +50,12 @@ export const viewport: Viewport = {
 const GTM_CONTAINER_ID = "GTM-TFLPS3HC";
 
 /**
+ * Coffee Flow's Meta pixel ("coffee flow's pixel", Coffee Flow business), loaded by the site itself — see
+ * src/lookup/analytics/meta-pixel.ts. Admin → Site settings → Meta pixel overrides it. Do not add a Meta tag in GTM too.
+ */
+const META_PIXEL_ID = "1142800614630250";
+
+/**
  * Runs before GTM: Consent Mode default (from Admin → Site settings), then the visitor's saved banner choice, then
  * the official GTM snippet. Skipped on the admin. Must stay in sync with initializeConsent() in analytics/events.ts.
  */
@@ -95,6 +101,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Analytics
           gtmId={null}
           consentDefault={settings.consentDefault}
+          // Same production-only rule as GTM: previews and local runs never send pixel events.
+          metaPixelId={loadGtm ? metaPixelId || META_PIXEL_ID : null}
           trackingConfig={{
             ga4_measurement_id: ga4Id,
             meta_pixel_id: metaPixelId,
