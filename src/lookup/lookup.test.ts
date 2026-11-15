@@ -12,6 +12,7 @@ import {
   type SiteFacts,
 } from "@/lookup/admin/readiness";
 import { classifyClick, sanitizeEvent, sanitizeLocation } from "@/lookup/analytics/events";
+import { toMetaEvent } from "@/lookup/analytics/meta-pixel";
 import { ATTRIBUTION_TTL_MS, nextAttribution, type Attribution } from "@/lookup/attribution";
 import { freshValue, type Snapshot } from "@/lookup/cache";
 import { DEFAULT_OG_IMAGE } from "@/lookup/config";
@@ -229,6 +230,20 @@ describe("analytics", () => {
 
   it("keeps only campaign parameters in page_location", () => {
     expect(sanitizeLocation("https://s.co/p?utm_source=g&email=a@b.co&gclid=1")).toBe("https://s.co/p?utm_source=g&gclid=1");
+  });
+
+  it("maps site events to Meta standard events, with the lead event_id as the Meta eventID", () => {
+    expect(toMetaEvent({ event: "page_view", page_path: "/", page_location: "https://s.co/" })).toEqual({ name: "PageView" });
+    expect(
+      toMetaEvent({ event: "generate_lead", form_name: "contact", page_path: "/", lead_type: "משרדים", event_id: "abc" }),
+    ).toEqual({ name: "Lead", params: { content_name: "contact", content_category: "משרדים" }, eventId: "abc" });
+    expect(toMetaEvent({ event: "whatsapp_click", page_path: "/", link_location: "header" })).toEqual({
+      name: "Contact",
+      params: { content_name: "whatsapp", content_category: "header" },
+    });
+    expect(toMetaEvent({ event: "phone_click", page_path: "/" })).toEqual({ name: "Contact", params: { content_name: "phone" } });
+    expect(toMetaEvent({ event: "form_start", form_name: "contact", page_path: "/" })).toBeNull();
+    expect(toMetaEvent({ event: "cta_click", cta_name: "x", page_path: "/", link_location: "content" })).toBeNull();
   });
 
   it("counts a contact click once, even when the element is also a tracked CTA", () => {
