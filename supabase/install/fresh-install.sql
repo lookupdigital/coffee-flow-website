@@ -536,7 +536,28 @@ comment on column public.posts.og_title is 'Open Graph title override; empty = t
 comment on column public.posts.og_description is 'Open Graph description override; empty = the resolved meta description.';
 comment on column public.posts.robots_follow is 'false = nofollow for this post (only effective while the site is indexable).';
 
--- ===== 20261008090000_coffee_flow_survey_responses.sql =====
+-- ═══ 20261007120000_coffee_flow_post_show_on_home.sql ═══
+-- Coffee Flow — choose which blog posts appear on the home page.
+-- Adds posts.show_on_home (default false). Additive only: no existing data is rewritten.
+-- Aborts WITHOUT changing anything if run twice.
+
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+     where table_schema = 'public' and table_name = 'posts' and column_name = 'show_on_home'
+  ) then
+    raise exception 'show_on_home migration aborted: it is already applied. Nothing was changed.';
+  end if;
+end
+$$;
+
+alter table public.posts
+  add column show_on_home boolean not null default false;
+
+comment on column public.posts.show_on_home is 'true = shown in the home page blog section (published posts only, newest first, up to 3).';
+
+-- ═══ 20261008090000_coffee_flow_survey_responses.sql ═══
 -- Coffee Flow — customer satisfaction survey (QR-code page, e.g. /survey/elbit).
 -- Adds public.survey_responses. Additive only: no existing data is touched.
 -- Aborts WITHOUT changing anything if run twice.
