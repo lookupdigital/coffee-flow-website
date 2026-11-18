@@ -127,6 +127,9 @@ describe("Lookup migrations", () => {
     await expect(upgraded.exec(`update public.posts set og_description = '${"x".repeat(501)}'`)).rejects.toThrow();
     await expect(upgraded.exec("update public.posts set robots_follow = null")).rejects.toThrow();
 
+    // Catch up on later migrations so this upgrade path ends at the same state as a fresh install.
+    for (const sql of migrations.slice(8)) await upgraded.exec(sql);
+
     // A fresh install has exactly the same post columns as an upgraded install.
     const columns = "select column_name, data_type, is_nullable, column_default from information_schema.columns where table_schema = 'public' and table_name = 'posts' order by column_name";
     const bundled = await freshDatabase();
